@@ -1,0 +1,33 @@
+Reaction rates of some ionospheric constituents
+
+Mind the units!!!
+
+
+--Constituents:---------
+Symbol	; ID	; Charge
+e	; 0	; -1
+O	; 1	;  0
+O+	; 2	;  1
+O2	; 3	;  0
+O2+	; 4	;  1
+N	; 5	;  0
+N+	; 6	;  1
+N2	; 7	;  0
+N2+	; 8	;  1
+NO	; 9	;  0	
+NO+	;10	;  1
+
+
+--Reactions:--------------------------------------------------------------------------------------------------------
+ID	; Reaction		; rate				; Source	; Comments
+alpha1	; NO+ + e => N + O	; 4.0e-13*(300/Te)**(0.5) m3s-1	; SN		; quite different from B, follow up?
+alpha2	; O2+ + e => O + O	; 1.9e-13*(300/Te)**(0.5) m3s-1	; B		; look up in SN
+
+
+
+_____________________________________________________________________________________________________________________
+Sources:
+SN - Schunk and Nagy, 2009: Ionospheres: Physics, Plasma Physics, and Chemistry
+B - Brekke: Physics of the upper polar Atmosphere
+
+  
