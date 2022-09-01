@@ -23,20 +23,22 @@ ID	; Reaction		; rate				; Source	; Comments
 alpha1	; NO+ + e => N + O	; 4.0e-13*(300/Te)**(0.5) m3s-1	; SN		; quite different from B, follow up?
 alpha2	; O2+ + e => O + O	; 2.4e-13*(300/Te)**(0.70) m3s-1; SN		; 
 alpha3  ; N2+ + e => N + N	; 2.2e-13*(300/Te)**(0.39) m3s-1; SN		;
-k1	; O+  + N2  => NO+ + N	; 1.2e-18 m3s-1			; SN		;
-k2	; O+  + O2  => O2+ + O	; 2.1e-17 m3s-1			; SN		; Brekke has a temperature factor (300/T_r)**(0.4). follow up?
-k3	; O2+ + NO  => NO+ + O2	; 4.6e-16 m3s-1			; SN		; Brekke has a temperature factor 
-k4	; O2+ + N2  => NO+ + NO	; 5.0e-22 m3s-1			; B		; not listed in SN
-k5a	; N2+ + O   => NO+ + N	; 1.3e-16 m3s-1			; SN		; Brekke has a temperature factor 
-k5b	; N2+ + O   => O+  + N2 ; 9.8e-18 m3s-1			; SN		;
-k6	; N2+ + O2  => N2 + O2+ ; 5e-17*(300/Tr)**(0.8)		; SN		;
-	
+k1	; O+  + N2  => NO+ + N	; 5e-19 m3s-1			; R		; still no temperature dependence
+k1c	; O+  + N2  => N+  + NO	; 1e-16 m3s-1			; R		; seems to be a considerable reaction path; just include it and see the build-up (also as a test)
+k1b	; O+  + N2  => N2+ + O	; 4.8e-16+8e-16 m3s-1		; R		; 2 different reaction speeds for O+(2P) and O+(2D)
+k2	; O+  + O2  => O2+ + O	; 7e-16+2e-17*(300/Tr)**(0.4)	; R		; 2 different reaction speeds for O+(4S) and O+(2D)
+k3	; O2+ + NO  => NO+ + O2	; 4.6e-16 m3s-1			; SN, R		; both sources cite same number 
+k4	; O2+ + N2  => NO+ + NO	; 5.0e-22 m3s-1			; B, R		; not listed in SN
+k5a	; N2+ + O   => NO+ + N	; 1.4e-16*(300/Tr)**(0.44)	; R		; SN has no Temperature dependence
+k5b	; N2+ + O   => O+  + N2 ; 1.4e-16*(300/Tr)**(0.44) m3s-1; R		; SN has no Temperature dependence
+k6	; N2+ + O2  => N2 + O2+ ; 5e-17*(300/Tr)**(0.8)		; R, B		; both sources cite same number 
 
 
 _____________________________________________________________________________________________________________________
 Sources:
 SN - Schunk and Nagy, 2009: Ionospheres: Physics, Plasma Physics, and Chemistry
 B - Brekke: Physics of the upper polar Atmosphere
+R - Rees: Physics and Chemistry of the upper Atmosphere
 
   
 
