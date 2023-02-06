@@ -1,0 +1,159 @@
+Reaction rates of some ionospheric constituents
+
+Mind the units=>=>=>
+
+
+--Constituents:---------
+Symbol	; ID	; Charge
+e	; 0	; -1
+O	; 1	;  0
+O+	; 2	;  1
+O2	; 3	;  0
+O2+	; 4	;  1
+N	; 5	;  0
+N+	; 6	;  1
+N2	; 7	;  0
+N2+	; 8	;  1
+NO	; 9	;  0	
+NO+	;10	;  1
+H	;11	;  0
+H+	;12	;  1
+
+
+--Reactions:--------------------------------------------------------------------------------------------------------
+ID	; Reaction		; rate				; Source	; Comments
+alpha1	; NO+ + e   => N   + O	; 4.0e-13*(300/Te)**(0.5) m3s-1	; SN		; quite different from B, follow up?
+alpha2	; O2+ + e   => O   + O	; 2.4e-13*(300/Te)**(0.70) m3s-1; SN		; 
+alpha3  ; N2+ + e   => N   + N	; 2.2e-13*(300/Te)**(0.39) m3s-1; SN		;
+alpha4	; O+  + e   => O   + _	; 3.7e-18*(250/Te)**(0.7)	; SN		;new
+alpha5	; N+  + e   => N   + _  ; 3.6e-18*(250/Te)**(0.7)	; SN		;new
+k1	; O+  + N2  => NO+ + N	; 5e-19 m3s-1			; R		; still no temperature dependence
+k1c	; O+  + N2  => N+  + NO	; 1e-16 m3s-1			; R		; seems to be a considerable reaction path, just include it and see the build-up (also as a test)
+k1b	; O+  + N2  => N2+ + O	; 4.8e-16+8e-16 m3s-1		; R		; 2 different reaction speeds for O+(2P) and O+(2D)
+k2	; O+  + O2  => O2+ + O	; 7e-16+2e-17*(300/Tr)**(0.4)	; R		; 2 different reaction speeds for O+(4S) and O+(2D)
+R49 	; O+  + NO  => NO+ + O	; 8.0e-19			; SN		;new
+k3	; O2+ + NO  => NO+ + O2	; 4.6e-16 m3s-1			; SN, R		; both sources cite same number 
+k4	; O2+ + N2  => NO+ + NO	; 5.0e-22 m3s-1			; B, R		; not listed in SN
+R53	; O2+ + N   => NO+ + O	; 1.5e-16			; SN		;new
+k5a	; N2+ + O   => NO+ + N	; 1.4e-16*(300/Tr)**(0.44)	; R		; SN has no Temperature dependence
+k5b	; N2+ + O   => O+  + N2 ; 1.4e-16*(300/Tr)**(0.44) m3s-1; R		; SN has no Temperature dependence
+k6	; N2+ + O2  => O2+ + N2 ; 5e-17*(300/Tr)**(0.8)		; R, B		; both sources cite same number 
+R43 	; N2+ + NO  => NO+ + N2	; 4.1e-16			; SN		;new
+R37	; N+  + O2  => O2+ + N	; 3.07e-16			; SN		;new		
+R38 	; N+  + O2  => NO+ + O	; 2.32e-16			; SN		;new
+R39	; N+  + O2  => O+  + NO	; 4.6e-17			; SN		;new
+g11_g33	; N+  + O2  => O2+ + N	; 1.1e-16+2e-16			; R		;new
+g28	; N+  + O   => O+  + N	; 5e-19				; R		;new
+
+
+
+
+O2+ + e  => O  + O	; alpha1 = 1.9e-13*(Te/300)**(-0.50) 
+N2+ + e  => N  + N	; alpha2 = 1.8e-13*(Te/300)**(-0.39)
+NO+ + e  => O  + N	; alpha3 = 4.2e-13*(Te/300)**(-0.85)
+#O2+(a4P) + e  => O      + O	; alpha4 = 1.0e-13
+#O+(2D)   + e  => O+(4S) + e 	; alpha5 = 7.8e-14*(Te/300)**(-0.5)
+#O+(2P)   + e  => O+(4S) + e 	; alpha7 = 4.0e-14*(Te/300)**(-0.5)
+#O+(2P)   + e  => O+(2D) + e 	; alpha8 = 1.5e-13*(Te/300)**(-0.5)
+N   + O2 => NO + O	; beta1  = 4.4e-18*exp(-3220/Tn)
+#N(2D)    + O2 => NO, O, O(1D)	; beta2 = 5.3e-18
+N   + NO => N2 + O	; beta4  = 1.5e-18*(Tn**(0.5))
+#N(2D)    + O  => N(4S)  + O 	; beta5 = 2e-18
+#N(2D)    + e  => N(4S)  + e	; beta6 = 5.5e-16*(Te/300)**(0.5)
+#N(2D)    + NO => N2     + O 	; beta7 = 7e-17
+O+  + N2 => NO+ + N	; gamma1 = np.array([5e-19 if T<=1000 else 4.5e-20*(T/300)**(2) for T in Tr])
+O+  + O2 => O2+ + O	; gamma2 = 2.0e-17*(Tr/300)**(-0.40)
+#O+(2D)   + N2 => N2+    + O	; gamma3 = 8e-16
+N2+ + O  => NO+ + N	; gamma4 = 1.4e-16*(Tr/300)**(-0.44)			; produced N is in state N(2D)
+N2+ + O2 => N2  + O2+ 	; gamma5 = 5.0e-17*(Tr/300)**(-0.80)
+#O2+(a4P) + N2 => N2+    + O2 	; gamma6 = 2.5e-16				; INCLUDE?? no bc gamma6 >> gamma8
+#O2+(a4P) + O  => O2+    + O 	; gamma7 = 1.0e-16				; INCLUDE?? no bc gamma7 >> gamma8
+O2+ + N2 => NO+ + NO	; gamma8 = 5e-22
+#O+(2P)   + N2 => N2+    + O	; gamma9 = 4.8e-16				; INCLUDE?? no bc gamma9 >> gamma8
+N+  + O2 => NO+ + O	; gamma10= 2.6e-16
+N+  + O2 => O2  + N	; gamma11= 1.1e-16
+O+  + H  => H+  + O	; gamma12= 6.0e-16 
+#O+(2D)   + O  => O+(4S) + O	; gamma13= 1.0e-17
+O2+ + NO => NO+ + O2 	; gamma15= 4.4e-16
+O2+ + N  => NO+ + O 	; gamma16= 1.8e-16
+#O2+   + N(2D) => N+     + O2	; gamma17=2.5e-16 				; INCLUDE?? gamma17 ≈ gamma16 => ??
+N2+ + NO => NO+ + N2 	; gamma18= 3.3e-16
+N2+ + O  => O+  + N2 	; gamma19= 1.4e-16*(Tr/300)**(-0.44)
+H+  + O  => O+  + H	; gamma20= (8/9)*6.0e-16*np.sqrt((Ti + Tn/4)/(Tn + Ti/16))
+O+  + NO => NO+ + O	; gamma21= 8.0e-19
+#O+(2D)   + O2 => O2+    + O	; gamma22= 7.0e-16
+#O+(2D)   + N2 => O+(4S) + N2	; gamma24= 8.0e-16
+#O+(2P)   + O  => O+(4S) + O 	; gamma25= 5.2e-17
+#O+(4S)+ N(2D) => N+     + O 	; gamma26= 1.3e-16
+N+  + O2 => O+  + NO	; gamma27= 3.0e-17
+N+  + O  => O+  + N	; gamma28= 5.0e-19
+N+  + H  => H+  + N	; gamma29= 3.6e-18
+#O+(2P)   + N2 => N+     + NO	; gamma30 =1.0e-16
+#O+(2P)   + N(4S) => N+  + O 	; gamma31 =1.0e-16
+#O+(2D)   + N(4S) => N+	 + O	; gamma32 =7.5e-17
+N+  + O2 => O2+ + N	; gamma33= 2e-16
+
+
+_____________________________________________________________________________________________________________________
+Sources:
+SN - Schunk and Nagy, 2009: Ionospheres: Physics, Plasma Physics, and Chemistry
+B - Brekke: Physics of the upper polar Atmosphere
+R - Rees: Physics and Chemistry of the upper Atmosphere
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
