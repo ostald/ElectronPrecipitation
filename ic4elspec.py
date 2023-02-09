@@ -40,8 +40,7 @@ def ic(direc, file, iteration):
             prod_t = prod[i_max_ts]
             return prod_t
     
-    chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation'+\
-                       '/Data/other/Reaction rates.txt'
+    chemistry_config = 'Data/other/Reaction rates.txt'
     z_model = con["h"]
     
     model = ionChem.ionChem(chemistry_config, z_model)
@@ -57,8 +56,7 @@ def ic(direc, file, iteration):
     model.O2p.density = nO2p
     model.Op.density  = nOp
 
-    msis_model = loadMSIS.loadMSIS_new('/Users/ost051/Documents/PhD/Electron Precipitation/'+\
-                                       'Data/other/msis.rtf')
+    msis_model = loadMSIS.loadMSIS_new('Data/other/msis.rtf')
     nH = msis_model[4]
     #model.H.density = model.Op.density * 0
     model.H.density   = np.exp(PchipInterpolator(msis_model[0][1:-3]/1e3, np.log(nH[1:-3]))(con["h"]))
