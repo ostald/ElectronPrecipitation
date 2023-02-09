@@ -8,7 +8,8 @@
 %% 1, Setting up the matlab-path
 % Simply modify the path below to point to the directory where ELSPEC-2022
 % is installed. That should be it.
-addpath /Users/ost051/Documents/PhD/ELSPEC-2022 -end
+
+%addpath 'ELSPEC-2022' -end
 
 %% 2 Setup of parameters controlling ELSPEC
 
@@ -18,8 +19,8 @@ egrid = logspace(1,5,400);
 % Data directories
 % The paths to the directories with the ionospheric parameters and the
 % power-profiles.
-fitdir = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Data';
-ppdir = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Data';
+fitdir = '../Data/Eiscat';
+ppdir  = '../Data/Eiscat';
 % Flag for specifying which EISCAT-experiment it is
 experiment = 'arc1';
 % Altitude-limits.
@@ -97,7 +98,7 @@ ErrType = 'l'; % L for Lorentzian.
 
 %for i1 = numel(OUTLIERS):-1:1
 %  Outliers = OUTLIERS{i1};
-Outname = sprintf('Reactions Set Rees/ElSpec-iqt_IC_0');
+Outname = sprintf('../log/testing/ElSpec-iqt_IC_0');
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...

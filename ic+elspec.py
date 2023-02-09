@@ -1,24 +1,30 @@
 import os
-import import_ipynb
 import ic4elspec
 import time
-#%matplotlib widget
 
+matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
+cwd = os.getcwd()
+print('Current working Dir: ', cwd)
+
+#check if plotting folder exists:
+if not os.path.isdir('log/testing/plots'):
+    print('Creating log/testing/plots')
+    os.mkdir('log/testing/plots')
+
+#start model
 i = 0
-#os.system("/Applications/MATLAB_R2022b.app/bin/./matlab -sd"+
-#          " \"/Users/ost051/Documents/PhD/ELSPEC-2022" +
-#          "\" -batch \"ElSpec_IC\" -nodisplay")
+#os.system(matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" "+
+#          "-batch \"ElSpec_IC\" -nodisplay")
 
-ic4elspec.ic('/Users/ost051/Documents/PhD/ELSPEC-2022/Reactions Set Rees/',
-             'ElSpec-iqt_IC_', i)
+#ic4elspec.ic('log/testing/',
+#             'ElSpec-iqt_IC_', i)
 i = 1
 
 while True:
-    osstr = "/Applications/MATLAB_R2022b.app/bin/./matlab -sd "+\
-            " \"/Users/ost051/Documents/PhD/ELSPEC-2022"+\
-            "\" -batch \"ElSpec_IC_iter("+str(i)+")\" -nodisplay"
+    osstr = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" "+\
+            "-batch \"ElSpec_IC_iter("+str(i)+")\" -nodisplay"
     os.system(osstr)
-    ic4elspec.ic('/Users/ost051/Documents/PhD/ELSPEC-2022/Reactions Set Rees/',
+    ic4elspec.ic('log/testing/',
                  'ElSpec-iqt_IC_', i)
     i = i+1 
 

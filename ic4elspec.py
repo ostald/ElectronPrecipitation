@@ -1,7 +1,6 @@
 import scipy.io as spio
 from scipy.integrate import solve_ivp
 from scipy.interpolate import PchipInterpolator
-import import_ipynb
 import ionChem
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,8 +8,8 @@ import loadMSIS
 import loadmat
 
 def ic(direc, file, iteration):
-    file_i = file + str(iteration)
-    f = direc + file_i
+    #load content of last Elspec iteration
+    f = direc + file + str(iteration)
     mat = loadmat.loadmat(f)
     con = mat["ElSpecOut"]
 
@@ -20,9 +19,9 @@ def ic(direc, file, iteration):
     [nNOp,nO2p,nOp] = n_model[:, 7:, 0].T/np.sum(n_model[:, 7:, 0], axis = 1)*ne[:, 0]
     
     temp = n_model[:, :3, :].T
-    ts = con["ts"]
-    te = con["te"] - ts[0]
-    ts = ts - ts[0]
+    #setting start time [0] to 0:
+    ts = con["ts"] - con["ts"][0]
+    te = con["te"] - con["ts"][0]
     e_prod = con["q"].T
     
     def stepped_prod_t(prod, t):
@@ -42,7 +41,7 @@ def ic(direc, file, iteration):
             return prod_t
     
     chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation'+\
-                       '/example/Meta-data/Reaction rates.txt'
+                       '/Data/other/Reaction rates.txt'
     z_model = con["h"]
     
     model = ionChem.ionChem(chemistry_config, z_model)
@@ -59,7 +58,7 @@ def ic(direc, file, iteration):
     model.Op.density  = nOp
 
     msis_model = loadMSIS.loadMSIS_new('/Users/ost051/Documents/PhD/Electron Precipitation/'+\
-                                       'example/Meta-data/msis.rtf')
+                                       'Data/other/msis.rtf')
     nH = msis_model[4]
     #model.H.density = model.Op.density * 0
     model.H.density   = np.exp(PchipInterpolator(msis_model[0][1:-3]/1e3, np.log(nH[1:-3]))(con["h"]))
