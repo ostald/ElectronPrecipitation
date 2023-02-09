@@ -1,3 +1,4 @@
+function ElSpec_IC(log_dir)
 %% ElSpec extended with Ion Chemitry
 %% Based on Example-script for ElSpec_iqt usage
 % This script should be possible to adapt for anyone with basic skills in
@@ -98,7 +99,7 @@ ErrType = 'l'; % L for Lorentzian.
 
 %for i1 = numel(OUTLIERS):-1:1
 %  Outliers = OUTLIERS{i1};
-Outname = sprintf('../log/testing/ElSpec-iqt_IC_0');
+Outname = sprintf('../' + log_dir + '/ElSpec-iqt_IC_0');
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...
@@ -132,3 +133,4 @@ ElSpecPlotRes(ElSpecQT_iqtOutliers_L5,fig2.Number)
 ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5)
 ph = ElSpecPlotTres(ElSpecQT_iqtOutliers_L5);
 set(ph,'color','r','linestyle','--','marker','.')
+end

@@ -214,7 +214,8 @@ def ic(direc, file, iteration):
         for i in range(n_ic.shape[2]):
             n_ic[:, :, i] = (n_ic[:, :, i] + mixf*n_ic[:, :, 0])/(1+mixf)
     else:
-        res_old = pickle.load(direc + "IC_res_" + str(iteration-1) + '.pickle')
+        with open(direc + "IC_res_" + str(iteration-1) + '.pickle', 'rb') as pf:
+            res_old = pickle.load(pf)
         n_ic_old = np.array([r.y for r in res_old])
         n_ic = (n_ic + mixf * n_ic_old) / (1 + mixf)
     

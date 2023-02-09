@@ -1,4 +1,4 @@
-function ElSpec_IC_iter(iter, log_dir)
+function ElSpec_IC(log_directory)
 %% ElSpec extended with Ion Chemitry
 %% Based on Example-script for ElSpec_iqt usage
 % This script should be possible to adapt for anyone with basic skills in
@@ -9,7 +9,8 @@ function ElSpec_IC_iter(iter, log_dir)
 %% 1, Setting up the matlab-path
 % Simply modify the path below to point to the directory where ELSPEC-2022
 % is installed. That should be it.
-%addpath /Users/ost051/Documents/PhD/Electron Precipitation/ELSPEC-2022 -end
+
+%addpath 'ELSPEC-2022' -end
 
 %% 2 Setup of parameters controlling ELSPEC
 
@@ -21,7 +22,6 @@ egrid = logspace(1,5,400);
 % power-profiles.
 fitdir = '../Data/Eiscat';
 ppdir  = '../Data/Eiscat';
-
 % Flag for specifying which EISCAT-experiment it is
 experiment = 'arc1';
 % Altitude-limits.
@@ -99,18 +99,10 @@ ErrType = 'l'; % L for Lorentzian.
 
 %for i1 = numel(OUTLIERS):-1:1
 %  Outliers = OUTLIERS{i1};
-
-j = iter - 1;
-icdir = "../" + log_dir + "/IC_" + j + ".mat";
-
-icdata = load(icdir);
-iri_ic = icdata.elspec_iri_sorted;
-alpha_eff = icdata.eff_rr;
-
-Outname = sprintf("../" + log_dir + "/ElSpec-iqt_IC_" + iter);
+Outname = sprintf('../log/testing/ElSpec-iqt_IC_0');
 disp(Outname)
 %  disp(Outliers)
-ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
+ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...
                                        'ppdir',ppdir,...
                                        'experiment',experiment,...
                                        'hmax',hmax,'hmin',hmin,...
@@ -122,12 +114,10 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'ErrType',ErrType,...
                                        'MaxOrder',maxorder,...
                                        'ninteg',ninteg,...
-                                       'Outfilename',Outname,...
-                                       'iri_ic', iri_ic, ...
-                                       'alpha_eff', alpha_eff);
+                                       'Outfilename',Outname);
   ElSpecPlot(ElSpecQT_iqtOutliers_L5)
   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
-  print('-depsc2', '-painters', [Outname,'IC_']);
+  print('-depsc2', '-painters', [Outname,'_IC_0']);
   dstr = sprintf('Done with loop S i1: at %s',datestr(now,'HH:MM:SS'));
   disp(dstr)
   close(gcf)

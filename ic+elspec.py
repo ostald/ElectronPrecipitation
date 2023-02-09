@@ -2,6 +2,17 @@ import os
 import ic4elspec
 import time
 import sys
+import setup
+
+#defining file paths
+msis_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/msis.rtf'
+iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri.txt'
+chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/Reaction rates.txt'
+path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/Eiscat'
+
+#setup log directory
+setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data)
+log_directory = setup_._log_directory
 
 matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
 if sys.platform == 'linux2':
@@ -12,23 +23,17 @@ print('Current working Dir: ', cwd)
 
 call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
 
-#check if plotting folder exists:
-if not os.path.isdir('log/testing/plots'):
-    print('Creating log/testing/plots')
-    os.mkdir('log/testing/plots')
-
 #start model
 i = 0
 start_t = time.time()
-os.system(call_matlab + "\"ElSpec_IC\" -nodisplay")
-ic4elspec.ic('log/testing/', 'ElSpec-iqt_IC_', i)
+os.system(call_matlab + "\"ElSpec_IC(\\\""+log_directory+"\\\")\" -nodisplay")
+ic4elspec.ic(log_directory, 'ElSpec-iqt_IC_', i)
 
 i = 1
 print('First Iteration:', time.time() - start_t, 's')
 
 while True:
-    os.system(call_matlab + "\"ElSpec_IC_iter("+str(i)+")\" -nodisplay")
-    ic4elspec.ic('log/testing/',
-                 'ElSpec-iqt_IC_', i)
+    os.system(call_matlab + "\"ElSpec_IC_iter("+str(i)+", "+log_directory+")\" -nodisplay")
+    ic4elspec.ic(log_directory, 'ElSpec-iqt_IC_', i)
     i = i+1
     print('Mean Iteration Duration:', (time.time() - start_t)/i, 's')
