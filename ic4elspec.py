@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import loadMSIS
 import loadmat
+import pickle
+
 
 def ic(direc, file, iteration):
     #load content of last Elspec iteration
@@ -206,10 +208,15 @@ def ic(direc, file, iteration):
         break
         
     n_ic = np.array([r.y for r in res])
-    
+
     mixf = 0.3
-    for i in range(n_ic.shape[2]):
-        n_ic[:, :, i] = (n_ic[:, :, i] + mixf*n_ic[:, :, 0])/(1+mixf)
+    if iteration == 0:
+        for i in range(n_ic.shape[2]):
+            n_ic[:, :, i] = (n_ic[:, :, i] + mixf*n_ic[:, :, 0])/(1+mixf)
+    else:
+        res_old = pickle.load(direc + "IC_res_" + str(iteration-1) + '.pickle')
+        n_ic_old = np.array([r.y for r in res_old])
+        n_ic = (n_ic + mixf * n_ic_old) / (1 + mixf)
     
     eff_rr = (rrate.T[:, 0, :]*n_ic[:, 10, :] + \
               rrate.T[:, 1, :]*n_ic[:, 4 , :] + \
@@ -223,8 +230,8 @@ def ic(direc, file, iteration):
 
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
-    
-    import pickle
+
+
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:

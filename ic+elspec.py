@@ -1,8 +1,14 @@
 import os
 import ic4elspec
 import time
+import sys
 
-matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
+if sys.platform == 'darwin':
+    matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
+
+if sys.platform == 'linux2':
+    matlabroot_dir = "/usr/local/bin/matlab"
+
 cwd = os.getcwd()
 print('Current working Dir: ', cwd)
 
@@ -13,12 +19,14 @@ if not os.path.isdir('log/testing/plots'):
 
 #start model
 i = 0
-#os.system(matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" "+
-#          "-batch \"ElSpec_IC\" -nodisplay")
+start_t = time.time()
+os.system(matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" "+
+          "-batch \"ElSpec_IC\" -nodisplay")
 
-#ic4elspec.ic('log/testing/',
-#             'ElSpec-iqt_IC_', i)
+ic4elspec.ic('log/testing/',
+             'ElSpec-iqt_IC_', i)
 i = 1
+print('First Iteration:', time.time() - start_t, 's')
 
 while True:
     osstr = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" "+\
@@ -26,7 +34,9 @@ while True:
     os.system(osstr)
     ic4elspec.ic('log/testing/',
                  'ElSpec-iqt_IC_', i)
-    i = i+1 
+    i = i+1
+    print('Mean Iteration Duration:', (time.time() - start_t)/i, 's')
+
 
 
 
