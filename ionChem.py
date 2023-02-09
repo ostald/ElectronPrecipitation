@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 # Ion Chemistry
 
 """
@@ -927,7 +921,7 @@ plt.plot(n_o1_msis, z_msis/1e3, label = 'MSIS data', marker = 'x')
         plt.legend()
         
 '''
-
+'''
 for start, only O2+ and NO+ are looked at. => this expanded a bit (e, O, O+, O2, O2+, N, N+, N2, N2+, NO, NO+)
 
 dn(O2+)/dt = q(O2+) - l(O2+)
@@ -976,3 +970,4 @@ Production:
 
 
 => need a model for T_e!! => from measurements
+'''

@@ -1,0 +1,101 @@
+Reaction rates of some ionospheric constituents
+
+Mind the units!!!
+
+
+--Constituents:---------
+Symbol	; ID	; Charge
+e	; 0	; -1
+O	; 1	;  0
+O+	; 2	;  1
+O2	; 3	;  0
+O2+	; 4	;  1
+N	; 5	;  0
+N+	; 6	;  1
+N2	; 7	;  0
+N2+	; 8	;  1
+NO	; 9	;  0	
+NO+	;10	;  1
+
+
+--Reactions:--------------------------------------------------------------------------------------------------------
+ID	; Reaction		; rate				; Source	; Comments
+alpha1	; NO+ + e => N + O	; 4.0e-13*(300/Te)**(0.5) m3s-1	; SN		; quite different from B, follow up?
+alpha2	; O2+ + e => O + O	; 2.4e-13*(300/Te)**(0.70) m3s-1; SN		; 
+alpha3  ; N2+ + e => N + N	; 2.2e-13*(300/Te)**(0.39) m3s-1; SN		;
+k1	; O+  + N2  => NO+ + N	; 1.2e-18 m3s-1			; SN		;
+					5e-19 m3s-1		; R		; still no temperature dependence
+					1e-16 m3s-1		; R		;
+k1b	  O+  + N2  => N2+ + O	;	8e-16 m3s-1		; R		;
+					4.8e-16	m3s-1		; R		;
+k2	; O+  + O2  => O2+ + O	; 2.1e-17 m3s-1			; SN		; Brekke has a temperature factor (300/T_r)**(0.4). follow up?
+k3	; O2+ + NO  => NO+ + O2	; 4.6e-16 m3s-1			; SN		; Brekke has a temperature factor 
+k4	; O2+ + N2  => NO+ + NO	; 5.0e-22 m3s-1			; B		; not listed in SN
+k5a	; N2+ + O   => NO+ + N	; 1.3e-16 m3s-1			; SN		; Brekke has a temperature factor 
+k5b	; N2+ + O   => O+  + N2 ; 9.8e-18 m3s-1			; SN		;
+k6	; N2+ + O2  => N2 + O2+ ; 5e-17*(300/Tr)**(0.8)		; SN		;
+
+
+_____________________________________________________________________________________________________________________
+Sources:
+SN - Schunk and Nagy, 2009: Ionospheres: Physics, Plasma Physics, and Chemistry
+B - Brekke: Physics of the upper polar Atmosphere
+R - Rees: Physics and Chemistry of the upper Atmosphere
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

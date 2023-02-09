@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import scipy.io as spio
 from scipy.integrate import solve_ivp
 from scipy.interpolate import PchipInterpolator
@@ -13,7 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import loadMSIS
 import loadmat
-
 
 def ic(direc, file, iteration):
     file_i = file + str(iteration)
@@ -48,7 +41,8 @@ def ic(direc, file, iteration):
             prod_t = prod[i_max_ts]
             return prod_t
     
-    chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation'+                            '/example/Meta-data/Reaction rates.txt'
+    chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation'+\
+                       '/example/Meta-data/Reaction rates.txt'
     z_model = con["h"]
     
     model = ionChem.ionChem(chemistry_config, z_model)
@@ -64,13 +58,14 @@ def ic(direc, file, iteration):
     model.O2p.density = nO2p
     model.Op.density  = nOp
 
-    msis_model = loadMSIS.loadMSIS_new('/Users/ost051/Documents/PhD/Electron Precipitation/'+                                       'example/Meta-data/msis.rtf')
+    msis_model = loadMSIS.loadMSIS_new('/Users/ost051/Documents/PhD/Electron Precipitation/'+\
+                                       'example/Meta-data/msis.rtf')
     nH = msis_model[4]
     #model.H.density = model.Op.density * 0
     model.H.density   = np.exp(PchipInterpolator(msis_model[0][1:-3]/1e3, np.log(nH[1:-3]))(con["h"]))
 
     
-    #model.e.density = np.sum([nNOp,nO2p,nOp,model.N2p.density], axis = 0)
+#    model.e.density = np.sum([nNOp,nO2p,nOp,model.N2p.density], axis = 0)
     
     model.e.density = con["ne"][:, 0]
     
@@ -81,9 +76,12 @@ def ic(direc, file, iteration):
         c.prod = e_prod *0
     
     #model.e.prod   = e_prod
-    Op_prod  = e_prod * 0.56 * model.O.density  /         (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
-    O2p_prod = e_prod * 1.00 * model.O2.density /         (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
-    N2p_prod = e_prod * 0.92 * model.N2.density /         (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
+    Op_prod  = e_prod * 0.56 * model.O.density  /\
+               (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
+    O2p_prod = e_prod * 1.00 * model.O2.density /\
+               (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
+    N2p_prod = e_prod * 0.92 * model.N2.density /\
+               (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
     
     
     #create smooth function for production
@@ -139,7 +137,8 @@ def ic(direc, file, iteration):
             ode_mat[r.r_ID, p[1]] = np.array([r.r_ID,  1, *e])
             if p[1] == p[0]: ode_mat[r.r_ID, p[0]] = np.array([r.r_ID,  2, *e])
         except IndexError:
-            print('This is a useless statement. It is necessary. ' +                   'It could be replaced with another statement. Do what you wish with this information.')
+            print('This is a useless statement. It is necessary. ' +\
+                  'It could be replaced with another statement. Do what you wish with this information.')
         
     #2. produce raw DG from 1., excluding all terms that are 0 anyways.
     ode_raw = np.empty(len(model.all_species), dtype = 'object')
@@ -149,13 +148,17 @@ def ic(direc, file, iteration):
         
     #3. produce DG with only relevant terms
     def fun(t, n, h):
-        if t >= ts[0] and t<=te[-1]:
+        if ts[0] <= t <= te[-1]:
             k = len(ts[ts<=t])-1
         else:
             print(t)
             raise RuntimeError
             
-        dndt = np.array([np.sum(((rrate[k, ode_raw[i.c_ID][:, 0], h].T  *   ode_raw[i.c_ID][:, 1] ).T                                    * n[ode_raw[i.c_ID][:, 2]]          * n[ode_raw[i.c_ID][:, 3]]                                   ), axis = 0)                         + prodMat[i.c_ID](t)[h]                        for i in model.all_species])
+        dndt = np.array([np.sum(((rrate[k, ode_raw[i.c_ID][:, 0], h].T  *   ode_raw[i.c_ID][:, 1] ).T \
+                                  * n[ode_raw[i.c_ID][:, 2]]            * n[ode_raw[i.c_ID][:, 3]]    \
+                                ), axis = 0)                                                          \
+                         + prodMat[i.c_ID](t)[h] \
+                         for i in model.all_species])
         return dndt
     
     def ic():
@@ -163,7 +166,8 @@ def ic(direc, file, iteration):
         
         for h in range(model.n_heights):
             n = np.array([c.density[h] for c in model.all_species])
-            res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],                                t_eval = ts, max_step = 0.0444)
+            res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
+                               t_eval = ts, max_step = 0.0444)
     #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
    #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
             #for j, c in enumerate(model.all_species):
@@ -175,7 +179,7 @@ def ic(direc, file, iteration):
     
     res = ic()
     
-    #check charge nuetrality!!
+    #check charge neutrality!!
     #[e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
     
     for h, i in enumerate(res):
@@ -210,7 +214,9 @@ def ic(direc, file, iteration):
     for i in range(n_ic.shape[2]):
         n_ic[:, :, i] = (n_ic[:, :, i] + mixf*n_ic[:, :, 0])/(1+mixf)
     
-    eff_rr = (rrate.T[:, 0, :]*n_ic[:, 10, :] +               rrate.T[:, 1, :]*n_ic[:, 4 , :] +               rrate.T[:, 2, :]*n_ic[:, 6 , :]   ) / n_ic[:, 0, :]
+    eff_rr = (rrate.T[:, 0, :]*n_ic[:, 10, :] + \
+              rrate.T[:, 1, :]*n_ic[:, 4 , :] + \
+              rrate.T[:, 2, :]*n_ic[:, 6 , :]   ) / n_ic[:, 0, :]
     
     
     [Tn,Ti,Te,nN2,nO2,nO,nAr,nNOp,nO2p,nOp] = n_model.swapaxes(0, 1)
@@ -237,17 +243,20 @@ def ic(direc, file, iteration):
     plt.yscale('log')
     plt.legend()
     plt.title('Eff.Rec.Rate and Difference from last Iteratrion')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +                 'Eff Rec Rate and Difference from last Iteratrion.svg')
+    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +\
+                'Eff Rec Rate and Difference from last Iteratrion.svg')
 
     h = 20
     [re,rO,rOp,rO2,rO2p,rN,rNp,rN2,rN2p,rNO,rNOp,rH,rHp] = [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp]/e
     plt.figure()
-    plt.stackplot(ts, rOp[h],rO2p[h],rNp[h],rN2p[h],rNOp[h],rHp[h],                   labels = ['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+'])
+    plt.stackplot(ts, rOp[h],rO2p[h],rNp[h],rN2p[h],rNOp[h],rHp[h],\
+                  labels = ['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+'])
     plt.xlabel('Time [s]')
     plt.ylabel('Ratio of Charged Species')
     plt.legend(loc = 2)
     plt.title('Charged Species Stackplot at height index ' + str(h))
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +                 'Charged Species Stackplot at height index ' + str(h) + '.svg')
+    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +\
+                'Charged Species Stackplot at height index ' + str(h) + '.svg')
     
     #check charge nuetrality!!
     sum_charged = np.sum(np.array([Op, O2p, Np, N2p, NOp, Hp]), axis = 0)
@@ -259,7 +268,8 @@ def ic(direc, file, iteration):
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
     plt.title('Relative Charge imabalance $(n_{I^+} - n_{e^-})/n_{e^-}$')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +                 'Relative Charge imabalance.svg')
+    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +\
+                'Relative Charge imabalance.svg')
 
     plt.figure()
     pc = plt.pcolor(ts, z_model, eff_rr, label = 'alpha')
@@ -269,7 +279,8 @@ def ic(direc, file, iteration):
     #plt.tight_layout()
     plt.colorbar(pc)
     plt.title('Effective Recombination rate [m3s-1]')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +                 'Effective Recombination rate.svg')
+    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +\
+                'Effective Recombination rate.svg')
     
     import matplotlib as mpl
     plt.figure()
@@ -280,11 +291,6 @@ def ic(direc, file, iteration):
     #plt.tight_layout()
     plt.colorbar(pc)
     plt.title('Deviation from previous eff. rec. rate [m3s-1]')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +                 'Deviation from previous eff rec rate.svg')
-
-
-# In[ ]:
-
-
-
+    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' +\
+                'Deviation from previous eff rec rate.svg')
 
