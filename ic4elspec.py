@@ -207,17 +207,18 @@ def ic(direc, file, iteration):
             plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
         break
         
-    n_ic = np.array([r.y for r in res])
+    n_ic_ = np.array([r.y for r in res])
 
-    mixf = 0.3
+    mixf = 30
+    print(mixf)
     if iteration == 0:
-        for i in range(n_ic.shape[2]):
-            n_ic[:, :, i] = (n_ic[:, :, i] + mixf*n_ic[:, :, 0])/(1+mixf)
+        for i in range(n_ic_.shape[2]):
+            n_ic[:, :, i] = (n_ic_[:, :, i] + mixf*n_ic_[:, :, 0])/(1+mixf)
     else:
         with open(direc + "IC_res_" + str(iteration-1) + '.pickle', 'rb') as pf:
             res_old = pickle.load(pf)
         n_ic_old = np.array([r.y for r in res_old])
-        n_ic = (n_ic + mixf * n_ic_old) / (1 + mixf)
+        n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
     
     eff_rr = (rrate.T[:, 0, :]*n_ic[:, 10, :] + \
               rrate.T[:, 1, :]*n_ic[:, 4 , :] + \

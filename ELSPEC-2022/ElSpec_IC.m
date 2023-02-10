@@ -99,7 +99,7 @@ ErrType = 'l'; % L for Lorentzian.
 
 %for i1 = numel(OUTLIERS):-1:1
 %  Outliers = OUTLIERS{i1};
-Outname = sprintf('../' + log_dir + '/ElSpec-iqt_IC_0');
+Outname = sprintf('../' + log_dir + 'ElSpec-iqt_IC_0');
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...

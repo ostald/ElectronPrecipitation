@@ -101,13 +101,13 @@ ErrType = 'l'; % L for Lorentzian.
 %  Outliers = OUTLIERS{i1};
 
 j = iter - 1;
-icdir = "../" + log_dir + "/IC_" + j + ".mat";
+icdir = "../" + log_dir + "IC_" + j + ".mat";
 
 icdata = load(icdir);
 iri_ic = icdata.elspec_iri_sorted;
 alpha_eff = icdata.eff_rr;
 
-Outname = sprintf("../" + log_dir + "/ElSpec-iqt_IC_" + iter);
+Outname = sprintf("../" + log_dir + "ElSpec-iqt_IC_" + iter);
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...

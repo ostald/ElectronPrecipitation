@@ -11,7 +11,7 @@ chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/othe
 path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/Eiscat'
 
 #setup log directory
-setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data)
+setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data)#, no_timecode=True)
 log_directory = setup_._log_directory
 
 matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
@@ -33,7 +33,7 @@ i = 1
 print('First Iteration:', time.time() - start_t, 's')
 
 while True:
-    os.system(call_matlab + "\"ElSpec_IC_iter("+str(i)+", "+log_directory+")\" -nodisplay")
+    os.system(call_matlab + "\"ElSpec_IC_iter("+str(i)+", \\\""+log_directory+"\\\")\" -nodisplay")
     ic4elspec.ic(log_directory, 'ElSpec-iqt_IC_', i)
     i = i+1
     print('Mean Iteration Duration:', (time.time() - start_t)/i, 's')
