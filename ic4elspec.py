@@ -9,7 +9,7 @@ import loadmat
 import pickle
 
 
-def ic(direc, file, iteration):
+def ic(direc, file, iteration, mixf = 0):
     #load content of last Elspec iteration
     f = direc + file + str(iteration)
     mat = loadmat.loadmat(f)
@@ -208,8 +208,8 @@ def ic(direc, file, iteration):
         break
         
     n_ic_ = np.array([r.y for r in res])
+    n_ic  = np.empty(n_ic_.shape)
 
-    mixf = 30
     print(mixf)
     if iteration == 0:
         for i in range(n_ic_.shape[2]):

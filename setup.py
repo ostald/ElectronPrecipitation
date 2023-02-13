@@ -32,9 +32,10 @@ pcfg = print_config()
 
 
 class setup:
-    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, no_timecode = False):
+    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf = 0, no_timecode = False):
         #self._directory = os.path.abspath('')
         self.no_timecode = no_timecode
+        self.mixf = mixf
         self._create_directory()
         self._copy_config(msis_config, iri_config, chemistry_config, path_eiscat_data)
      
@@ -49,7 +50,7 @@ class setup:
         if self.no_timecode == True:
             self._log_directory = 'log/testing/'
         else:
-            self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') +'/'
+            self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '_' + str(self.mixf) +'/'
             os.mkdir(self._log_directory)
         if not os.path.isdir('log/testing/'):
             os.mkdir('log/testing/')
