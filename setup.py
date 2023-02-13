@@ -50,7 +50,7 @@ class setup:
         if self.no_timecode == True:
             self._log_directory = 'log/testing/'
         else:
-            self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '_' + str(self.mixf) +'/'
+            self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + ' mixf=' + str(self.mixf) +'/'
             os.mkdir(self._log_directory)
         if not os.path.isdir('log/testing/'):
             os.mkdir('log/testing/')
