@@ -186,15 +186,16 @@ class ionChem:
             r_rate_string = r[2].replace('m3s-1', '')#.replace(' ', '')
             r_stoch = r[1][1:].replace('-', '')
 
-            print(r[1])
-            educts, products = r[1].split('=>')
+            #print(r[1])
+            educts, products = r_stoch.split('=>')
             educts = educts.split(' + ')
             educts = np.char.replace(educts, ' ', '')
         
             products = products.split(' + ')
             products = np.char.replace(products, ' ', '')
             if con.print: print(r_ID, r_rate_string, educts, products)
-            
+
+            #print(educts, products)
             self.all_reactions.append(reaction(self, r_ID, r_name, r_stoch, educts, products, r_rate_string, self.all_species))
             exec(f'self.{r_name} = self.all_reactions[-1]')
     

@@ -62,7 +62,10 @@ if True:
         z_model = con["h"]
 
         model = ionChem.ionChem(chemistry_config, z_model)
-
+        c_order = np.array([c.name.replace('+', 'p').replace('(', '_').replace(')', '') for c in model.all_species])
+        exec(f'{c_order} = np.zeros([18])')
+        print('e')
+        exit()
         for c in model.all_species:
             c.density = nN2 * 0
 
@@ -125,7 +128,7 @@ if True:
         prodMat = np.array([zerof for i in range(len(model.all_species))], dtype  = 'object')
 
         for i, c in enumerate(model.all_species):
-            print(c.name)
+            #print(c.name)
             if c.name == 'e':   prodMat[i] = e_prod_smooth
             if c.name == 'O+':  prodMat[i] = Op_prod_smooth
             if c.name == 'O+(4S)':  prodMat[i] = Op_prod_smooth
@@ -141,6 +144,7 @@ if True:
         for r in model.all_reactions:
             e = r.educts_ID
             p = r.products_ID
+            #print(e)
             ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, -1, *e])
             ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, -1, *e])
             ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 1, *e])
@@ -203,7 +207,7 @@ if True:
                 if c == model.O: plt.plot(ts, con["iri"][h, 5], label='ElSpec O ')
                 if c == model.NOp: plt.plot(ts, con["iri"][h, 7], label='ElSpec NOp')
                 if c == model.O2p: plt.plot(ts, con["iri"][h, 8], label='ElSpec O2p')
-                if c == model.Op: plt.plot(ts, con["iri"][h, 9], label='ElSpec Op ')
+                #if c == model.Op: plt.plot(ts, con["iri"][h, 9], label='ElSpec Op ')
                 plt.legend(loc=2)
                 plt.yscale('log')
                 plt.xlabel('Time [s]')
@@ -235,6 +239,7 @@ if True:
         eff_rr = (rrate.T[:, 0, :] * n_ic[:, 10, :] + \
                   rrate.T[:, 1, :] * n_ic[:, 4, :] + \
                   rrate.T[:, 2, :] * n_ic[:, 6, :]) / n_ic[:, 0, :]
+
 
         [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
         [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
