@@ -140,9 +140,7 @@ class ionChem:
                     start_consprint = line_no
                 if line[:11] == '--Reactions':
                     start_reactions = line_no
-                    
-            start_consprint = 5
-            start_reactions = 22
+
                     
             for line_no, line in enumerate(lines):
                 if line_no > start_consprint+1 and line == '': break
@@ -168,7 +166,7 @@ class ionChem:
         
         for c in species_str:
             self.all_species.append(constituent(c[1], c[0], int(c[2]), np.zeros(self.n_heights)))
-            name = c[0].replace('+', 'p')
+            name = c[0].replace('+', 'p').replace('(', '_').replace(')', '').replace('-', '')
             exec(f'self.{name} = self.all_species[-1]')
             
         for ind, c in enumerate(self.all_species):
@@ -186,9 +184,10 @@ class ionChem:
         for i, r in enumerate(reactions_str):
             r_ID = i
             r_name = r[0]
-            r_rate_string = r[2].replace('m3s-1', '')#.replace(' ', '')
+            r_rate_string = r[2].replace('m3s-1', '').replace('-', '')#.replace(' ', '')
             r_stoch = r[1][1:]
-            
+
+            #print(r[1])
             educts, products = r[1].split('=>')
             educts = educts.split(' + ')
             educts = np.char.replace(educts, ' ', '')
@@ -533,8 +532,7 @@ if con.print:
     
     import loadMSIS
     import loadIRI
-    get_ipython().run_line_magic('matplotlib', 'widget')
-    
+
     #load neutroal atmopshere model
     [z_msis
      , n_o1_msis

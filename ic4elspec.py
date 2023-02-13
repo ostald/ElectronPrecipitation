@@ -8,8 +8,7 @@ import loadMSIS
 import loadmat
 import pickle
 
-
-def ic(direc, file, iteration):
+def ic(direc, file, iteration, mixf = 0):
     #load content of last Elspec iteration
     f = direc + file + str(iteration)
     mat = loadmat.loadmat(f)
@@ -42,7 +41,7 @@ def ic(direc, file, iteration):
             prod_t = prod[i_max_ts]
             return prod_t
     
-    chemistry_config = 'Data/other/Reaction rates.txt'
+    chemistry_config = 'Data/other/Reaction rates full set.txt'
     z_model = con["h"]
     
     model = ionChem.ionChem(chemistry_config, z_model)
@@ -138,7 +137,17 @@ def ic(direc, file, iteration):
         except IndexError:
             print('This is a useless statement. It is necessary. ' +\
                   'It could be replaced with another statement. Do what you wish with this information.')
-        
+        if e[0] == p[0]: ode_mat[r.r_ID, e[0]] = 0
+        if e[1] == p[0]: ode_mat[r.r_ID, e[1]] = 0
+        try:
+            if e[0] == p[1]: ode_mat[r.r_ID, e[0]] = 0
+            if e[1] == p[1]: ode_mat[r.r_ID, e[1]] = 0
+        except IndexError: pass
+
+
+
+
+
     #2. produce raw DG from 1., excluding all terms that are 0 anyways.
     ode_raw = np.empty(len(model.all_species), dtype = 'object')
     for i in model.all_species:
@@ -208,16 +217,15 @@ def ic(direc, file, iteration):
         break
         
     n_ic_ = np.array([r.y for r in res])
+    n_ic  = np.empty(n_ic_.shape)
 
-    mixf = 30
     print(mixf)
     if iteration == 0:
         for i in range(n_ic_.shape[2]):
             n_ic[:, :, i] = (n_ic_[:, :, i] + mixf*n_ic_[:, :, 0])/(1+mixf)
     else:
         with open(direc + "IC_res_" + str(iteration-1) + '.pickle', 'rb') as pf:
-            res_old = pickle.load(pf)
-        n_ic_old = np.array([r.y for r in res_old])
+            [ts_old,z_old,n_ic_old, eff_rr_old]  = pickle.load(pf)
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
     
     eff_rr = (rrate.T[:, 0, :]*n_ic[:, 10, :] + \
@@ -237,7 +245,7 @@ def ic(direc, file, iteration):
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump(res, f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([ts,z_model,n_ic,eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
     
     d_effrr = con["alpha"] - eff_rr
     

@@ -5,7 +5,14 @@ function ElSpec_IC_iter(iter, log_dir)
 % matlab-usage. This test runs the ElSpec_iqt and ElSpec_qt functions
 % testing the outlier-resilience with Pearson-type 6 statistics for the
 % electron-density-estimates
+% Calling:
+%  ElSpec_IC_iter(iter, log_dir)
+% Input:
+%  iter - what is this, data-type and size?
+%  log_dir - what is this, data-type and size?
 
+
+%  
 %% 1, Setting up the matlab-path
 % Simply modify the path below to point to the directory where ELSPEC-2022
 % is installed. That should be it.
@@ -101,13 +108,14 @@ ErrType = 'l'; % L for Lorentzian.
 %  Outliers = OUTLIERS{i1};
 
 j = iter - 1;
-icdir = "../" + log_dir + "IC_" + j + ".mat";
-
+icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
+%icdir = "../" + log_dir + "IC_" + j + ".mat";
 icdata = load(icdir);
 iri_ic = icdata.elspec_iri_sorted;
 alpha_eff = icdata.eff_rr;
 
-Outname = sprintf("../" + log_dir + "ElSpec-iqt_IC_" + iter);
+Outname = fullfile("..", log_dir, ["ElSpec-iqt_IC_" + iter]);
+
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
@@ -127,7 +135,7 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'alpha_eff', alpha_eff);
   ElSpecPlot(ElSpecQT_iqtOutliers_L5)
   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
-  print('-depsc2', '-painters', [Outname,'IC_']);
+  print('-depsc2', '-painters', [Outname]);
   dstr = sprintf('Done with loop S i1: at %s',datestr(now,'HH:MM:SS'));
   disp(dstr)
   close(gcf)

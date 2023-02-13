@@ -49,10 +49,14 @@ def loadMSIS_new(file):
     n_n_msis     = data[:, 8]*1e6      #[number density in m^-3]
     
     number_density = np.sum(np.array([n_o1_msis, n_n2_msis, n_o2_msis]), 0)
-    mean_molecular_mass = mass_density/number_density
-    
-    avarage_molecular_mass = mass_density/number_density
-    
+
+    #reomve mean_molecular_mass and avarage_molecular_mass!!!
+    #mean_molecular_mass = mass_density/number_density
+    mean_molecular_mass = z_msis*0
+
+    #avarage_molecular_mass = mass_density/number_density
+    avarage_molecular_mass = z_msis*0
+
     #calculate scale height:
     global scale_height_msis
     scale_height_msis = _kb * temp_n_msis * (_re**2 + z_msis**2) / (avarage_molecular_mass * _g * _re**2)
