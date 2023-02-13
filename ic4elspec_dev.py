@@ -1,20 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Combining ionChem with ElSpec
-# ## Goal: run ELSpec, load produced output, run ionChem, feed produced output to ElSpec
-
-# In[3]:
-
-
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/'
-file = 'ElSpec-iqt_IC_'
-iteration = 0
-
-chemistry_config = 'Data/other/Reaction rates full set.txt'
-
-mixf = 0
-
 import scipy.io as spio
 from scipy.integrate import solve_ivp
 from scipy.interpolate import PchipInterpolator
@@ -25,6 +8,13 @@ import loadMSIS
 import loadmat
 import pickle
 
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/'
+file = 'ElSpec-iqt_IC_'
+iteration = 0
+
+chemistry_config = 'Data/other/Reaction rates full set.txt'
+
+mixf = 0
 
 if True:
         # load content of last Elspec iteration
@@ -62,10 +52,7 @@ if True:
         z_model = con["h"]
 
         model = ionChem.ionChem(chemistry_config, z_model)
-        c_order = np.array([c.name.replace('+', 'p').replace('(', '_').replace(')', '') for c in model.all_species])
-        exec(f'{c_order} = np.zeros([18])')
-        print('e')
-        exit()
+
         for c in model.all_species:
             c.density = nN2 * 0
 
@@ -89,11 +76,9 @@ if True:
 
         model.check_chargeNeutrality()
 
-        # assign production (unused?)
         for c in model.all_species:
             c.prod = e_prod * 0
 
-        # model.e.prod   = e_prod
         Op_prod = e_prod * 0.56 * model.O.density / \
                   (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
         O2p_prod = e_prod * 1.00 * model.O2.density / \
@@ -131,7 +116,7 @@ if True:
             #print(c.name)
             if c.name == 'e':   prodMat[i] = e_prod_smooth
             if c.name == 'O+':  prodMat[i] = Op_prod_smooth
-            if c.name == 'O+(4S)':  prodMat[i] = Op_prod_smooth
+            if c.name == 'O+(4S)':prodMat[i]=Op_prod_smooth
             if c.name == 'O2+': prodMat[i] = O2p_prod_smooth
             if c.name == 'N2+': prodMat[i] = N2p_prod_smooth
 
@@ -147,13 +132,20 @@ if True:
             #print(e)
             ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, -1, *e])
             ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, -1, *e])
-            ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 1, *e])
+            ode_mat[r.r_ID, p[0]] = np.array([r.r_ID,  1, *e])
             try:
                 ode_mat[r.r_ID, p[1]] = np.array([r.r_ID, 1, *e])
                 if p[1] == p[0]: ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 2, *e])
             except IndexError:
-                print('This is a useless statement. It is necessary. ' + \
-                      'It could be replaced with another statement. Do what you wish with this information.')
+                pass
+                #print('This is a useless statement. It is necessary. ' + \
+                #      'It could be replaced with another statement. Do what you wish with this information.')
+            if e[0] == p[0]: ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, 0, *e])
+            if e[1] == p[0]: ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, 0, *e])
+            try:
+                if e[0] == p[1]: ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, 0, *e])
+                if e[1] == p[1]: ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, 0, *e])
+            except: pass
 
         # 2. produce raw DG from 1., excluding all terms that are 0 anyways.
         ode_raw = np.empty(len(model.all_species), dtype='object')
@@ -236,14 +228,27 @@ if True:
             n_ic_old = np.array([r.y for r in res_old])
             n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
-        eff_rr = (rrate.T[:, 0, :] * n_ic[:, 10, :] + \
-                  rrate.T[:, 1, :] * n_ic[:, 4, :] + \
-                  rrate.T[:, 2, :] * n_ic[:, 6, :]) / n_ic[:, 0, :]
+        c_order = np.array([c.name for c in model.all_species])
+        order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
+        for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
+            print(c)
+            exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
+        #print(Op_4S)
+
+
+        eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
+                  rrate.T[:, 1, :] * n_ic[:, 3, :] + \
+                  rrate.T[:, 2, :] * n_ic[:, 3, :] + \
+                  rrate.T[:, 3, :] * n_ic[:, 6, :] + \
+                  rrate.T[:, 4, :] * n_ic[:, 6, :] + \
+                  rrate.T[:, 5, :] * n_ic[:, 8, :] + \
+                  rrate.T[:, 6, :] * n_ic[:, 8, :] + \
+                  rrate.T[:, 7, :] * n_ic[:, 8, :] )  / n_ic[:, 0, :]
 
 
         [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
-        [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
-        elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op]).swapaxes(0, 1)
+        #[e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
+        elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
         mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
         spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
@@ -267,7 +272,7 @@ if True:
                     'Eff Rec Rate and Difference from last Iteratrion.svg')
 
         h = 20
-        [re, rO, rOp, rO2, rO2p, rN, rNp, rN2, rN2p, rNO, rNOp, rH, rHp] = [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp,
+        [re, rO, rOp, rO2, rO2p, rN, rNp, rN2, rN2p, rNO, rNOp, rH, rHp] = [e, O, Op_4S, O2, O2p, N_4S, Np, N2, N2p, NO, NOp,
                                                                             H, Hp] / e
         plt.figure()
         plt.stackplot(ts, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
@@ -280,7 +285,7 @@ if True:
                     'Charged Species Stackplot at height index ' + str(h) + '.svg')
 
         # check charge nuetrality!!
-        sum_charged = np.sum(np.array([Op, O2p, Np, N2p, NOp, Hp]), axis=0)
+        sum_charged = np.sum(np.array([Op_4S,Op_2D,Op_2P, O2p_a4P, O2p, Np, N2p, NOp, Hp]), axis=0)
         r = np.abs(sum_charged - e)
         r.shape
         plt.figure()
