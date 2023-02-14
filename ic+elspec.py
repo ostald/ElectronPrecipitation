@@ -34,7 +34,7 @@ ic4elspec.ic(log_directory, 'ElSpec-iqt_IC_', i, mixf = mixf)
 i = 1
 print('First Iteration:', time.time() - start_t, 's')
 
-while True:
+while i<10:
     os.system(call_matlab + "\"ElSpec_IC_iter("+str(i)+", \\\""+log_directory+"\\\")\" -nodisplay")
     ic4elspec.ic(log_directory, 'ElSpec-iqt_IC_', i, mixf = mixf)
     i = i+1

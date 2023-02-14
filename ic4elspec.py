@@ -214,8 +214,7 @@ def ic(direc, file, iteration, mixf = 0):
             n_ic[:, :, i] = (n_ic_[:, :, i] + mixf * n_ic_[:, :, 0]) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-            res_old = pickle.load(pf)
-        n_ic_old = np.array([r.y for r in res_old])
+            [ts, z_model, n_ic_old, eff_rr_old] = pickle.load(pf)
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
     # c_order = np.array([c.name for c in model.all_species])
@@ -238,7 +237,7 @@ def ic(direc, file, iteration, mixf = 0):
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump(res, f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([ts, z_model, n_ic, eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
 
     d_effrr = con["alpha"] - eff_rr
 

@@ -185,6 +185,7 @@ class ionChem:
             r_name = r[0]
             r_rate_string = r[2].replace('m3s-1', '')#.replace(' ', '')
             r_stoch = r[1][1:].replace('-', '')
+            r_branching = r[3]
 
             #print(r[1])
             educts, products = r_stoch.split('=>')
