@@ -7,7 +7,7 @@ import setup
 #defining file paths
 msis_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/msis.rtf'
 iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri.txt'
-chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/Reaction rates.txt'
+chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/Reaction rates full set.txt'
 path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/Eiscat'
 
 mixf = 0

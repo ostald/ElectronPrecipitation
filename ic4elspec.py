@@ -44,7 +44,7 @@ def ic(direc, file, iteration, mixf = 0):
 
     z_model = con["h"]
 
-    chemistry_config = direc + 'Config/Reaction rates.txt'
+    chemistry_config = direc + 'Config/Reaction rates full set.txt'
     model = ionChem.ionChem(chemistry_config, z_model)
 
     for c in model.all_species:
@@ -72,11 +72,9 @@ def ic(direc, file, iteration, mixf = 0):
 
     model.check_chargeNeutrality()
 
-    # assign production (unused?)
     for c in model.all_species:
         c.prod = e_prod * 0
 
-    # model.e.prod   = e_prod
     Op_prod = e_prod * 0.56 * model.O.density / \
               (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
     O2p_prod = e_prod * 1.00 * model.O2.density / \
@@ -114,7 +112,7 @@ def ic(direc, file, iteration, mixf = 0):
         # print(c.name)
         if c.name == 'e':   prodMat[i] = e_prod_smooth
         if c.name == 'O+':  prodMat[i] = Op_prod_smooth
-        if c.name == 'O+(4S)':  prodMat[i] = Op_prod_smooth
+        if c.name == 'O+(4S)': prodMat[i] = Op_prod_smooth
         if c.name == 'O2+': prodMat[i] = O2p_prod_smooth
         if c.name == 'N2+': prodMat[i] = N2p_prod_smooth
 
@@ -124,24 +122,27 @@ def ic(direc, file, iteration, mixf = 0):
     rrate = np.array([np.array([r.r_rate_t(*t) for r in model.all_reactions]) for t in temp])
 
     for r in model.all_reactions:
-        e = r.educts_ID
-        p = r.products_ID
+        ed = r.educts_ID
+        pr = r.products_ID
+        br = r.branching
         # print(e)
-        ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, -1, *e])
-        ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, -1, *e])
-        ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 1, *e])
-        try:
-            ode_mat[r.r_ID, p[1]] = np.array([r.r_ID, 1, *e])
-            if p[1] == p[0]: ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 2, *e])
-        except IndexError:
-            print('This is a useless statement. It is necessary. ' + \
-                  'It could be replaced with another statement. Do what you wish with this information.')
+        for ed_i in ed:
+            ode_mat[r.r_ID, ed_i] = np.array([r.r_ID, -1, *ed])
+        for pr_i, bra in zip(pr, br):
+            ode_mat[r.r_ID, pr_i] = np.array([r.r_ID, +1 * bra, *ed])
+
+        for ed_i in ed:
+            for pr_i in pr:
+                if ed_i == pr_i: ode_mat[r.r_ID, ed_i] = 0
 
     # 2. produce raw DG from 1., excluding all terms that are 0 anyways.
     ode_raw = np.empty(len(model.all_species), dtype='object')
     for i in model.all_species:
         #    print(np.array([o for o in ode_mat[:, i.c_ID] if type(o)!= int]))
         ode_raw[i.c_ID] = np.array([o for o in ode_mat[:, i.c_ID] if type(o) != int])
+
+    def asint(arr):
+        return arr.astype(int)
 
     # 3. produce DG with only relevant terms
     def fun(t, n, h):
@@ -151,8 +152,8 @@ def ic(direc, file, iteration, mixf = 0):
             print(t)
             raise RuntimeError
 
-        dndt = np.array([np.sum(((rrate[k, ode_raw[i.c_ID][:, 0], h].T * ode_raw[i.c_ID][:, 1]).T \
-                                 * n[ode_raw[i.c_ID][:, 2]] * n[ode_raw[i.c_ID][:, 3]] \
+        dndt = np.array([np.sum(((rrate[k, asint(ode_raw[i.c_ID][:, 0]), h].T * ode_raw[i.c_ID][:, 1]).T \
+                                 * n[asint(ode_raw[i.c_ID][:, 2])] * n[asint(ode_raw[i.c_ID][:, 3])] \
                                  ), axis=0) \
                          + prodMat[i.c_ID](t)[h] \
                          for i in model.all_species])
@@ -214,22 +215,25 @@ def ic(direc, file, iteration, mixf = 0):
             n_ic[:, :, i] = (n_ic_[:, :, i] + mixf * n_ic_[:, :, 0]) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-            [ts, z_model, n_ic_old, eff_rr_old] = pickle.load(pf)
+            res_old = pickle.load(pf)
+        n_ic_old = np.array([r.y for r in res_old])
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
-    # c_order = np.array([c.name for c in model.all_species])
-    # order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
-    # for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
-    #     exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
-    # # print(Op_4S)
+    c_order = np.array([c.name for c in model.all_species])
+    order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
+    for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
+        print(c)
+        exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
+    # print(Op_4S)
 
-    eff_rr = (rrate.T[:, 0, :] * n_ic[:, 10, :] + \
-              rrate.T[:, 1, :] * n_ic[:, 4, :] + \
-              rrate.T[:, 2, :] * n_ic[:, 6, :]) / n_ic[:, 0, :]
+    eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
+              rrate.T[:, 1, :] * n_ic[:, 6, :] + \
+              rrate.T[:, 2, :] * n_ic[:, 8, :] + \
+              rrate.T[:, 3, :] * n_ic[:, 15, :]) / n_ic[:, 0, :]
 
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
-    [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
-    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op]).swapaxes(0, 1)
+    # [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
+    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
@@ -237,7 +241,7 @@ def ic(direc, file, iteration, mixf = 0):
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump([ts, z_model, n_ic, eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(res, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     d_effrr = con["alpha"] - eff_rr
 
@@ -253,7 +257,8 @@ def ic(direc, file, iteration, mixf = 0):
                 'Eff Rec Rate and Difference from last Iteratrion.svg')
 
     h = 20
-    [re, rO, rOp, rO2, rO2p, rN, rNp, rN2, rN2p, rNO, rNOp, rH, rHp] = [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp,
+    [re, rO, rOp, rO2, rO2p, rN, rNp, rN2, rN2p, rNO, rNOp, rH, rHp] = [e, O, Op_4S, O2, O2p, N_4S, Np, N2, N2p, NO,
+                                                                        NOp,
                                                                         H, Hp] / e
     plt.figure()
     plt.stackplot(ts, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
@@ -266,7 +271,7 @@ def ic(direc, file, iteration, mixf = 0):
                 'Charged Species Stackplot at height index ' + str(h) + '.svg')
 
     # check charge nuetrality!!
-    sum_charged = np.sum(np.array([Op, O2p, Np, N2p, NOp, Hp]), axis=0)
+    sum_charged = np.sum(np.array([Op_4S, Op_2D, Op_2P, O2p_a4P, O2p, Np, N2p, NOp, Hp]), axis=0)
     r = np.abs(sum_charged - e)
     r.shape
     plt.figure()

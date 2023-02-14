@@ -6,7 +6,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.13_17_54_55 mixf=0/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.13_19_19_14 mixf=0/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/' +
@@ -16,7 +16,7 @@ h = 20
 species = 10
 spstr = ['e','O','Op','O2','O2p','N','Np','N2','N2p','NO','NOp','H','Hp']
 
-nax = 9
+nax = 3
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'

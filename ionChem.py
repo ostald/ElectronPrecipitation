@@ -74,7 +74,7 @@ class reaction():
     r_rate: evaluates the reaction rate at a given temperature T
         float
     """    
-    def __init__(self, ionChem_inst, r_ID,  r_name, r_stoch, educts, products, r_rate_string, all_species):
+    def __init__(self, ionChem_inst, r_ID,  r_name, r_stoch, educts, products, r_rate_string, all_species, branching):
         self.r_ID = int(r_ID)
         self.r_name = r_name
         self.r_stoch = r_stoch
@@ -82,9 +82,11 @@ class reaction():
         self.educts_ID = ionChem_inst.getConstituentsIDByName(self.educts)
         self.products = products
         self.products_ID = ionChem_inst.getConstituentsIDByName(self.products)
+        try: self.branching = np.array(branching, dtype = float)
+        except ValueError: self.branching = np.array([1])
         self.r_rate_string = r_rate_string
         self.ionChem_inst = ionChem_inst
-        
+
     def r_rate(self):
         Te = self.ionChem_inst.Te
         Tn = self.ionChem_inst.Tn
@@ -162,7 +164,7 @@ class ionChem:
         reactions_str = np.array([r.replace('\t', '').split(';') for r in reactions_raw], dtype = object)
         if con.print: print(reactions_raw)
         if con.print: print(reactions_str)
-        
+
         for c in species_str:
             self.all_species.append(constituent(c[1], c[0], int(c[2]), np.zeros(self.n_heights)))
             name = c[0].replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
@@ -185,9 +187,8 @@ class ionChem:
             r_name = r[0]
             r_rate_string = r[2].replace('m3s-1', '')#.replace(' ', '')
             r_stoch = r[1][1:].replace('-', '')
-            r_branching = r[3]
+            r_branching = np.array(r[3].split(','))
 
-            #print(r[1])
             educts, products = r_stoch.split('=>')
             educts = educts.split(' + ')
             educts = np.char.replace(educts, ' ', '')
@@ -197,7 +198,7 @@ class ionChem:
             if con.print: print(r_ID, r_rate_string, educts, products)
 
             #print(educts, products)
-            self.all_reactions.append(reaction(self, r_ID, r_name, r_stoch, educts, products, r_rate_string, self.all_species))
+            self.all_reactions.append(reaction(self, r_ID, r_name, r_stoch, educts, products, r_rate_string, self.all_species, r_branching))
             exec(f'self.{r_name} = self.all_reactions[-1]')
     
     

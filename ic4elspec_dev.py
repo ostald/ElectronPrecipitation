@@ -127,31 +127,28 @@ if True:
         rrate = np.array([np.array([r.r_rate_t(*t) for r in model.all_reactions]) for t in temp])
 
         for r in model.all_reactions:
-            e = r.educts_ID
-            p = r.products_ID
+            ed = r.educts_ID
+            pr = r.products_ID
+            br = r.branching
             #print(e)
-            ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, -1, *e])
-            ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, -1, *e])
-            ode_mat[r.r_ID, p[0]] = np.array([r.r_ID,  1, *e])
-            try:
-                ode_mat[r.r_ID, p[1]] = np.array([r.r_ID, 1, *e])
-                if p[1] == p[0]: ode_mat[r.r_ID, p[0]] = np.array([r.r_ID, 2, *e])
-            except IndexError:
-                pass
-                #print('This is a useless statement. It is necessary. ' + \
-                #      'It could be replaced with another statement. Do what you wish with this information.')
-            if e[0] == p[0]: ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, 0, *e])
-            if e[1] == p[0]: ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, 0, *e])
-            try:
-                if e[0] == p[1]: ode_mat[r.r_ID, e[0]] = np.array([r.r_ID, 0, *e])
-                if e[1] == p[1]: ode_mat[r.r_ID, e[1]] = np.array([r.r_ID, 0, *e])
-            except: pass
+            for ed_i in ed:
+                ode_mat[r.r_ID, ed_i] = np.array([r.r_ID, -1, *ed])
+            for pr_i, bra in zip(pr, br):
+                ode_mat[r.r_ID, pr_i] = np.array([r.r_ID, +1*bra, *ed])
+
+            for ed_i in ed:
+                for pr_i in pr:
+                    if ed_i == pr_i: ode_mat[r.r_ID, ed_i] = 0
+
 
         # 2. produce raw DG from 1., excluding all terms that are 0 anyways.
         ode_raw = np.empty(len(model.all_species), dtype='object')
         for i in model.all_species:
             #    print(np.array([o for o in ode_mat[:, i.c_ID] if type(o)!= int]))
             ode_raw[i.c_ID] = np.array([o for o in ode_mat[:, i.c_ID] if type(o) != int])
+
+        def asint(arr):
+            return arr.astype(int)
 
         # 3. produce DG with only relevant terms
         def fun(t, n, h):
@@ -161,8 +158,8 @@ if True:
                 print(t)
                 raise RuntimeError
 
-            dndt = np.array([np.sum(((rrate[k, ode_raw[i.c_ID][:, 0], h].T * ode_raw[i.c_ID][:, 1]).T \
-                                     * n[ode_raw[i.c_ID][:, 2]] * n[ode_raw[i.c_ID][:, 3]] \
+            dndt = np.array([np.sum(((rrate[k, asint(ode_raw[i.c_ID][:, 0]), h].T * ode_raw[i.c_ID][:, 1]).T \
+                                     * n[asint(ode_raw[i.c_ID][:, 2])] * n[asint(ode_raw[i.c_ID][:, 3])] \
                                      ), axis=0) \
                              + prodMat[i.c_ID](t)[h] \
                              for i in model.all_species])
@@ -232,18 +229,14 @@ if True:
         order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
         for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
             print(c)
-            exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
-        #print(Op_4S)
+            exec(f"global {c}; {c} = n")
+
 
 
         eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
-                  rrate.T[:, 1, :] * n_ic[:, 3, :] + \
-                  rrate.T[:, 2, :] * n_ic[:, 3, :] + \
-                  rrate.T[:, 3, :] * n_ic[:, 6, :] + \
-                  rrate.T[:, 4, :] * n_ic[:, 6, :] + \
-                  rrate.T[:, 5, :] * n_ic[:, 8, :] + \
-                  rrate.T[:, 6, :] * n_ic[:, 8, :] + \
-                  rrate.T[:, 7, :] * n_ic[:, 8, :] )  / n_ic[:, 0, :]
+                  rrate.T[:, 1, :] * n_ic[:, 6, :] + \
+                  rrate.T[:, 2, :] * n_ic[:, 8, :] + \
+                  rrate.T[:, 3, :] * n_ic[:, 15, :]   )  / n_ic[:, 0, :]
 
 
         [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
