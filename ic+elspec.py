@@ -10,7 +10,7 @@ iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri
 chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/Reaction rates full set.txt'
 path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/Eiscat'
 
-mixf = 0
+mixf = 1
 
 #setup log directory
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf = mixf)#, no_timecode=True)
