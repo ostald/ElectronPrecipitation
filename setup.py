@@ -47,32 +47,35 @@ class setup:
         """
         self._today = datetime.now()
         #self._log_directory = self._directory + '/log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S')
+        if not os.path.isdir('log/testing/'):
+            os.mkdir('log/testing/')
         if self.no_timecode == True:
             self._log_directory = 'log/testing/'
         else:
             self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + ' mixf=' + str(self.mixf) +'/'
             os.mkdir(self._log_directory)
-        if not os.path.isdir('log/testing/'):
-            os.mkdir('log/testing/')
-        os.mkdir(self._log_directory + '/Simulation')
-        os.mkdir(self._log_directory + '/plots')
+        if not os.path.isdir( self._log_directory + 'Simulation/'):
+            os.mkdir(self._log_directory + '/Simulation')
+        if not os.path.isdir( self._log_directory + 'plots/'):
+            os.mkdir(self._log_directory + '/plots')
 
     def _copy_config(self, msis_config, iri_config, chemistry_config, path_eiscat_data):
         """
         Copies all configuration files into the log folder
         """
-        os.mkdir(self._log_directory + '/Config')
-        copy(msis_config, self._log_directory + '/Config')
-        copy(iri_config, self._log_directory + '/Config')
-        copy(chemistry_config, self._log_directory + '/Config')
-        with open(self._log_directory + '/Config/path_to_eiscat_data.txt', 'w') as f:
+        if not os.path.isdir( self._log_directory + 'Config/'):
+            os.mkdir(self._log_directory + 'Config')
+        copy(msis_config, self._log_directory + 'Config')
+        copy(iri_config, self._log_directory + 'Config')
+        copy(chemistry_config, self._log_directory + 'Config')
+        with open(self._log_directory + 'Config/path_to_eiscat_data.txt', 'w') as f:
             f.write(path_eiscat_data)
             
     def datadump(self, data):
         '''
         Dumps log data into the log file
         '''
-        with open(self._log_directory + '/Simulation/log.p', 'ab') as f:
+        with open(self._log_directory + 'Simulation/log.p', 'ab') as f:
             pickle.dump(data, f)
 
 

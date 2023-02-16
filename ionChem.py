@@ -363,8 +363,8 @@ class ionChem:
         checks charge neutrality by adding up all charge densities, and checking if it balances to 0.
         The charge density is divided by the density for normalization.
         """
-        total_charge_density = np.zeros(len(self.all_species[0].density))
-        density_cc = np.zeros(len(self.all_species[0].density)) 
+        total_charge_density = np.zeros(self.all_species[0].density.shape)
+        density_cc = np.zeros(self.all_species[0].density.shape)
         for c in self.all_species:
             if c.charge != 0:
                 total_charge_density += c.density * c.charge

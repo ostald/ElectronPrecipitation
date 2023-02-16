@@ -9,7 +9,7 @@ import loadmat
 import pickle
 
 
-def ic(direc, file, iteration, mixf = 0):
+def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # load content of last Elspec iteration
     f = direc + file + str(iteration)
     mat = loadmat.loadmat(f)
@@ -17,14 +17,18 @@ def ic(direc, file, iteration, mixf = 0):
 
     ne = con["ne"]
     n_model = con["iri"]
-    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model[:, :, 0].T
-    [nNOp, nO2p, nOp] = n_model[:, 7:, 0].T / np.sum(n_model[:, 7:, 0], axis=1) * ne[:, 0]
+    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] =  n_model.swapaxes(0, 1)
+    #normalise charged species to fit electron density
+    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
-    temp = n_model[:, :3, :].T
     # setting start time [0] to 0:
     ts = con["ts"] - con["ts"][0]
     te = con["te"] - con["ts"][0]
-    e_prod = con["q"].T
+    e_prod = con["q"]
+    z_model = con["h"]
+
+    ts_ = ts
+    ts[0] = -30*60
 
     def stepped_prod_t(prod, t):
         """
@@ -39,12 +43,9 @@ def ic(direc, file, iteration, mixf = 0):
             return 0
         else:
             i_max_ts = len(ts[ts <= t]) - 1
-            prod_t = prod[i_max_ts]
+            prod_t = prod[:, i_max_ts]
             return prod_t
 
-    z_model = con["h"]
-
-    chemistry_config = direc + 'Config/Reaction rates full set.txt'
     model = ionChem.ionChem(chemistry_config, z_model)
 
     for c in model.all_species:
@@ -63,14 +64,12 @@ def ic(direc, file, iteration, mixf = 0):
 
     msis_model = loadMSIS.loadMSIS_new('Data/other/msis.rtf')
     nH = msis_model[4]
-    # model.H.density = model.Op.density * 0
-    model.H.density = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(con["h"]))
+    nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
+    model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
-    #    model.e.density = np.sum([nNOp,nO2p,nOp,model.N2p.density], axis = 0)
+    model.e.density = ne
 
-    model.e.density = con["ne"][:, 0]
-
-    model.check_chargeNeutrality()
+    #model.check_chargeNeutrality()
 
     for c in model.all_species:
         c.prod = e_prod * 0
@@ -119,7 +118,7 @@ def ic(direc, file, iteration, mixf = 0):
     # new way to do ionospheric chemistry
     # 1. take all info from reaction (reaction rate, constituents)
     ode_mat = np.zeros((len(model.all_reactions), len(model.all_species)), dtype='object')
-    rrate = np.array([np.array([r.r_rate_t(*t) for r in model.all_reactions]) for t in temp])
+    rrate = np.array([np.array([r.r_rate_t(*t) for r in model.all_reactions]) for t in zip(Tn.T, Ti.T, Te.T)])
 
     for r in model.all_reactions:
         ed = r.educts_ID
@@ -163,9 +162,9 @@ def ic(direc, file, iteration, mixf = 0):
         res = np.empty(model.n_heights, dtype='object')
 
         for h in range(model.n_heights):
-            n = np.array([c.density[h] for c in model.all_species])
+            n = np.array([c.density[h, 0] for c in model.all_species])
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                               t_eval=ts, max_step=0.0444)
+                               t_eval=ts_, max_step=0.0444)
         #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
         #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
         # for j, c in enumerate(model.all_species):
@@ -197,7 +196,7 @@ def ic(direc, file, iteration, mixf = 0):
             plt.ylabel('Density [m-3]')
             plt.title(c.name + ' Density')
             ax2 = plt.gca().twinx()
-            ax2.plot(ts, e_prod[:, 0], '.', color='green', label='q_e')
+            ax2.plot(ts, e_prod[h, :], '.', color='green', label='q_e')
             ax2.set_yscale('log')
             ax2.legend(loc=1)
             ax2.set_ylabel('Electron production [m-3s-1]')

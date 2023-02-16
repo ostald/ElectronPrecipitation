@@ -6,7 +6,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.14_15_28_17 mixf=1/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/' +
@@ -14,9 +14,12 @@ elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/l
 z = elspec_0["h"]
 h = 20
 species = 10
-spstr = ['e','O','Op','O2','O2p','N','Np','N2','N2p','NO','NOp','H','Hp']
+#spstr = ['e','O','Op','O2','O2p','N','Np','N2','N2p','NO','NOp','H','Hp']
+spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N_2D','N_4S','O2p_a4P','Op_2D', \
+         'Op_4S','Op_2P']
 
-nax = 3
+
+nax = 5
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
@@ -24,10 +27,10 @@ for i, f in enumerate(files[:nax**2]):
     with open(f, 'rb') as pf:
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
         #[ts, n_ic] = pickle.load(pf)
-    [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = n_ic.swapaxes(0, 1)
-    [re,rO,rOp,rO2,rO2p,rN,rNp,rN2,rN2p,rNO,rNOp,rH,rHp] = [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp]/e
-    axs.flat[i].stackplot(ts, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h],
-                 labels=['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+'])
+    [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
+     Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1) / n_ic.swapaxes(0, 1)[0]
+    axs.flat[i].stackplot(ts, O2p[h], Np[h], N2p[h], NOp[h], Hp[h], O2p_a4P[h], Op_2D[h], Op_4S[h], Op_2P[h],
+                 labels=['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+', 'O2p_a4P', 'Op_2D', 'Op_4S', 'Op_2P'])
     axs.flat[i].set_title('Iteration ' + str(i))
 fig.supxlabel('Time [s]')
 fig.supylabel('Ratio of Charged Species')
@@ -40,7 +43,8 @@ for i, f in enumerate(files[:nax**2]):
     with open(f, 'rb') as pf:
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
         #[ts, n_ic] = pickle.load(pf)
-    [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = n_ic.swapaxes(0, 1)
+    [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
+     Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
     line = plt.plot(ts, n_ic.swapaxes(0, 1)[species][h], alpha=0.05, color='black', figure = fig4)
     plt.text(ts[-1], n_ic.swapaxes(0, 1)[species][h, -1], 'it'+str(i), color=line[0].get_color())
 plt.yscale('log')
@@ -67,7 +71,7 @@ for i, f in enumerate(files[:nax**2]):
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
         #[ts, n_ic] = pickle.load(pf)
     den = n_ic.swapaxes(0, 1)[species]
-    pc = axs31.flat[i].pcolormesh(ts, z, den, norm= mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+    pc = axs31.flat[i].pcolormesh(ts, z, den, norm= mpl.colors.LogNorm(vmax=vmax))
     axs31.flat[i].set_title('Iteration ' + str(i))
 
 fig31.suptitle('Number Density of ' + spstr[species])
@@ -82,7 +86,8 @@ for i, f in enumerate(files[:nax**2]):
     with open(f, 'rb') as pf:
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
         #[ts, n_ic] = pickle.load(pf)
-    [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = n_ic.swapaxes(0, 1)
+    [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
+     Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
     ratioO2pNOp = O2p/NOp
     line = plt.plot(ts, ratioO2pNOp[h], alpha=0.1, color='black', figure = fig2)
     plt.text(ts[-1], ratioO2pNOp[h, -1], 'it'+str(i), color=line[0].get_color())
@@ -98,7 +103,8 @@ for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     with open(f, 'rb') as pf:
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
-        [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
+        [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
+         Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
         ratioO2pNOp = O2p / NOp
         ma = np.max(ratioO2pNOp)
         if ma > vmax: vmax = ma
@@ -110,7 +116,8 @@ for i, f in enumerate(files[:nax**2]):
     with open(f, 'rb') as pf:
         [ts, z, n_ic, eff_rr] = pickle.load(pf)
         #[ts, n_ic] = pickle.load(pf)
-    [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = n_ic.swapaxes(0, 1)
+    [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
+     Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
     ratioO2pNOp = O2p/NOp
     pc = axs3.flat[i].pcolormesh(ts, z, ratioO2pNOp, norm= mpl.colors.Normalize(vmin=vmin, vmax=vmax))
     axs3.flat[i].set_title('Iteration ' + str(i))
@@ -189,8 +196,6 @@ fig5.suptitle('Eff. Rec. Rate [m3s-1]')
 fig5.supylabel('Altitude [km]')
 fig5.supxlabel('Time [s]')
 plt.colorbar(pc5, ax=axs5)
-plt.show()
-exit()
 
 fig6, axs6 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 vmin = 0
