@@ -14,6 +14,8 @@ iteration = 0
 
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 
+mixf = 0
+
 if True:
     # load content of last Elspec iteration
     f = direc + file + str(iteration)
@@ -32,8 +34,9 @@ if True:
     e_prod = con["q"]
     z_model = con["h"]
 
-    ts_ = np.copy(ts)
-    ts[0] = -30 * 6
+    ts_elspec = np.copy(ts)
+    ts[0] = -30 * 60
+    ts_ = np.arange(ts[0], te[-1], 0.1)
 
 
     def stepped_prod_t(prod, t):
@@ -175,9 +178,11 @@ if True:
 
         for h in range(model.n_heights):
             n = np.array([c.density[h, 0] for c in model.all_species])
-            res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
+            res[h] = solve_ivp(fun, (ts_[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
                                t_eval=ts_, max_step=0.0444)
-            print(res[h])
+            if res[h].status != 0:
+                print(res[h])
+                breakpoint()
         #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
         #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
         # for j, c in enumerate(model.all_species):
@@ -189,6 +194,9 @@ if True:
 
 
     res = ic()
+    savedir = direc + "res" + str(iteration) + '.pickle'
+    with open(savedir, "wb") as f:
+        pickle.dump([ts, res], f, protocol=pickle.HIGHEST_PROTOCOL)
 
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
@@ -197,24 +205,24 @@ if True:
         for c in model.all_species:
             plt.figure()
             plt.plot(i.t, i.y[c.c_ID, :], label=c.name)
-            if c == model.e: plt.plot(ts_, con["ne"][h, :], label='ElSpec ne')
-            if c == model.N2: plt.plot(ts_, con["iri"][h, 3], label='ElSpec N2')
-            if c == model.O2: plt.plot(ts_, con["iri"][h, 4], label='ElSpec O2')
-            if c == model.O: plt.plot(ts_, con["iri"][h, 5], label='ElSpec O ')
-            if c == model.NOp: plt.plot(ts_, con["iri"][h, 7], label='ElSpec NOp')
-            if c == model.O2p: plt.plot(ts_, con["iri"][h, 8], label='ElSpec O2p')
-            # if c == model.Op: plt.plot(ts_, con["iri"][h, 9], label='ElSpec Op ')
+            if c == model.e: plt.plot(ts_elspec, con["ne"][h, :], label='ElSpec ne')
+            if c == model.N2: plt.plot(ts_elspec, con["iri"][h, 3], label='ElSpec N2')
+            if c == model.O2: plt.plot(ts_elspec, con["iri"][h, 4], label='ElSpec O2')
+            if c == model.O: plt.plot(ts_elspec, con["iri"][h, 5], label='ElSpec O ')
+            if c == model.NOp: plt.plot(ts_elspec, con["iri"][h, 7], label='ElSpec NOp')
+            if c == model.O2p: plt.plot(ts_elspec, con["iri"][h, 8], label='ElSpec O2p')
+            # if c == model.Op: plt.plot(ts_elspec, con["iri"][h, 9], label='ElSpec Op ')
             plt.legend(loc=2)
             plt.yscale('log')
             plt.xlabel('Time [s]')
             plt.ylabel('Density [m-3]')
             plt.title(c.name + ' Density')
             ax2 = plt.gca().twinx()
-            ax2.plot(ts_, e_prod[h, :], '.', color='green', label='q_e')
+            ax2.plot(ts_elspec, e_prod[h, :], '.', color='green', label='q_e')
             ax2.set_yscale('log')
             ax2.legend(loc=1)
             ax2.set_ylabel('Electron production [m-3s-1]')
-            # for t in ts_: plt.axvline(t, alpha = 0.1)
+            # for t in ts_elspec: plt.axvline(t, alpha = 0.1)
 
             plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
         break
@@ -228,7 +236,7 @@ if True:
             n_ic[:, :, i] = (n_ic_[:, :, i] + mixf * n_ic_[:, :, 0]) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-            [ts_, z, n_ic_old, eff_rr_old] = pickle.load(pf)
+            [ts_elspec, z, n_ic_old, eff_rr_old] = pickle.load(pf)
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
     c_order = np.array([c.name for c in model.all_species])
@@ -253,13 +261,13 @@ if True:
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump([ts_, z_model, n_ic, eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([ts_elspec, z_model, n_ic, eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
 
     d_effrr = con["alpha"] - eff_rr
 
     plt.figure()
-    plt.plot(ts_, np.abs(d_effrr[0, :]), label='d_alpha')
-    plt.plot(ts_, eff_rr[0, :], label='alpha')
+    plt.plot(ts_elspec, np.abs(d_effrr[0, :]), label='d_alpha')
+    plt.plot(ts_elspec, eff_rr[0, :], label='alpha')
     plt.xlabel('Time [s]')
     plt.ylabel('Eff. Recombination Rate [m3s-1]')
     plt.yscale('log')
@@ -273,7 +281,7 @@ if True:
                                                                         NOp,
                                                                         H, Hp] / e
     plt.figure()
-    plt.stackplot(ts_, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
+    plt.stackplot(ts_elspec, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
                   labels=['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+'])
     plt.xlabel('Time [s]')
     plt.ylabel('Ratio of Charged Species')
@@ -287,7 +295,7 @@ if True:
     r = np.abs(sum_charged - e)
     r.shape
     plt.figure()
-    pm = plt.pcolor(ts_, z_model, r / e)
+    pm = plt.pcolor(ts_elspec, z_model, r / e)
     plt.gcf().colorbar(pm)
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
@@ -296,7 +304,7 @@ if True:
                 'Relative Charge imabalance.svg')
 
     plt.figure()
-    pc = plt.pcolor(ts_, z_model, eff_rr, label='alpha')
+    pc = plt.pcolor(ts_elspec, z_model, eff_rr, label='alpha')
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
     plt.legend()
@@ -308,7 +316,7 @@ if True:
 
     import matplotlib as mpl
     plt.figure()
-    pc = plt.pcolor(ts_, z_model, d_effrr, norm=mpl.colors.CenteredNorm(),
+    pc = plt.pcolor(ts_elspec, z_model, d_effrr, norm=mpl.colors.CenteredNorm(),
                     label='alpha', cmap='RdBu')
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')

@@ -32,7 +32,7 @@ pcfg = print_config()
 
 
 class setup:
-    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf = 0, no_timecode = False):
+    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode = False):
         #self._directory = os.path.abspath('')
         self.no_timecode = no_timecode
         self.mixf = mixf
