@@ -6,7 +6,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_17_58_37 mixf=0/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_21_45_58 mixf=1/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/' +
@@ -248,14 +248,51 @@ for i, f in enumerate(matfiles[:nax**2]):
     Ie = elspec["Ie"]
     egrid = elspec["egrid"]
     axs7.flat[i].set_title('Iteration ' + str(i))
-    pc7 = axs7.flat[i].pcolor(ts, egrid[:-1]/1e3, Ie, norm= mpl.colors.LogNorm(vmin = 1e5, vmax=vmax))
+    pc7 = axs7.flat[i].pcolormesh(ts, egrid[:-1]/1e3, Ie, norm= mpl.colors.LogNorm(vmin = 1e5, vmax=vmax))
     axs7.flat[i].set_yscale('log')
+    axs7.flat[i].set_ylim(1, 100)
 
 fig7.suptitle('Electron Energy Spectrum')
 fig7.supylabel('Altitude [km]')
 fig7.supxlabel('Time [s]')
 plt.colorbar(pc7, ax=axs7)
+
+
+fig8, axs8 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
+vmin = 0
+vmax = 0
+matfiles = glob.glob(direc + 'ElSpec*.mat')
+for i, f in enumerate(matfiles[:nax**2]):
+    f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
+    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    ts = elspec["ts"]
+    Ie = elspec["Ie"]
+    ma = np.max(Ie)
+    if ma > vmax: vmax = ma
+    mi = np.min(Ie)
+    if mi > vmin: vmin = mi
+
+for i, f in enumerate(matfiles[:nax**2]):
+    f0 = direc + 'ElSpec-iqt_IC_0.mat'
+    elspec0 = loadmat.loadmat(f0)["ElSpecOut"]
+    Ie0 = elspec0["Ie"]
+
+    f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
+    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    ts = elspec["ts"]
+    Ie = elspec["Ie"]
+    egrid = elspec["egrid"]
+    axs8.flat[i].set_title('Iteration ' + str(i))
+    pc8 = axs8.flat[i].pcolormesh(ts, egrid[:-1]/1e3, ((Ie0-Ie)))#, norm= mpl.colors.LogNorm())#vmin = 1, vmax = 10e10))
+    axs8.flat[i].set_yscale('log')
+    axs8.flat[i].set_ylim(1, 100)
+
+fig8.suptitle(' Difference in Electron Energy Spectrum to constant Ionospheric composotion')
+fig8.supylabel('Altitude [km]')
+fig8.supxlabel('Time [s]')
+plt.colorbar(pc8, ax=axs8)
 plt.show()
+
 
 
 """

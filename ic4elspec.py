@@ -28,7 +28,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     z_model = con["h"]
 
     ts_ = np.copy(ts)
-    ts[0] = -30*60
+    #ts[0] = -30*60
 
     def stepped_prod_t(prod, t):
         """
