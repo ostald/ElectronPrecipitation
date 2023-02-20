@@ -17,7 +17,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
     ne = con["ne"]
     n_model = con["iri"]
-    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] =  n_model.swapaxes(0, 1)
+    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     #normalise charged species to fit electron density
     [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
