@@ -118,8 +118,8 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...
                                        'Outfilename',Outname);
   ElSpecPlot(ElSpecQT_iqtOutliers_L5);
   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
-  print('-depsc2', '-painters', [Outname]);
-  print('-dpdf', '-painters', [Outname]);
+  print('-dsvg', '-painters', [Outname]);
+  print('-dsvg', '-painters', [Outname]);
   dstr = sprintf('Done with loop S i1: at %s',datestr(now,'HH:MM:SS'));
   disp(dstr);
   close(gcf);

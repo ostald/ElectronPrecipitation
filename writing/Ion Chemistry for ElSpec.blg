@@ -1,0 +1,15 @@
+[0] Config.pm:311> INFO - This is Biber 2.16
+[0] Config.pm:314> INFO - Logfile is 'Ion Chemistry for ElSpec.blg'
+[53] biber-darwin:340> INFO - === Fri Feb 24, 2023, 14:39:51
+[65] Biber.pm:415> INFO - Reading 'Ion Chemistry for ElSpec.bcf'
+[135] Biber.pm:952> INFO - Found 4 citekeys in bib section 0
+[147] Biber.pm:4340> INFO - Processing section 0
+[155] Biber.pm:4531> INFO - Looking for bibtex format file 'My Library.bib' for section 0
+[181] bibtex.pm:1689> INFO - LaTeX decoding ...
+[504] bibtex.pm:1494> INFO - Found BibTeX data source 'My Library.bib'
+[579] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[579] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[579] Biber.pm:4168> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[579] Biber.pm:4174> INFO - No sort tailoring available for locale 'en-US'
+[586] bbl.pm:654> INFO - Writing 'Ion Chemistry for ElSpec.bbl' with encoding 'UTF-8'
+[590] bbl.pm:757> INFO - Output to Ion Chemistry for ElSpec.bbl

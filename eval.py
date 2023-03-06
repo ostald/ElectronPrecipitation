@@ -6,11 +6,15 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_17_58_37 mixf=0/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_21_45_58 mixf=1/'
 files = glob.glob(direc + '*.pickle')
+print(sorted(files))
 
 elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/' +
                            'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
+
+matfiles = glob.glob(direc + 'ElSpec*.mat')
+
 z = elspec_0["h"]
 h = 20
 species = 10
@@ -19,7 +23,7 @@ spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N
          'Op_4S','Op_2P']
 
 
-nax = 4
+nax = 9
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
@@ -128,8 +132,11 @@ fig3.supxlabel('Time [s]')
 plt.colorbar(pc, ax = axs3)
 
 
+
 fig4, axs4 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 pc4 = np.empty(len(files), dtype = 'object')
+fig,ax = plt.subplots()
+
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     with open(f, 'rb') as pf:
@@ -143,15 +150,25 @@ for i, f in enumerate(files[:nax**2]):
     pc4 = axs4.flat[i].pcolor(ts, z, d_effrr, norm=mpl.colors.CenteredNorm(),
                     label='alpha', cmap='RdBu')
     fig4.colorbar(pc4, ax=axs4.flat[i])
+    ax.plot(i, np.sum(np.abs(d_effrr.flat)), 'x', color = 'black')
+    print(np.sum(np.abs(d_effrr.flat)))
+
 
 fig4.suptitle('Deviation from previous eff. rec. rate [m3s-1]')
 fig4.supylabel('Altitude [km]')
 fig4.supxlabel('Time [s]')
 #plt.colorbar(pc4, ax=axs4)
+ax.set_ylabel(r"Sum of Deviations in $\alpha_{eff}$")
+ax.set_xlabel("Iteration")
+ax.set_yscale('log')
+
+
 
 
 fig41, axs41 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 pc41 = np.empty(len(files), dtype = 'object')
+fig,ax = plt.subplots()
+
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     with open(f, 'rb') as pf:
@@ -165,12 +182,19 @@ for i, f in enumerate(files[:nax**2]):
     pc41 = axs41.flat[i].pcolor(ts, z, d_effrr_r, norm=mpl.colors.CenteredNorm(),
                     label='alpha', cmap='RdBu')
     fig41.colorbar(pc41, ax=axs41.flat[i])
+    ax.plot(i, np.sum(np.abs(d_effrr_r.flat))/len(d_effrr_r.flat), 'x', color = 'black', label = 'Mean')
+    ax.plot(i, np.max(np.abs(d_effrr_r.flat)), 'x', color = 'blue', label = 'Max')
+    if i == 0: ax.legend()
 
 fig41.suptitle('Relative Deviation from previous eff. rec. rate [m3s-1]')
 fig41.supylabel('Altitude [km]')
 fig41.supxlabel('Time [s]')
 #plt.colorbar(pc4, ax=axs4)
-
+ax.set_ylabel(r"Deviation in $\alpha_{eff}$")
+ax.set_xlabel("Iteration")
+ax.set_yscale('log')
+plt.show()
+exit()
 
 
 fig5, axs5 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
@@ -200,7 +224,6 @@ plt.colorbar(pc5, ax=axs5)
 fig6, axs6 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 vmin = 0
 vmax = 0
-matfiles = glob.glob(direc + 'ElSpec*.mat')
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
     print(f)
@@ -293,21 +316,72 @@ fig8.supxlabel('Time [s]')
 plt.colorbar(pc8, ax=axs8)
 plt.show()
 
-
-
 """
-plt.figure()
-for r in model.all_reactions:
-    #print(r.r_name)
-    if r.r_name != 'gamma20 ': continue
-    line = plt.plot(r.r_rate_t(Tn[:, 0], Ti[:, 0], Te[:, 0]), z_model)
-    plt.text(r.r_rate_t(Tn[:, 0], Ti[:, 0], Te[:, 0])[0], z_model[0], r.r_name, color = line[0].get_color())
-    
-plt.xscale('log')
-plt.title('Reaction Rate gamma20')
-plt.ylabel('Altitude [km]')
-plt.xlabel('Reaction Rate [m-3s-1]')
+lim = 1e5
+
+f0 = sorted(matfiles)[0]
+print('It 0: ', f0)
+elspec0 = loadmat.loadmat(f0)["ElSpecOut"]
+Ie0 = elspec0["Ie"]
+Ie0_ = np.where(Ie0 < lim, np.ones(Ie0.shape)*lim, Ie0)
+
+f1= sorted(matfiles)[-1]
+print('It-1: ', f1)
+elspec = loadmat.loadmat(f1)["ElSpecOut"]
+Ie = elspec["Ie"]
+Ie_ = np.where(Ie < lim, np.ones(Ie.shape)*lim, Ie)
+
+ts = elspec["ts"]
+egrid = elspec["egrid"]
+
+fig, axs = plt.subplots(nrows=3, ncols=1, sharex=True)
+pc0 = axs.flat[0].pcolormesh(ts, egrid[:-1]/1e3, Ie0, norm=mpl.colors.LogNorm(vmin = 1e5))
+pc1 = axs.flat[1].pcolormesh(ts, egrid[:-1]/1e3, Ie , norm=mpl.colors.LogNorm(vmin = 1e5))
+# pc2 = axs.flat[2].pcolormesh(ts, egrid[:-1]/1e3, np.abs(Ie-Ie0), norm=mpl.colors.LogNorm(vmin = 1e5))#, label='alpha', cmap='RdBu')
+# pc3 = axs.flat[3].pcolormesh(ts, egrid[:-1]/1e3, np.abs(Ie-Ie0)/Ie0_, norm=mpl.colors.LogNorm(vmin = 1, vmax = 1e3))#, label='alpha', cmap='RdBu')
+# pc4 = axs.flat[4].pcolormesh(ts, egrid[:-1]/1e3, (Ie-Ie0)/Ie0_, norm=mpl.colors.CenteredNorm(halfrange = 10),
+#                     label='alpha', cmap='RdBu')
+# pc5 = axs.flat[5].pcolormesh(ts, egrid[:-1]/1e3, np.abs(Ie-Ie0)/(Ie0 + Ie))#, norm=mpl.colors.LogNorm(vmin = 1, vmax = 1e10))#, label='alpha', cmap='RdBu')
+# pc6 = axs.flat[6].pcolormesh(ts, egrid[:-1]/1e3, Ie/Ie0_, norm=mpl.colors.LogNorm(vmin = 1, vmax = 1e3))#, label='alpha', cmap='RdBu')
+# pc7 = axs.flat[7].pcolormesh(ts, egrid[:-1]/1e3, Ie_/Ie0, norm=mpl.colors.LogNorm(vmin = 1e-3, vmax = 1))#, label='alpha', cmap='RdBu')
+pc8 = axs.flat[2].pcolormesh(ts, egrid[:-1]/1e3, Ie_/Ie0_, norm=mpl.colors.LogNorm(vmin = 1e-3, vmax = 1e3), cmap='RdBu')
+
+fig.suptitle('Difference in Energy Spectrum')
+fig.supylabel('Energy [km]')
+fig.supxlabel('Time [s]')
+plt.colorbar(pc0, ax = axs.flat[0])
+plt.colorbar(pc1, ax = axs.flat[1])
+plt.colorbar(pc8, ax = axs.flat[2])
+#plt.colorbar(pc3, ax = axs.flat[3])
+# plt.colorbar(pc4, ax = axs.flat[4])
+# plt.colorbar(pc5, ax = axs.flat[5])
+# plt.colorbar(pc6, ax = axs.flat[6])
+# plt.colorbar(pc7, ax = axs.flat[7])
+# plt.colorbar(pc8, ax = axs.flat[8])
+
+axs.flat[0].set_yscale('log')
+axs.flat[1].set_yscale('log')
+axs.flat[2].set_yscale('log')
+# axs.flat[3].set_yscale('log')
+# axs.flat[4].set_yscale('log')
+# axs.flat[5].set_yscale('log')
+# axs.flat[6].set_yscale('log')
+# axs.flat[7].set_yscale('log')
+# axs.flat[8].set_yscale('log')
+
+axs.flat[0].set_ylim(1, 100)
+axs.flat[1].set_ylim(1, 100)
+axs.flat[2].set_ylim(1, 100)
+# axs.flat[3].set_ylim(1, 100)
+# axs.flat[4].set_ylim(1, 100)
+# axs.flat[5].set_ylim(1, 100)
+# axs.flat[6].set_ylim(1, 100)
+# axs.flat[7].set_ylim(1, 100)
+# axs.flat[8].set_ylim(1, 100)
 plt.show()
+
+
+
 """
 
 

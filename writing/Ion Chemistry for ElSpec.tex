@@ -1,0 +1,322 @@
+%%Hauptdokument
+%Oliver Stalder
+
+\documentclass[10pt, a4paper]{article}
+
+%Language:
+%=========
+%!TeX spellcheck = en
+\usepackage[english]{babel}
+%last language in list determines default
+\usepackage[T1]{fontenc}
+%no line exceeding
+\usepackage[utf8]{inputenc}
+%Encoding of .tex files
+
+
+%Layout and such:
+%================
+\setcounter{secnumdepth}{3}
+%Number sections to a depth of 3 =\subsubsections
+\setcounter{tocdepth}{3}
+%Lists section titles in Table Of Contents to a depth of 3 = \subsubsections
+
+\setlength{\parindent}{0pt}
+%Removes intend before every paragraph
+
+\usepackage[
+	left=3cm,
+	right=2.5cm,
+	top=30mm,
+	bottom=30mm,
+	headsep=10mm,
+	headheight=20mm,
+	footskip=15mm
+]{geometry}
+
+\usepackage{rotating}
+
+\emergencystretch=2em
+
+\widowpenalty 10000
+\clubpenalty 10000
+%prevents widow/orphan lines
+
+%Bibliography:
+%=============
+\usepackage{biblatex} 
+\addbibresource{My Library.bib}
+\usepackage{csquotes}
+
+
+%Mathematics Tools:
+%==================
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage[euler]{textgreek}
+\numberwithin{equation}{section}										% Gleichungszaehler pro Sektion zurücksetzen
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}	% Definiert den Darstellungsstil der Gleichungsnummerierung
+
+%Graphik Tools and Figures:
+%==============
+\usepackage{tikz}
+\usepackage[ 
+	margin=10pt,	% Beschriftungsbereich um 10pt kleiner als maximal moeglich
+	font=small, 	% Schriftgroesse small
+	labelfont=bf,	% ``Abb.'' und ``Tab.'' werden fett geschrieben
+	figurename=Fig., % Beschriftungen von Bildern: ändert ``Abbildung x'' zu ``Abb. x''
+	tablename=Tab.,	% Dasselbe fuer Tabellen
+]{caption}
+\renewcommand{\thefigure}{\arabic{section}.\arabic{figure}}	% Bildnummerierung
+\makeatletter \@addtoreset{figure}{section} \makeatother			% Zähler pro Sektion zurücksetzen
+
+\renewcommand{\thetable}{\arabic{section}.\arabic{table}}		% Tabellennummerierung
+\makeatletter \@addtoreset{table}{section} \makeatother			% Zähler pro Sektion zurücksetzen
+\usepackage{epstopdf} %converting to PDF
+\usepackage{svg}
+
+%Misc:
+%=====
+\newcommand{\upmu}{\text{\textmu}}
+\usepackage{blindtext}%
+   
+   
+\usepackage{comment}% http://ctan.org/pkg/comment
+\usepackage{url}
+
+\usepackage[version=4]{mhchem}
+
+%\renewcommand{\citep}{\cite}
+
+%Actual writing:
+%===============
+\begin{document}
+%
+\title{Effect of Ionospheric Variability on the Electron Energy Spectrum produced from Incoherent Scatter Radar Measurements}
+\author{Oliver Stalder, Björn Gustavsson}
+\maketitle
+
+\begin{abstract}
+The ionospheric composition is modeled for the relevant species at 80 - 150 km during auroral precipitation. The model is combined with the ElSpec algorithm \cite{virtanen_electron_2018} to produce differential energy spectrum from incoherent scatter radar measurements. The impact of ionospheric variability on the inversion is shown. We find up to ... \% deviations in the differential energy spectrum and up to ...\% deviation in field aligned current compared to a constant ionosphere model.
+\end{abstract}
+
+
+
+%Outline
+%________
+%
+%Abstract:
+%	Variable Ionispheric Composition
+%	Effect on density to sepctrum inversion
+% 	iterative method???
+%	
+%Intro:
+%	- first time to do a full integration of ionospheric densities
+%	- theory: conitnuity equation and integration of density
+% 	- can help with composition/temperature problem, see Zettegren et al 2010 (is at higher heights though...) (?)
+%Method:
+%
+%Limitations:
+%	- still no convection
+%	- still very much dependent on neutral atmsophere variability	
+
+
+% to do :- field aligned current and comparison
+% coparison of energy spectrum 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Introduction}
+Ion density variations in the ionosphere can significantly influence the recombination time of electrons. This has direct influence on inversion techniques that use electron density profiles to infer differential energy spectra of electrons precipitating during aurora.
+
+Electron density inversion makes use the electron continuity equation:
+\begin{equation}
+	\frac{dn_e}{dt} = q_e - \alpha_{eff} n_e^2 + \nabla \cdot (n_e \textbf{v})
+\end{equation}
+with $n_e$ being the electron density, $q$ the production and $\alpha_{eff}$ the effective recombination rate. The convective term $n_e \textbf{v}$ is usually neglected due to the lack of information on the velocity.
+Transport and ionization of electrons precipitating in the ionosphere are governed by a set of linear differential equations, allowing to formulate the production height profile as a matrix product with a discretized differential energy flux $\phi$:
+\begin{equation}
+	q_e = A \phi
+\end{equation}
+with $A$ representing the production rates at discrete energies and altitudes \cite{fang_parameterization_2010, semeter_determination_2005}. %, sergienko, rees other authors?}.
+If the effective recombination rate is assumed constant, the problem is largely independent from ion densities. However, the recombination rate depends on the ion densities:
+\begin{equation}
+	\alpha_{eff} = \alpha_{\mathrm{NO^+}, e} \frac{n_{\mathrm{NO^+}}}{n_e} + \alpha_{\mathrm{O_2^+}, e} \frac{n_{\mathrm{O_2^+}}}{n_e}
+\end{equation}
+It has been shown that the ionospheric composition varies greatly during auroral precipitation \cite{jones_time_1973} and it is assumed to have a considerable effect on electron inversion techniques \cite{virtanen_electron_2018}. This is the first study, to the author's knowledge, that takes the dynamic variability into account by modeling the relevant ion and minor species densities.
+
+\section{Method}
+To model the ionospheric composition in response to the precipitation, the coupled continuity equations for minor neutral and in species (H, H+, N(4S), N(2D), N+, N2+, NO, NO+, O(1D), O(1S), O+(4S), O2+) are integrated in time:
+\begin{align}
+	\frac{dn_k}{dt} &= q_k - l_k\\
+	\label{eq:ode}
+	n_k(t) &= n_k(t_0) + \int_{t_0}^t \frac{dn_k}{dt} dt
+\end{align}
+where production and loss terms are of the form $q_k = \sum_{i, j \rightarrow k} \alpha_{ij} n_i n_j$ and $l_k = -\sum_{i, k} \alpha_{ik} n_i n_k$, summed over all relevant reactions. Table \ref{tab:ic} shows the reactions and reaction rates taken into account. In addition, ionization of major neutral species from electron precipitation is accounted for:
+\begin{align}
+	q_{A, O^+}  = q_e \frac {0.56 \, n_O}{0.92\, n_{N_2} + n_{O_2} + 0.56\, n_O}\\
+	q_{A, N_2^+} = q_e \frac {0.92\, n_{N_2}}{0.92\, n_{N_2} + n_{O_2} + 0.56 \,n_O}\\
+	q_{A, O_2^+} = q_e \frac {n_{O_2}}{0.92\, n_{N_2} + n_{O_2} + 0.56\, n_O}
+\end{align}
+%Equation \ref{eq:ode} describes a system of coupled, non-linear ordinary differential equations, that come close to th
+%
+\begin{table}
+\begin{center}
+\begin{tabular}{l l l}
+Reaction											& Rate $[m^{-3} s^{-1}]$					& Branching ratio	\\
+\hline\\
+\ce{O_2^+       + e^-    -> O(1D) + O(1S) + O	}	&$\alpha_{1}  = 1.9 \times 10^{-13}\,(T_e/300)^{-0.50}	$&$ 1.20, 0.10, 0.70	$	\\
+\ce{N_2^+       + e^-    -> N(2D) + N(4S)		}	&$\alpha_{2}  = 1.8 \times 10^{-13}\,(T_e/300)^{-0.39}	$&$ 1.90, 0.10			$	\\
+\ce{NO^+        + e^-    -> O + N(2D) + N(4S)	}	&$\alpha_{3}  = 4.2 \times 10^{-13}\,(T_e/300)^{-0.85}	$&$ 1.00, 0.78, 0.22	$	\\
+%\ce{O_2^+(a4P)  + e^-    -> O					}	&$\alpha_{4}  = 1.0 \times 10^{-13}						$&$ 2					$	\\
+%\ce{O^+(2D)     + e^-    -> O^+(4S) + e^-		}	&$\alpha_{5}  = 7.8 \times 10^{-14}\,(T_e/300)^{-0.50}	$&$ 					$	\\
+%\ce{O^+(2P)     + e^-    -> O^+(4S) + e^-		}	&$\alpha_{7}  = 4.0 \times 10^{-14}\,(T_e/300)^{-0.50}	$&$ 					$	\\
+%\ce{O^+(2P)     + e^-    -> O^+(2D) + e^- 		}	&$\alpha_{8}  = 1.5 \times 10^{-13}\,(T_e/300)^{-0.50}	$&$						$	\\
+\ce{N(4S)       + O_2    -> NO     + O			}	&$\beta_{1}   = 4.4 \times 10^{-18}\,\exp(-3220/T_n)	$&$						$	\\
+\ce{N(2D)       + O_2    -> NO + O(1D) + O		}	&$\beta_{2}   = 5.3 \times 10^{-18}						$&$ 1.00, 0.10, 0.90	$	\\
+\ce{N(4S)       + NO     -> N_2     + O 		}	&$\beta_{4}   = 1.5 \times 10^{-18}\,T_n^{0.50}		$&$						$	\\
+\ce{N(2D)       + O      -> N(4S)  + O 		}	&$\beta_{5}   = 2.0 \times 10^{-18}						$&$						$	\\
+\ce{N(2D)       + e^-    -> N(4S)  + e^-		}	&$\beta_{6}   = 5.5 \times 10^{-16}\,(T_e/300)^{0.5}	$&$						$	\\
+\ce{N(2D)       + NO     -> N_2     + O		}	&$\beta_{7}   = 7.0 \times 10^{-17}						$&$						$	\\
+\ce{O^+(4S)     + N_2    -> NO^+    + N(4S)	}	&$\gamma_{1}  = \begin{cases} 5   \times 10^{-19}				& T\leq1000 \\
+																	 4.5 \times 10^{-20}\,(T/300)^{2}& T>1000 \end{cases}$ &$		$	\\
+\ce{O^+(4S)     + O_2    -> O_2^+    + O		}	&$\gamma_{2}  = 2.0 \times 10^{-17}\,(T_r/300)^{-0.40}	$&$						$	\\
+%\ce{O^+(2D)     + N_2    -> N_2^+    + O 		}	&$\gamma_{3}  = 1.0 \times 10^{-16}						$&$						$	\\
+\ce{N_2^+       + O      -> NO^+    + N(2D)	}	&$\gamma_{4}  = 1.4 \times 10^{-16}\,(T_r/300)^{-0.44}	$&$						$	\\
+\ce{N_2^+       + O_2    -> O_2^+    + N_2		}	&$\gamma_{5}  = 5.0 \times 10^{-17}\,(T_r/300)^{-0.80}	$&$						$	\\
+%\ce{O_2^+(a4P)  + N_2    -> N_2^+    + O_2		}	&$\gamma_{6}  = 2.5 \times 10^{-16}						$&$						$	\\
+%\ce{O_2^+(a4P)  + O      -> O_2^+    + O 		}	&$\gamma_{7}  = 1.0 \times 10^{-16}						$&$						$	\\
+\ce{O_2^+       + N_2    -> NO^+    + NO		}	&$\gamma_{8}  = 5.0 \times 10^{-22}						$&$						$	\\
+%\ce{O^+(2P)     + N_2    -> N_2^+    + O		}	&$\gamma_{9}  = 4.8 \times 10^{-16}						$&$						$	\\
+\ce{N^+         + O_2    -> NO^+ + O + O(1D)	}	&$\gamma_{10} = 2.6 \times 10^{-16}						$&$ 1.00, 0.30, 0.70	$	\\
+\ce{N^+         + O_2    -> O_2^+    + N(4S)	}	&$\gamma_{11} = 1.1 \times 10^{-16}						$&$						$	\\
+\ce{O^+(4S)     + H      -> H^+     + O 		}	&$\gamma_{12} = 6.0 \times 10^{-16}						$&$						$	\\
+%\ce{O^+(2D)     + O      -> O^+(4S) + O		}	&$\gamma_{13} = 1.0 \times 10^{-17}						$&$						$	\\
+\ce{O_2^+       + NO     -> NO^+    + O_2		}	&$\gamma_{15} = 4.4 \times 10^{-16}						$&$						$	\\
+\ce{O_2^+       + N(4S)  -> NO^+    + O		}	&$\gamma_{16} = 1.8 \times 10^{-16}						$&$						$	\\
+\ce{O_2^+       + N(2D)  -> N^+     + O_2		}	&$\gamma_{17} = 2.5 \times 10^{-16}						$&$						$	\\
+\ce{N_2^+       + NO     -> NO^+    + N_2		}	&$\gamma_{18} = 3.3 \times 10^{-16}						$&$						$	\\
+\ce{N_2^+       + O      -> O^+(4S) + N_2		}	&$\gamma_{19} = 1.4 \times 10^{-16}\,(T_r/300)^{-0.44}	$&$						$	\\
+\ce{H^+         + O      -> O^+(4S) + H		}	&$\gamma_{20} = (8/9) \gamma_{12} \sqrt{\frac{Ti + T_n/4}{T_n + Ti/16}}	$&$	$	\\
+\ce{O^+(4S)     + NO     -> NO^+    + O		}	&$\gamma_{21} = 8.0 \times 10^{-19}						$&$						$	\\
+%\ce{O^+(2D)     + O_2    -> O_2^+    + O		}	&$\gamma_{22} = 7.0 \times 10^{-16}						$&$						$	\\
+%\ce{O^+(2D)     + N_2    -> O^+(4S) + N_2		}	&$\gamma_{24} = 8.0 \times 10^{-16}						$&$						$	\\
+%\ce{O^+(2P)     + O      -> O^+(4S) + O		}	&$\gamma_{25} = 5.2 \times 10^{-17}						$&$						$	\\
+\ce{O^+(4S)     + N(2D)  -> N^+     + O		}	&$\gamma_{26} = 1.3 \times 10^{-16}						$&$						$	\\
+\ce{N^+         + O_2    -> O^+(4S) + NO		}	&$\gamma_{27} = 3.0 \times 10^{-17}						$&$						$	\\
+\ce{N^+         + O      -> O^+(4S) + N(4S)	}	&$\gamma_{28} = 5.0 \times 10^{-19}						$&$						$	\\
+\ce{N^+         + H      -> H^+     + N(4S)	}	&$\gamma_{29} = 3.6 \times 10^{-18}						$&$						$	\\
+%\ce{O^+(2P)     + N_2    -> N^+     + NO		}	&$\gamma_{30} = 1.0 \times 10^{-16}						$&$						$	\\
+%\ce{O^+(2P)     + N(4S)  -> N^+     + O		}	&$\gamma_{31} = 1.0 \times 10^{-16}						$&$						$	\\
+%\ce{O^+(2D)     + N(4S)  -> N^+     + O		}	&$\gamma_{32} = 7.5 \times 10^{-17}						$&$						$	\\
+\ce{N^+         + O_2    -> O_2^+    + N(2D)	}	&$\gamma_{33} = 2.0 \times 10^{-16}						$&$						$	
+\end{tabular}
+\caption{\label{tab:ic}Chemical reactions in the E-region and reaction rates.}
+\end{center}
+\end{table}
+%
+\par\medskip
+Inverting the electron density height profiles to differential energy spectra is performed with the ElSPec algorithm \cite{virtanen_electron_2018}, extended by a robust statistics implementation [B. Gustavsson, unpublished]. The implementation of ElSPec used requires the entire data set to be processed at once. Therefore, instead of combining the ion chemistry model at each timestep with ElSpec, an iterative approach is adopted: The ElSpec algorithm is started with an assumed ionospheric composition, producing an electron production $q_e$ model in altitude and time. This is then used in the ion chemistry model to track the evolution of ionospheric composition, and given as an input into the next iteration of ElSpec. Over few iterations, the ionospheric composition is converging to negligibly small deviations in between iterations.
+Furthermore, a 30 minute time window was added at the start, where the ionospheric chemistry model is run, starting from an IRI model. A constant electron production is assumed, equal to the production of the first step in the time series. This allows the model ionosphere to reach an equilibrium state that is more representative than the IRI model.
+Lastly, deviations in densities are damped by a factor of 2 between iterations to suppress oscillations.
+
+%state the measurement time and date and radar facility etc
+
+\section{Results}
+A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in Tromsø is analyzed. First, the convergence of this approach is tested. Figure \ref{fig:convergence} shows the mean relative deviation in the effective recombination rate compared to the last iteration, and the maximum relative deviation. There is a clear convergence until the 10th iteration.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{"../log/testing/Figure_7.png"}
+	\caption{The mean relative change in the effective recombination rate and the maximum value show that the effective recombination rate indeed converges to some value}
+	\label{fig:convergence}
+\end{figure}
+
+\par\medskip
+Figure \ref{fig:comp} shows a comparison between the inversion results obtained with a non-variable and variable ionosphere. 
+- FAC modulation
+- slight differences in energy spectra, effects on electron profile
+\begin{figure}
+	\centering
+    	\begin{minipage}{0.5\textwidth}
+			\centering
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf"}
+			a
+    	\end{minipage}%
+    	\begin{minipage}{0.5\textwidth}
+        	\centering
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf"}
+			b
+    	\end{minipage}
+    \caption{ElSpec results with (a) constant ionospheric densities and (b) variable ionospheric densities.}
+    \label{fig:comp}
+\end{figure}
+
+
+
+%Losses are determined by recombination reactions, most importantly the dissociative recombination of $\mathrm{NO^+}$ and $\mathrm{O_2^+}$:
+%\begin{center}
+%	\ce{NO^+ + e^- -> N + O} \qquad 
+%	$l_{\mathrm{NO^+}} = \alpha_{\mathrm{NO^+}} n_{\mathrm{NO^+}} n_e \qquad
+%	\alpha_{\mathrm{NO^+}} = 4.2 \times 10^{-13} (Te/300)^{-0.85} \, \mathrm{m^{-3} s^{-1}}$\\
+%	\ce{O_2^+ + e^- -> 2 O} \qquad
+%	$l_{\mathrm{O_2^+}} = \alpha_{\mathrm{O_2^+}} n_{\mathrm{O_2^+}} n_e \qquad
+%	\alpha_{\mathrm{O_2^+}} = 1.9 \times 10^{-13} (Te/300)^{-0.5} \, \mathrm{m^{-3} s^{-1}}$
+%\end{center}
+%For simplification, one may define an effective recombination rate 
+%\begin{equation}
+%	\alpha_{eff} = \alpha_{\mathrm{NO^+}} \frac{n_{\mathrm{NO^+}}}{n_e} + \alpha_{\mathrm{O_2^+}} \frac{n_{\mathrm{O_2^+}}}{n_e}
+%\end{equation}
+%such that the loss term can be written as
+%\begin{equation}
+%	l = \alpha_{eff} n_e^2
+%\end{equation}
+%Assuming a constant effective recombination rate $\alpha_{eff}$ effectively decouples the electron continuity equation from ion densities in the ionosphere, significantly simplifying the inversion. 
+%The variability of ionospheric composition has been shown \textbf{references: GREBOWSKY YI d.. 1983), ANDERSONet al., 1991, Vibrationally excited molecular species, such as N and Of, can have a significant effect on the recombination coefficient (HARRISand ADAMS,1983 ; TORR and TORR, 1982 ; RICHARDSand TORR, 1986)}
+%- vibrational excitment
+%- electric field => high temperature => O+ -> NO+ => depletions
+%- precipitation?
+%
+%This is the first study, to the author's knowledge, that takes the dynamic variability into account by modeling the relevant ion and minor species densities. Table \ref{tab:reactions} shows the reactions and species taken into account.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\printbibliography
+
+
+\end{document}

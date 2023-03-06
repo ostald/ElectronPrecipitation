@@ -100,14 +100,15 @@ ErrType = 'l'; % L for Lorentzian.
 %for i1 = numel(OUTLIERS):-1:1
 %  Outliers = OUTLIERS{i1};
 
-j = iter - 1;
-icdir = "../" + log_dir + "IC_" + j + ".mat";
 
+j = iter - 1;
+icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
+%icdir = "../" + log_dir + "IC_" + j + ".mat";
 icdata = load(icdir);
 iri_ic = icdata.elspec_iri_sorted;
 alpha_eff = icdata.eff_rr;
 
-Outname = sprintf("../" + log_dir + "ElSpec-iqt_IC_" + iter);
+Outname = fullfile("..", log_dir, ["ElSpec-iqt_IC_" + iter]);
 disp(Outname)
 %  disp(Outliers)
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
@@ -125,21 +126,22 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'Outfilename',Outname,...
                                        'iri_ic', iri_ic, ...
                                        'alpha_eff', alpha_eff);
-  ElSpecPlot(ElSpecQT_iqtOutliers_L5)
+  ElSpecPlot(ElSpecQT_iqtOutliers_L5, ieelim = [10, 15], faclim = [0, 20], plim = [0, 100]);
   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
-  print('-depsc2', '-painters', [Outname,'IC_']);
+  print('-depsc2', '-painters', [Outname]);
+  print('-dpdf', '-painters', [Outname]);
   dstr = sprintf('Done with loop S i1: at %s',datestr(now,'HH:MM:SS'));
-  disp(dstr)
-  close(gcf)
+  disp(dstr);
+  close(gcf);
   
 %end
 %% Two modified plotting-functions
 % In addition to ElSpecPlot, ElSpecPlot2 and ElSpecPlotSmall 2 new
 % plotting-functions are added:
 fig1 = figure;
-ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5,fig1.Number)
+ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5,fig1.Number);
 fig2 = figure;
-ElSpecPlotRes(ElSpecQT_iqtOutliers_L5,fig2.Number)
-ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5)
+ElSpecPlotRes(ElSpecQT_iqtOutliers_L5,fig2.Number);
+ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5);
 ph = ElSpecPlotTres(ElSpecQT_iqtOutliers_L5);
-set(ph,'color','r','linestyle','--','marker','.')
+set(ph,'color','r','linestyle','--','marker','.');

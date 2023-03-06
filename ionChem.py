@@ -370,7 +370,7 @@ class ionChem:
                 total_charge_density += c.density * c.charge
                 density_cc += c.density
         reduced_tot_charge = total_charge_density / density_cc
-        if any(reduced_tot_charge > 1e-10):
+        if any(reduced_tot_charge.flat > 1e-10):
             import matplotlib.pyplot as plt
             plt.figure()
             plt.plot(reduced_tot_charge, self.z_model/1e3)

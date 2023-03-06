@@ -1,0 +1,280 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{fang_parameterization_2010}{article}{}
+      \name{author}{7}{}{%
+        {{hash=c71ffbc626d465528c5377540c72a198}{%
+           family={Fang},
+           familyi={F\bibinitperiod},
+           given={Xiaohua},
+           giveni={X\bibinitperiod}}}%
+        {{hash=4121d63db11c2095398da7cd8c235a35}{%
+           family={Randall},
+           familyi={R\bibinitperiod},
+           given={Cora\bibnamedelima E.},
+           giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=97515a96a84b2999f6bd4e1f7ecde565}{%
+           family={Lummerzheim},
+           familyi={L\bibinitperiod},
+           given={Dirk},
+           giveni={D\bibinitperiod}}}%
+        {{hash=deaa85d20a011b0d2600af68515733bc}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Wenbin},
+           giveni={W\bibinitperiod}}}%
+        {{hash=651d8ad1075af9edde09d25bdff48fc1}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Gang},
+           giveni={G\bibinitperiod}}}%
+        {{hash=8b44361812e77e9d8561df62aabc23fe}{%
+           family={Solomon},
+           familyi={S\bibinitperiod},
+           given={Stanley\bibnamedelima C.},
+           giveni={S\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=16a7c9653a5b66dbf49fe64fa78c6223}{%
+           family={Frahm},
+           familyi={F\bibinitperiod},
+           given={Rudy\bibnamedelima A.},
+           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{64b9bf8354ad5cf303d2002e6ed42286}
+      \strng{fullhash}{150c643653eab7c2a7784da547bff974}
+      \strng{bibnamehash}{64b9bf8354ad5cf303d2002e6ed42286}
+      \strng{authorbibnamehash}{64b9bf8354ad5cf303d2002e6ed42286}
+      \strng{authornamehash}{64b9bf8354ad5cf303d2002e6ed42286}
+      \strng{authorfullhash}{150c643653eab7c2a7784da547bff974}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We report a new parameterization of ionization in the Earth's atmosphere by isotropically precipitating monoenergetic (100 eV to 1 MeV) electrons. This new parameterization is the first one based on sophisticated first-principle models, and represents a significant improvement in accuracy, particularly for incident auroral and lower energies. Without previous need to interpolate over source energy and atmospheric range, the new parameterization provides an easier implementation with a robust fit of model calculations for a wide range of incident energies and atmospheric conditions. By decomposing any incident energy spectrum into contiguous monoenergetic components and then calculating and integrating their resulting ionization, our parameterization is a valuable tool that can be used in conjunction with global models to accurately quantify the impact from realistic precipitating electrons during space weather events.}
+      \field{issn}{1944-8007}
+      \field{journaltitle}{Geophysical Research Letters}
+      \field{note}{\_eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1029/2010GL045406}
+      \field{number}{22}
+      \field{title}{Parameterization of monoenergetic electron impact ionization}
+      \field{urlday}{30}
+      \field{urlmonth}{5}
+      \field{urlyear}{2022}
+      \field{volume}{37}
+      \field{year}{2010}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.1029/2010GL045406
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/ost051/Documents/Zotero/storage/UELHANQE/Fang et al. - 2010 - Parameterization of monoenergetic electron impact .pdf:application/pdf;Snapshot:/Users/ost051/Documents/Zotero/storage/B6WX7B2B/2010GL045406.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2010GL045406
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2010GL045406
+      \endverb
+      \keyw{electron precipitation,impact ionization,parameterization}
+    \endentry
+    \entry{jones_time_1973}{article}{}
+      \name{author}{2}{}{%
+        {{hash=66d0b689b01c1d1c5882adf53bd9a508}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={R.\bibnamedelimi A.},
+           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=f100df08243f695038601b5e9451f54a}{%
+           family={Rees},
+           familyi={R\bibinitperiod},
+           given={M.\bibnamedelimi H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{1305037cf5a8e360f80adfb272ee8d08}
+      \strng{fullhash}{1305037cf5a8e360f80adfb272ee8d08}
+      \strng{bibnamehash}{1305037cf5a8e360f80adfb272ee8d08}
+      \strng{authorbibnamehash}{1305037cf5a8e360f80adfb272ee8d08}
+      \strng{authornamehash}{1305037cf5a8e360f80adfb272ee8d08}
+      \strng{authorfullhash}{1305037cf5a8e360f80adfb272ee8d08}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Ion densities and composition are investigated in a time varying model aurora. There is a time lag between turning on the source of ionization and the resulting increase in ion densities that depends on the species and the height level in the ionsophere, so that altitude profiles of auroral electron densities evolve with time. Characteristic buildup times for the ionization are a few seconds at the altitude of maximum energy deposition, increasing to tens of seconds above and below this level. A wide range of composition ratios, n(NO+/n(O2+ and n(NO+/n(O+), can be expected, depending on the time an observation is made during buildup or decay of ionization. The concentrations of atomic nitrogen and nitric oxide increase as a result of auroral ionization, but the associated characteristic times are long compared to the average duration of ‘auroral event’. Thus, intermittent auroral bombardment could result in a gradual buildup of these minor neutral constituents in the auroral atmosphere. Variations in the electron density during pulsating, fluctuating or coruscating aurora lag the source function variations by a few seconds in a typical aurora.}
+      \field{issn}{0032-0633}
+      \field{journaltitle}{Planetary and Space Science}
+      \field{month}{4}
+      \field{number}{4}
+      \field{title}{Time dependent studies of the aurora—{I}. {Ion} density and composition}
+      \field{urlday}{22}
+      \field{urlmonth}{9}
+      \field{urlyear}{2022}
+      \field{volume}{21}
+      \field{year}{1973}
+      \field{urldateera}{ce}
+      \field{pages}{537\bibrangedash 557}
+      \range{pages}{21}
+      \verb{doi}
+      \verb 10.1016/0032-0633(73)90069-X
+      \endverb
+      \verb{file}
+      \verb ScienceDirect Full Text PDF:/Users/ost051/Documents/Zotero/storage/IUFBGHQU/Jones and Rees - 1973 - Time dependent studies of the aurora—I. Ion densit.pdf:application/pdf;ScienceDirect Snapshot:/Users/ost051/Documents/Zotero/storage/3SRQNSQA/003206337390069X.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/003206337390069X
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/003206337390069X
+      \endverb
+    \endentry
+    \entry{semeter_determination_2005}{article}{}
+      \name{author}{2}{}{%
+        {{hash=a8c2035b4e6ad56b0e21b0feea979bc8}{%
+           family={Semeter},
+           familyi={S\bibinitperiod},
+           given={Joshua},
+           giveni={J\bibinitperiod}}}%
+        {{hash=bc67994c6638f9a7b580551afd4c1b82}{%
+           family={Kamalabadi},
+           familyi={K\bibinitperiod},
+           given={Farzad},
+           giveni={F\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{a469fbe49b55b921c04d32bfc664a91c}
+      \strng{fullhash}{a469fbe49b55b921c04d32bfc664a91c}
+      \strng{bibnamehash}{a469fbe49b55b921c04d32bfc664a91c}
+      \strng{authorbibnamehash}{a469fbe49b55b921c04d32bfc664a91c}
+      \strng{authornamehash}{a469fbe49b55b921c04d32bfc664a91c}
+      \strng{authorfullhash}{a469fbe49b55b921c04d32bfc664a91c}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A technique is presented for inverting incoherent scatter radar (ISR) measurements of the auroral ionosphere to determine the incident electron energy spectrum. A linear model is constructed relating electron differential number flux to the volume production rate of ions, the latter derived from measured electron density profiles using a continuity equation. The forward model is inverted using the maximum entropy method (MEM). This implementation of ISR inversion was found to be remarkably robust to the principal sources of model and measurement uncertainty. The procedure was applied to high-resolution measurements (1.2 s × 1 km) by the Sondrestrom ISR recorded during an auroral surge. Analysis of bulk plasma properties in the recovered spectra suggested that the relationship between the characteristic energy and the net number flux was highly nonlinear during the onset of the auroral surge, an observation that can now be evaluated statistically. This perspective on the temporal behavior of the auroral acceleration region cannot be accessed through spaceborne measurements; ISR inversion thus constitutes a critical tool for addressing time-dependent coupling of the magnetosphere and ionosphere.}
+      \field{issn}{1944-799X}
+      \field{journaltitle}{Radio Science}
+      \field{note}{\_eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1029/2004RS003042}
+      \field{number}{2}
+      \field{title}{Determination of primary electron spectra from incoherent scatter radar measurements of the auroral {E} region}
+      \field{urlday}{2}
+      \field{urlmonth}{5}
+      \field{urlyear}{2022}
+      \field{volume}{40}
+      \field{year}{2005}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.1029/2004RS003042
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/ost051/Documents/Zotero/storage/TJI8JAPP/Semeter and Kamalabadi - 2005 - Determination of primary electron spectra from inc.pdf:application/pdf;Snapshot:/Users/ost051/Documents/Zotero/storage/BSE99L2L/2004RS003042.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2004RS003042
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2004RS003042
+      \endverb
+      \keyw{incoherent scatter radar,aurora spectrum,inversion}
+    \endentry
+    \entry{virtanen_electron_2018}{article}{}
+      \name{author}{6}{}{%
+        {{hash=b8b238365506642494b4502d94f6ca21}{%
+           family={Virtanen},
+           familyi={V\bibinitperiod},
+           given={Ilkka\bibnamedelima I.},
+           giveni={I\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+        {{hash=ce29ee0a2cf69bd32634c7146fcd3299}{%
+           family={Gustavsson},
+           familyi={G\bibinitperiod},
+           given={Björn},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e64ee868258c5620158a4519fd1c74c4}{%
+           family={Aikio},
+           familyi={A\bibinitperiod},
+           given={Anita},
+           giveni={A\bibinitperiod}}}%
+        {{hash=92b0dd0bf0dd1f7828a0dcb88185a756}{%
+           family={Kero},
+           familyi={K\bibinitperiod},
+           given={Antti},
+           giveni={A\bibinitperiod}}}%
+        {{hash=7b643b54c0c514c5fdc403f9350a1792}{%
+           family={Asamura},
+           familyi={A\bibinitperiod},
+           given={Kazushi},
+           giveni={K\bibinitperiod}}}%
+        {{hash=347da53fb021d7a530117a86815d74db}{%
+           family={Ogawa},
+           familyi={O\bibinitperiod},
+           given={Yasunobu},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{66cbcebd6a7e30ea5172cddfe7dce015}
+      \strng{fullhash}{cae61b141ffb522f17ebd9d49786aa65}
+      \strng{bibnamehash}{66cbcebd6a7e30ea5172cddfe7dce015}
+      \strng{authorbibnamehash}{66cbcebd6a7e30ea5172cddfe7dce015}
+      \strng{authornamehash}{66cbcebd6a7e30ea5172cddfe7dce015}
+      \strng{authorfullhash}{cae61b141ffb522f17ebd9d49786aa65}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Differential energy flux of electrons precipitating into the high-latitude ionosphere can be estimated from incoherent scatter radar observations of the ionospheric electron density profile. We present a method called ELSPEC for electron spectrum estimation from incoherent scatter radar measurements, which is based on integration of the electron continuity equation and spectrum model selection by means of the Akaike information criterion. This approach allows us to use data with almost arbitrary time resolutions, enables spectrum estimation with dense energy grids, avoids noise amplifications in numerical derivatives, and yields statistical error estimates for all the output parameters, including the number and energy fluxes and upward field-aligned currents carried by the precipitating electrons. The technique is targeted for auroral energies, 1–100 keV, which ionize the atmosphere mainly between 80 and 150 km altitudes. We validate the technique by means of a simulation study, which shows that Maxwellian, kappa, and mono-energetic spectra, as well as combinations of those, can be reproduced. Comparison study for two conjugate satellite measurements to the EISCAT UHF radar are shown, for Reimei and Swarm, showing an agreement with the results. Finally, an example of a 2-hr measurement by the EISCAT radar is shown, during which we observe a variety of precipitation characteristics, from soft background precipitation to mono-energetic spectra with peak energies up to 60 keV. The upward field-aligned current varies from 0 to 10 μAm−2 and the total energy flux from 0 to 250 mWm−2.}
+      \field{issn}{2169-9402}
+      \field{journaltitle}{Journal of Geophysical Research: Space Physics}
+      \field{note}{\_eprint: https://onlinelibrary.wiley.com/doi/pdf/10.1029/2018JA025636}
+      \field{number}{8}
+      \field{title}{Electron {Energy} {Spectrum} and {Auroral} {Power} {Estimation} {From} {Incoherent} {Scatter} {Radar} {Measurements}}
+      \field{urlday}{21}
+      \field{urlmonth}{4}
+      \field{urlyear}{2022}
+      \field{volume}{123}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \field{pages}{6865\bibrangedash 6887}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1029/2018JA025636
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/ost051/Documents/Zotero/storage/UCVU8UBV/Virtanen et al. - 2018 - Electron Energy Spectrum and Auroral Power Estimat.pdf:application/pdf;Snapshot:/Users/ost051/Documents/Zotero/storage/K4VBUM7T/2018JA025636.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2018JA025636
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1029/2018JA025636
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

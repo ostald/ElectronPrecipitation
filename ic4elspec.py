@@ -28,14 +28,14 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     z_model = con["h"]
 
     ts_ = np.copy(ts)
-    #ts[0] = -30*60
+    ts[0] = -30*60
 
     def stepped_prod_t(prod, t):
         """
         returns the production according to the ELSPEC model
         of any species where prod is defined
         at arbitrary times
-        using the last ts from ELSPEC
+        using the last ts: ts <= t from ELSPEC
         """
         if t < ts[0]:
             return 0
@@ -52,6 +52,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         c.density = nN2 * 0
 
     # assign densities
+    model.e.density = ne
     model.N2.density = nN2
     model.O2.density = nO2
     model.O.density = nO
@@ -62,14 +63,24 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     except AttributeError:
         model.Op_4S.density = nOp
 
+    #custom ion densities:
+    #if iteration == 0:
+    #    model.NOp.density = model.NOp.density/2
+    #    model.O2p.density = model.O2p.density*2
+    #
+    #    model.O2.density = nO2-nO/2
+    #    model.O.density = nO * 2
+    #     for n, i in enumerate(model.ions):
+    #         i.density[:, 0] = i.density[:, 0] * 0.6
+    # model.e.density = np.sum(np.array([i.density for i in model.ions]), axis = 0)
+
+
     msis_model = loadMSIS.loadMSIS_new('Data/other/msis.rtf')
     nH = msis_model[4]
     nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
     model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
-    model.e.density = ne
-
-    #model.check_chargeNeutrality()
+    model.check_chargeNeutrality()
 
     for c in model.all_species:
         c.prod = e_prod * 0
@@ -165,6 +176,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             n = np.array([c.density[h, 0] for c in model.all_species])
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
                                t_eval=ts_, max_step=0.0444)
+
+            if res[h].status != 0:
+                print(res[h])
+                breakpoint()
         #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
         #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
         # for j, c in enumerate(model.all_species):
@@ -232,6 +247,9 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     # [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
     elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
+
+    #if iteration == 0:
+    #    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
