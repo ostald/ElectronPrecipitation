@@ -29,6 +29,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
     ts_ = np.copy(ts)
     ts[0] = -30*60
+    ts_show = np.arange(ts[0], te[-1], 0.01)
 
     def stepped_prod_t(prod, t):
         """
@@ -43,6 +44,9 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             return 0
         else:
             i_max_ts = len(ts[ts <= t]) - 1
+            if i_max_ts < 0:
+                print(i_max_ts)
+                raise RuntimeError
             prod_t = prod[:, i_max_ts]
             return prod_t
 
@@ -86,7 +90,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         c.prod = e_prod * 0
 
     Op_prod = e_prod * 0.56 * model.O.density / \
-              (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
+               (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
     O2p_prod = e_prod * 1.00 * model.O2.density / \
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
     N2p_prod = e_prod * 0.92 * model.N2.density / \
@@ -179,7 +183,16 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
             if res[h].status != 0:
                 print(res[h])
+                for c in model.all_species:
+                    plt.figure()
+                    plt.plot(res[h].t, res[h].y[c.c_ID, :], label='n(' + c.name + ')')
+                    plt.yscale('log')
+                    plt.tight_layout()
+                    plt.legend(loc=2)
+                    plt.show()
                 breakpoint()
+
+
         #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
         #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
         # for j, c in enumerate(model.all_species):

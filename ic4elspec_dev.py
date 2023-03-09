@@ -28,8 +28,6 @@ if True:
         # normalise charged species to fit electron density
         [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
-        print(nNOp.shape)
-
         # setting start time [0] to 0:
         ts = con["ts"] - con["ts"][0]
         te = con["te"] - con["ts"][0]
@@ -96,7 +94,7 @@ if True:
             c.prod = e_prod * 0
 
         Op_prod = e_prod * 0.56 * model.O.density / \
-                  (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
+                   (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
         O2p_prod = e_prod * 1.00 * model.O2.density / \
                    (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
         N2p_prod = e_prod * 0.92 * model.N2.density / \
@@ -114,6 +112,7 @@ if True:
         plt.figure()
         plt.plot(ts_, e_prod[0], 'x', label = 'data')
         plt.plot(lala, e_prod_smooth(lala)[:, 0], label = 'interp')
+        plt.yscale('log')
         plt.legend()
         plt.show()
 
