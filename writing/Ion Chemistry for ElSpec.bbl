@@ -19,6 +19,88 @@
 
 \refsection{0}
   \datalist[entry]{nty/global//global/global}
+    \entry{bilitza_international_2014}{article}{}
+      \name{author}{8}{}{%
+        {{hash=1834933f7296b3141381f3bca086f9ef}{%
+           family={Bilitza},
+           familyi={B\bibinitperiod},
+           given={Dieter},
+           giveni={D\bibinitperiod}}}%
+        {{hash=8b0a91384add89df719fa1d8eda28815}{%
+           family={Altadill},
+           familyi={A\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=3320858ae802be2ffddf3248559df0b9}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Yongliang},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=312fba005e0d8cdcf32b7b2df2252917}{%
+           family={Mertens},
+           familyi={M\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=ca21acfed41cf842436bda5b430380cb}{%
+           family={Truhlik},
+           familyi={T\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+        {{hash=f7cfdc7d6a8cd45e259d3556684e7822}{%
+           family={Richards},
+           familyi={R\bibinitperiod},
+           given={Phil},
+           giveni={P\bibinitperiod}}}%
+        {{hash=3052cb6d7e01697034ce35a52c696910}{%
+           family={McKinnell},
+           familyi={M\bibinitperiod},
+           given={Lee-Anne},
+           giveni={L\bibinithyphendelim A\bibinitperiod}}}%
+        {{hash=48e18a51d54a3a282e7326de3f4fa933}{%
+           family={Reinisch},
+           familyi={R\bibinitperiod},
+           given={Bodo},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{14b72fa92dcd97f726de0c48615eb43d}
+      \strng{fullhash}{2b9e3a971e895b78fcc467c3c1268671}
+      \strng{bibnamehash}{14b72fa92dcd97f726de0c48615eb43d}
+      \strng{authorbibnamehash}{14b72fa92dcd97f726de0c48615eb43d}
+      \strng{authornamehash}{14b72fa92dcd97f726de0c48615eb43d}
+      \strng{authorfullhash}{2b9e3a971e895b78fcc467c3c1268671}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The International Reference Ionosphere (IRI) project was established jointly by the Committee on Space Research (COSPAR) and the International Union of Radio Science (URSI) in the late sixties with the goal to develop an international standard for the specification of plasma parameters in the Earth’s ionosphere. COSPAR needed such a specification for the evaluation of environmental effects on spacecraft and experiments in space, and URSI for radiowave propagation studies and applications. At the request of COSPAR and URSI, IRI was developed as a data-based model to avoid the uncertainty of theory-based models which are only as good as the evolving theoretical understanding. Being based on most of the available and reliable observations of the ionospheric plasma from the ground and from space, IRI describes monthly averages of electron density, electron temperature, ion temperature, ion composition, and several additional parameters in the altitude range from 60 km to 2000 km. A working group of about 50 international ionospheric experts is in charge of developing and improving the IRI model. Over time as new data became available and new modeling techniques emerged, steadily improved editions of the IRI model have been published. This paper gives a brief history of the IRI project and describes the latest version of the model, IRI-2012. It also briefly discusses efforts to develop a real-time IRI model. The IRI homepage is at http://IRImodel.org.}
+      \field{issn}{2115-7251}
+      \field{journaltitle}{Journal of Space Weather and Space Climate}
+      \field{note}{Publisher: EDP Sciences}
+      \field{title}{The {International} {Reference} {Ionosphere} 2012 – a model of international collaboration}
+      \field{urlday}{6}
+      \field{urlmonth}{3}
+      \field{urlyear}{2023}
+      \field{volume}{4}
+      \field{year}{2014}
+      \field{urldateera}{ce}
+      \field{pages}{A07}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1051/swsc/2014004
+      \endverb
+      \verb{file}
+      \verb Full Text PDF:/Users/ost051/Documents/Zotero/storage/AGBGNW36/Bilitza et al. - 2014 - The International Reference Ionosphere 2012 – a mo.pdf:application/pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.swsc-journal.org/articles/swsc/abs/2014/01/swsc130043/swsc130043.html
+      \endverb
+      \verb{url}
+      \verb https://www.swsc-journal.org/articles/swsc/abs/2014/01/swsc130043/swsc130043.html
+      \endverb
+    \endentry
     \entry{fang_parameterization_2010}{article}{}
       \name{author}{7}{}{%
         {{hash=c71ffbc626d465528c5377540c72a198}{%

@@ -2350,6 +2350,7 @@
     <bcf:citekey order="3">jones_time_1973</bcf:citekey>
     <bcf:citekey order="4">virtanen_electron_2018</bcf:citekey>
     <bcf:citekey order="5">virtanen_electron_2018</bcf:citekey>
+    <bcf:citekey order="6">bilitza_international_2014</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

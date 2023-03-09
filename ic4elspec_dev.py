@@ -28,6 +28,8 @@ if True:
         # normalise charged species to fit electron density
         [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
+        print(nNOp.shape)
+
         # setting start time [0] to 0:
         ts = con["ts"] - con["ts"][0]
         te = con["te"] - con["ts"][0]
@@ -51,6 +53,7 @@ if True:
                 return 0
             else:
                 i_max_ts = len(ts[ts <= t]) - 1
+                if i_max_ts < 0: print(i_max_ts)
                 prod_t = prod[:, i_max_ts]
                 return prod_t
 
@@ -100,10 +103,19 @@ if True:
                    (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
 
         # create smooth function for production
-        t = np.arange(0, te[-1], 0.01)
+        t = np.arange(0, te[-1], 0.001)
 
         stepf = np.array([stepped_prod_t(e_prod, i) for i in t])
         e_prod_smooth = PchipInterpolator(t, stepf)
+
+
+        lala = np.arange(ts[0], te[-1], 0.001)
+        print(e_prod_smooth(lala).shape)
+        plt.figure()
+        plt.plot(ts_, e_prod[0], 'x', label = 'data')
+        plt.plot(lala, e_prod_smooth(lala)[:, 0], label = 'interp')
+        plt.legend()
+        plt.show()
 
         stepf = np.array([stepped_prod_t(Op_prod, i) for i in t])
         Op_prod_smooth = PchipInterpolator(t, stepf)
@@ -180,13 +192,23 @@ if True:
             res = np.empty(model.n_heights, dtype='object')
 
             for h in range(model.n_heights):
+                #breakpoint()
+                print(h)
                 n = np.array([c.density[h, 0] for c in model.all_species])
                 res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                                   t_eval=ts_show, max_step=0.0444)
+                                   t_eval=ts_show, max_step=0.01, atol = 1, rtol = 1)
 
                 if res[h].status != 0:
+                    print(h)
                     print(res[h])
-                    breakpoint()
+                    for c in model.all_species:
+                        plt.figure()
+                        plt.plot(res[h].t, res[h].y[c.c_ID, :], label='n(' + c.name + ')')
+                        plt.yscale('log')
+                        plt.tight_layout()
+                        plt.legend(loc=2)
+                        plt.show()
+
             #        res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF',vectorized=False, args = [h],
             #                           t_eval = np.arange(0, te[-1], 0.01), max_step = 0.0444)
             # for j, c in enumerate(model.all_species):
@@ -204,27 +226,29 @@ if True:
         for h, i in enumerate(res):
             for c in model.all_species:
                 plt.figure()
-                plt.plot(i.t, i.y[c.c_ID, :], label=c.name)
-                if c == model.e: plt.plot(ts_, con["ne"][h, :], label='ElSpec ne')
-                if c == model.N2: plt.plot(ts_, con["iri"][h, 3], label='ElSpec N2')
-                if c == model.O2: plt.plot(ts_, con["iri"][h, 4], label='ElSpec O2')
-                if c == model.O: plt.plot(ts_, con["iri"][h, 5], label='ElSpec O ')
-                if c == model.NOp: plt.plot(ts_, con["iri"][h, 7], label='ElSpec NOp')
-                if c == model.O2p: plt.plot(ts_, con["iri"][h, 8], label='ElSpec O2p')
-                # if c == model.Op: plt.plot(ts_, con["iri"][h, 9], label='ElSpec Op ')
+                plt.plot(i.t, i.y[c.c_ID, :], label='n('+c.name+')')
+                if c == model.e: plt.plot(ts_, ne[h, :], label='ElSpec ne')
+                if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec N2')
+                if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec O2')
+                if c == model.O: plt.plot(ts_ , nO[h],  label='ElSpec O ')
+                if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec NOp')
+                if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec O2p')
+                # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec Op ')
                 plt.legend(loc=2)
                 plt.yscale('log')
                 plt.xlabel('Time [s]')
-                plt.ylabel('Density [m-3]')
-                plt.title(c.name + ' Density')
+                plt.ylabel(r'Density [m$^{-3}$]')
+                #plt.title(c.name + ' Density')
                 ax2 = plt.gca().twinx()
-                ax2.plot(ts_, e_prod[h, :], '.', color='green', label='q_e')
+                ax2.plot(ts_, e_prod[h, :], '.', color='green', label=r'$q_e$')
                 ax2.set_yscale('log')
                 ax2.legend(loc=1)
-                ax2.set_ylabel('Electron production [m-3s-1]')
+                ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
                 # for t in ts_: plt.axvline(t, alpha = 0.1)
+                plt.tight_layout()
 
                 plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
+                plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.eps')
             break
 
         n_ic_ = np.array([r.y for r in res])

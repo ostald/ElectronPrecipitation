@@ -307,7 +307,7 @@ for k = 1:length(ff)
             te( k*nppdump-kpp+1 ) = te( k*nppdump ) - (kpp-1)*dtpp;
         end
     end
-    disp(ts(2)-ts(1))
+    %disp(ts(2)-ts(1))
 
     % heights
     if lower(tres) == 'dump'

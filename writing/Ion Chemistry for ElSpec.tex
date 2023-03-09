@@ -97,7 +97,7 @@
 \maketitle
 
 \begin{abstract}
-The ionospheric composition is modeled for the relevant species at 80 - 150 km during auroral precipitation. The model is combined with the ElSpec algorithm \cite{virtanen_electron_2018} to produce differential energy spectrum from incoherent scatter radar measurements. The impact of ionospheric variability on the inversion is shown. We find up to ... \% deviations in the differential energy spectrum and up to ...\% deviation in field aligned current compared to a constant ionosphere model.
+The ionospheric composition is modeled for relevant major and minor species at 80 - 150 km during auroral precipitation. The model is combined with the ElSpec algorithm \cite{virtanen_electron_2018} to produce differential energy spectrum from incoherent scatter radar measurements. The impact of ionospheric variability on the inversion is shown. We find up to ... \% deviations in the differential energy spectrum and up to ...\% deviation in field aligned current compared to a constant ionosphere model.
 \end{abstract}
 
 
@@ -149,7 +149,7 @@ Electron density inversion makes use the electron continuity equation:
 \begin{equation}
 	\frac{dn_e}{dt} = q_e - \alpha_{eff} n_e^2 + \nabla \cdot (n_e \textbf{v})
 \end{equation}
-with $n_e$ being the electron density, $q$ the production and $\alpha_{eff}$ the effective recombination rate. The convective term $n_e \textbf{v}$ is usually neglected due to the lack of information on the velocity.
+with $n_e$ being the electron density, $q_e$ the production and $\alpha_{eff}$ the effective recombination rate. The convective term $n_e \textbf{v}$ is usually neglected due to the lack of information on the velocity.
 Transport and ionization of electrons precipitating in the ionosphere are governed by a set of linear differential equations, allowing to formulate the production height profile as a matrix product with a discretized differential energy flux $\phi$:
 \begin{equation}
 	q_e = A \phi
@@ -162,6 +162,7 @@ If the effective recombination rate is assumed constant, the problem is largely 
 It has been shown that the ionospheric composition varies greatly during auroral precipitation \cite{jones_time_1973} and it is assumed to have a considerable effect on electron inversion techniques \cite{virtanen_electron_2018}. This is the first study, to the author's knowledge, that takes the dynamic variability into account by modeling the relevant ion and minor species densities.
 
 \section{Method}
+\subsection{Ion Chemistry}
 To model the ionospheric composition in response to the precipitation, the coupled continuity equations for minor neutral and in species (H, H+, N(4S), N(2D), N+, N2+, NO, NO+, O(1D), O(1S), O+(4S), O2+) are integrated in time:
 \begin{align}
 	\frac{dn_k}{dt} &= q_k - l_k\\
@@ -174,7 +175,7 @@ where production and loss terms are of the form $q_k = \sum_{i, j \rightarrow k}
 	q_{A, N_2^+} = q_e \frac {0.92\, n_{N_2}}{0.92\, n_{N_2} + n_{O_2} + 0.56 \,n_O}\\
 	q_{A, O_2^+} = q_e \frac {n_{O_2}}{0.92\, n_{N_2} + n_{O_2} + 0.56\, n_O}
 \end{align}
-%Equation \ref{eq:ode} describes a system of coupled, non-linear ordinary differential equations, that come close to th
+%Assuming some initial composition, integrating the system of coupled, non-linear ordinary differential equations described by Equation \ref{eq:ode} yields the ion densities at a later time t.
 %
 \begin{table}
 \begin{center}
@@ -232,23 +233,41 @@ Reaction											& Rate $[m^{-3} s^{-1}]$					& Branching ratio	\\
 \end{table}
 %
 \par\medskip
-Inverting the electron density height profiles to differential energy spectra is performed with the ElSPec algorithm \cite{virtanen_electron_2018}, extended by a robust statistics implementation [B. Gustavsson, unpublished]. The implementation of ElSPec used requires the entire data set to be processed at once. Therefore, instead of combining the ion chemistry model at each timestep with ElSpec, an iterative approach is adopted: The ElSpec algorithm is started with an assumed ionospheric composition, producing an electron production $q_e$ model in altitude and time. This is then used in the ion chemistry model to track the evolution of ionospheric composition, and given as an input into the next iteration of ElSpec. Over few iterations, the ionospheric composition is converging to negligibly small deviations in between iterations.
-Furthermore, a 30 minute time window was added at the start, where the ionospheric chemistry model is run, starting from an IRI model. A constant electron production is assumed, equal to the production of the first step in the time series. This allows the model ionosphere to reach an equilibrium state that is more representative than the IRI model.
+\subsection{Electron Profile inversion }
+Inverting the electron density height profiles to differential energy spectra is performed with the ElSPec algorithm \cite{virtanen_electron_2018}, extended by a robust statistics implementation [B. Gustavsson, unpublished]. The implementation of ElSPec used requires the entire data set to be processed at once. Therefore, instead of combining the ion chemistry model at each timestep with ElSpec, an iterative approach is adopted: The ElSpec algorithm is started with an assumed ionospheric composition, producing an electron production model $q_e$ in altitude and time. This is then used in the ion chemistry model to calculate the evolution of ionospheric composition, and given as an input into the next iteration of ElSpec. Over few iterations, the ionospheric composition is converging to negligibly small deviations in between iterations.
+
+\subsection{Initial Composition}
+The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} is used as a model for the initial ion composition. As the IRI model cannot account for auroral precipitation and the induced changes in composition, a 30 minute time window is added to the start of the data set. During that time, the ionospheric chemistry model is run, assuming a constant electron and ion production rate, according to that of the first step in the time series. The model ionosphere thereby reaches an equilibrium state. Figure \ref{fig:dialin} shows $NO^+$ density at  98 km altitude.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{"../log/testing/plots/IC_0_NO+ Density.pdf"}
+	\caption{The density of $NO^+$ at 96 km altitude is shown. During the first 30 minutes, the model ionosphere is allowed to find an equilibrium state.}
+	\label{fig:dialin}
+\end{figure}
+%
+
 Lastly, deviations in densities are damped by a factor of 2 between iterations to suppress oscillations.
 
 %state the measurement time and date and radar facility etc
 
 \section{Results}
-A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in Tromsø is analyzed. First, the convergence of this approach is tested. Figure \ref{fig:convergence} shows the mean relative deviation in the effective recombination rate compared to the last iteration, and the maximum relative deviation. There is a clear convergence until the 10th iteration.
+A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in Tromsø is analyzed. First, the convergence of this approach is tested. Figure \ref{fig:convergence} shows the mean relative deviation in the effective recombination rate between iterations, and the maximum relative deviation. There is a clear convergence until the 10th iteration. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{"../log/testing/Figure_7.png"}
-	\caption{The mean relative change in the effective recombination rate and the maximum value show that the effective recombination rate indeed converges to some value}
+	\caption{The mean relative deviation in the effective recombination rate and the maximum value show that the effective recombination rate indeed converges to some value}
 	\label{fig:convergence}
 \end{figure}
-
+%
 \par\medskip
+%
+
+%
+\par\medskip
+%
 Figure \ref{fig:comp} shows a comparison between the inversion results obtained with a non-variable and variable ionosphere. 
 - FAC modulation
 - slight differences in energy spectra, effects on electron profile
