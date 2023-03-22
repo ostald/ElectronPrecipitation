@@ -3,6 +3,8 @@ import ic4elspec
 import time
 import sys
 import setup
+import loadmat
+
 
 #defining file paths
 msis_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/msis.rtf'
@@ -10,7 +12,7 @@ iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri
 chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/Reaction rates full set.txt'
 path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/Eiscat'
 
-mixf = 0
+mixf = 1
 
 #setup log directory
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf)#, no_timecode=True)
@@ -23,6 +25,7 @@ if sys.platform == 'linux2':
 cwd = os.getcwd()
 print('Current working Dir: ', cwd)
 
+#call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -r "
 call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
 
 #start model

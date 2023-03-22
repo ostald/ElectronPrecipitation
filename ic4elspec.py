@@ -175,13 +175,25 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
     def ic():
         res = np.empty(model.n_heights, dtype='object')
+        import time
+        startt = time.time()
 
         for h in range(model.n_heights):
+            import sys
+            sys.stdout.write('\r' + (' ' * 2))
+            sys.stdout.write("\r{0}".format(h))
+            sys.stdout.flush()
             n = np.array([c.density[h, 0] for c in model.all_species])
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                               t_eval=ts_, max_step=0.0444)
+                               t_eval=ts_, max_step=0.44, atol = 1e-3)
+
+            import sys
+            sys.stdout.write('\r' + (' ' * 22))
+            sys.stdout.write("\r Height {0}. Mean time {1}".format(h, (time.time() - startt) / (h + 1)))
+            sys.stdout.flush()
 
             if res[h].status != 0:
+                print(h)
                 print(res[h])
                 for c in model.all_species:
                     plt.figure()

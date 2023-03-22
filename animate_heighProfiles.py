@@ -7,7 +7,7 @@ import loadmat
 import ionChem
 from matplotlib.animation import FuncAnimation
 
-f = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_17_58_37 mixf=0/IC_res_8.pickle'
+f = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.03.10_15_20_03 mixf=0/IC_res_6.pickle'
 
 s = 3
 

@@ -53,6 +53,7 @@
 %==================
 \usepackage{mathtools}
 \usepackage{amsmath}
+\usepackage{bm}
 \usepackage[euler]{textgreek}
 \numberwithin{equation}{section}										% Gleichungszaehler pro Sektion zurücksetzen
 \renewcommand{\theequation}{\arabic{section}.\arabic{equation}}	% Definiert den Darstellungsstil der Gleichungsnummerierung
@@ -147,9 +148,9 @@ Ion density variations in the ionosphere can significantly influence the recombi
 
 Electron density inversion makes use the electron continuity equation:
 \begin{equation}
-	\frac{dn_e}{dt} = q_e - \alpha_{eff} n_e^2 + \nabla \cdot (n_e \textbf{v})
+	\frac{dn_e}{dt} = q_e - \alpha_{eff} n_e^2 + \nabla \cdot (n_e \bm{v_{e}})
 \end{equation}
-with $n_e$ being the electron density, $q_e$ the production and $\alpha_{eff}$ the effective recombination rate. The convective term $n_e \textbf{v}$ is usually neglected due to the lack of information on the velocity.
+with $n_e$ being the electron density, $q_e$ the production and $\alpha_{eff}$ the effective recombination rate. The convective term $\nabla \cdot (n_e \bm{v_e})$ is usually neglected due to the lack of information on the velocity vector.
 Transport and ionization of electrons precipitating in the ionosphere are governed by a set of linear differential equations, allowing to formulate the production height profile as a matrix product with a discretized differential energy flux $\phi$:
 \begin{equation}
 	q_e = A \phi
@@ -159,7 +160,7 @@ If the effective recombination rate is assumed constant, the problem is largely 
 \begin{equation}
 	\alpha_{eff} = \alpha_{\mathrm{NO^+}, e} \frac{n_{\mathrm{NO^+}}}{n_e} + \alpha_{\mathrm{O_2^+}, e} \frac{n_{\mathrm{O_2^+}}}{n_e}
 \end{equation}
-It has been shown that the ionospheric composition varies greatly during auroral precipitation \cite{jones_time_1973} and it is assumed to have a considerable effect on electron inversion techniques \cite{virtanen_electron_2018}. This is the first study, to the author's knowledge, that takes the dynamic variability into account by modeling the relevant ion and minor species densities.
+The ion densities are again given by their continuity equations. It has been shown that the ionospheric composition varies greatly during auroral precipitation \cite{jones_time_1973} and it is assumed to have a considerable effect on electron inversion techniques \cite{virtanen_electron_2018}. This is the first study, to the author's knowledge, that takes the full dynamic variability into account by accurately modeling the relevant ion and minor species densities.
 
 \section{Method}
 \subsection{Ion Chemistry}
@@ -237,7 +238,7 @@ Reaction											& Rate $[m^{-3} s^{-1}]$					& Branching ratio	\\
 Inverting the electron density height profiles to differential energy spectra is performed with the ElSPec algorithm \cite{virtanen_electron_2018}, extended by a robust statistics implementation [B. Gustavsson, unpublished]. The implementation of ElSPec used requires the entire data set to be processed at once. Therefore, instead of combining the ion chemistry model at each timestep with ElSpec, an iterative approach is adopted: The ElSpec algorithm is started with an assumed ionospheric composition, producing an electron production model $q_e$ in altitude and time. This is then used in the ion chemistry model to calculate the evolution of ionospheric composition, and given as an input into the next iteration of ElSpec. Over few iterations, the ionospheric composition is converging to negligibly small deviations in between iterations.
 
 \subsection{Initial Composition}
-The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} is used as a model for the initial ion composition. As the IRI model cannot account for auroral precipitation and the induced changes in composition, a 30 minute time window is added to the start of the data set. During that time, the ionospheric chemistry model is run, assuming a constant electron and ion production rate, according to that of the first step in the time series. The model ionosphere thereby reaches an equilibrium state. Figure \ref{fig:dialin} shows $NO^+$ density at  98 km altitude.
+The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} is used as a model for the initial ion composition. As the IRI model cannot account for auroral precipitation and the induced changes in composition, a 30 minute time window is added to the start of the data set. During that time, the ionospheric chemistry model is run, assuming a constant electron and ion production rate, according to that of the first data point. The model ionosphere thereby reaches an equilibrium state. Figure \ref{fig:dialin} shows how $NO^+$ density at 98 km altitude reaches an equilibrium state.
 
 
 \begin{figure}

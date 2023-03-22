@@ -6,7 +6,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.02.16_21_45_58 mixf=1/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.03.15_14_50_46 mixf=1/'
 files = glob.glob(direc + '*.pickle')
 print(sorted(files))
 
@@ -23,7 +23,7 @@ spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N
          'Op_4S','Op_2P']
 
 
-nax = 9
+nax = 4
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
@@ -193,8 +193,8 @@ fig41.supxlabel('Time [s]')
 ax.set_ylabel(r"Deviation in $\alpha_{eff}$")
 ax.set_xlabel("Iteration")
 ax.set_yscale('log')
-plt.show()
-exit()
+#plt.show()
+#exit()
 
 
 fig5, axs5 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)

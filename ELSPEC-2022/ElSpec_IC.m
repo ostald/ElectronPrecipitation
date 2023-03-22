@@ -9,7 +9,7 @@ function ElSpec_IC(log_dir)
 %% 1, Setting up the matlab-path
 % Simply modify the path below to point to the directory where ELSPEC-2022
 % is installed. That should be it.
-
+%addpath /bigdata/Campaigns/ELSPEC-2022 -end
 %addpath 'ELSPEC-2022' -end
 
 %% 2 Setup of parameters controlling ELSPEC
@@ -20,8 +20,12 @@ egrid = logspace(1,5,400);
 % Data directories
 % The paths to the directories with the ionospheric parameters and the
 % power-profiles.
-fitdir = '../Data/Eiscat';
-ppdir  = '../Data/Eiscat';
+%fitdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
+%fitdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
+fitdir = '../Data/Eiscat/fit';
+%ppdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/tmp-ionlines/2006-12-12_arc1_4@uhf-pp';
+%ppdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf-pp';
+ppdir = '../Data/Eiscat/pp';
 % Flag for specifying which EISCAT-experiment it is
 experiment = 'arc1';
 % Altitude-limits.
@@ -48,21 +52,21 @@ ninteg = 5;
 %% Outlier-specification
 % The arrays here specify the outliers, and are of the format 
 %              iz1 iz2 it1 it2 C
-% OUTLIERS{1} = [ 12  13  91  92 10;
-%                12 21 123 124 10;
-%                12 21 421 422 10];
-% OUTLIERS{2} = [12 21 91 92 10;
-%                12 21 123 124 30;
-%                12 21 421 422 30];
-% OUTLIERS{3} = [12 13 91 92 30;
-%                12 51 123 124 10;
-%                12 51 421 422 3];
-% OUTLIERS{4} = [12 21 91 92 5;
-%                12 51 123 124 3;
-%                12 51 421 422 2];
-% OUTLIERS{5} = [12 21 91 92 2;
-%                12 51 123 124 2;
-%                12 51 421 422 2];
+    % OUTLIERS{1} = [ 12  13  91  92 10;
+    %                12 21 123 124 10;
+    %                12 21 421 422 10];
+    % OUTLIERS{2} = [12 21 91 92 10;
+    %                12 21 123 124 30;
+    %                12 21 421 422 30];
+    % OUTLIERS{3} = [12 13 91 92 30;
+    %                12 51 123 124 10;
+    %                12 51 421 422 3];
+    % OUTLIERS{4} = [12 21 91 92 5;
+    %                12 51 123 124 3;
+    %                12 51 421 422 2];
+    % OUTLIERS{5} = [12 21 91 92 2;
+    %                12 51 123 124 2;
+    %                12 51 421 422 2];
 % and the electron-densities at altitudes between z(iz1) and z(iz2) at
 % times between t(it1) and t(it2) will be multiplied with C, the last
 % element on each row. Here 3 outliers are inserted in the power-profiles.
@@ -71,10 +75,11 @@ ninteg = 5;
 ErrType = 'l'; % L for Lorentzian.
 % for i1 = numel(OUTLIERS):-1:1
 %   Outliers = OUTLIERS{i1};
-%Outname = sprintf('ElSpec-Outliers-L-5-2.mat');
-%disp(Outname)
+%   Outname = sprintf('ElSpec-Outliers-L-5-%02i.mat',i1);
+%   disp(Outname)
 %   disp(Outliers)
-% ElSpecQT_Outliers_L5 = ElSpec_qt('fitdir',fitdir,...
+%   %                                       'Tdir',Tdir,...  (time direction)
+%   ElSpecQT_Outliers_L5{i1} = ElSpec_qt('fitdir',fitdir,...
 %                                        'ppdir',ppdir,...
 %                                        'experiment',experiment,...
 %                                        'hmax',hmax,'hmin',hmin,...
@@ -86,23 +91,49 @@ ErrType = 'l'; % L for Lorentzian.
 %                                        'ErrType',ErrType,...
 %                                        'MaxOrder',maxorder,...
 %                                        'ninteg',ninteg,...
-%                                        'Tdir',1,...  
+%                                        'Outliers',Outliers,...
 %                                        'Outfilename',Outname);
 %   ElSpecPlot(ElSpecQT_Outliers_L5{i1})
 %   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_Outliers_L5{i1}.Outfilename); 
-%   print('-depsc2','-painters',[fnm2,'-QT-l-5']);
+%   print('-depsc','-vector',[fnm2,'-QT-l-5']);
+%   dstr = sprintf('Done with loop S i1: %i at %s',i1,datestr(now,'HH:MM:SS'));
+%   disp(dstr)
+%   close(gcf)
+%   
+% end
+% 
+% for i1 = numel(OUTLIERS):-1:1
+%   Outliers = OUTLIERS{i1};
+%   Outname = sprintf('ElSpec-iqtOutliers-L-5-%02i.mat',i1);
+%   disp(Outname)
+%   disp(Outliers)
+%   ElSpecQT_iqtOutliers_L5{i1} = ElSpec_iqt('fitdir',fitdir,...
+%                                        'ppdir',ppdir,...
+%                                        'experiment',experiment,...
+%                                        'hmax',hmax,'hmin',hmin,...
+%                                        'btime',btime,'etime',etime,...
+%                                        'ionomodel',ionomodel,...
+%                                        'integtype',integtype,...
+%                                        'egrid',egrid,...
+%                                        'tres',tres,...
+%                                        'ErrType',ErrType,...
+%                                        'MaxOrder',maxorder,...
+%                                        'ninteg',ninteg,...
+%                                         'Outliers',Outliers,...
+%                                        'Outfilename',Outname);
+%   ElSpecPlot(ElSpecQT_iqtOutliers_L5{i1})
+%   [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5{i1}.Outfilename) ;
+%   print('-depsc','-vector',[fnm2,'-IQT-l-5']);
 %   dstr = sprintf('Done with loop S i1: %i at %s',i1,datestr(now,'HH:MM:SS'));
 %   disp(dstr)
 %   close(gcf)
 %   
 % end
 
-%for i1 = numel(OUTLIERS):-1:1
-%  Outliers = OUTLIERS{i1};
 %Outname = sprintf('../' + log_dir + 'ElSpec-iqt_IC_0');
 Outname = fullfile("..", log_dir, "ElSpec-iqt_IC_0");
 disp(Outname)
-%  disp(Outliers)
+
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...
                                        'ppdir',ppdir,...
                                        'experiment',experiment,...
@@ -116,23 +147,23 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt('fitdir',fitdir,...
                                        'MaxOrder',maxorder,...
                                        'ninteg',ninteg,...
                                        'Outfilename',Outname);
-  ElSpecPlot(ElSpecQT_iqtOutliers_L5);
-  [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
-  print('-depsc2', '-painters', [Outname]);
-  print('-dpdf', '-painters', [Outname]);
-  dstr = sprintf('Done with loop S i1: at %s',datestr(now,'HH:MM:SS'));
-  disp(dstr);
-  close(gcf);
+ElSpecPlot(ElSpecQT_iqtOutliers_L5);
+[fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
+print('-depsc','-vector',[Outname]);
+print('-dpdf', '-painters', [Outname]);
+dstr = sprintf('Done with loop S i1: 0 at %s',datestr(now,'HH:MM:SS'));
+disp(dstr)
+close(gcf)
   
-%end
+
 %% Two modified plotting-functions
 % In addition to ElSpecPlot, ElSpecPlot2 and ElSpecPlotSmall 2 new
 % plotting-functions are added:
-fig1 = figure;
-ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5,fig1.Number);
-fig2 = figure;
-ElSpecPlotRes(ElSpecQT_iqtOutliers_L5,fig2.Number);
-ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5);
-ph = ElSpecPlotTres(ElSpecQT_iqtOutliers_L5);
-set(ph,'color','r','linestyle','--','marker','.');
+%fig1 = figure;
+%ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5,fig1.Number);
+%fig2 = figure;
+%ElSpecPlotRes(ElSpecQT_iqtOutliers_L5,fig2.Number);
+%ElSpecPlotIeNePpRes(ElSpecQT_iqtOutliers_L5);
+%ph = ElSpecPlotTres(ElSpecQT_iqtOutliers_L5);
+%set(ph,'color','r','linestyle','--','marker','.');
 end

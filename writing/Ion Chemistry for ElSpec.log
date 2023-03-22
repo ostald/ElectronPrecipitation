@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.6)  6 MAR 2023 15:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.6)  20 MAR 2023 10:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -468,6 +468,14 @@ LaTeX Info: Thecontrolsequence`\]'isalreadyrobust on input line 130.
 \l_MT_below_shortintertext_sep=\dimen167
 \xmathstrut@box=\box50
 \xmathstrut@dim=\dimen168
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2019/07/24 v1.2d Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup4
+\symboldletters=\mathgroup5
+\symboldsymbols=\mathgroup6
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 141.
+LaTeX Info: Redefining \bm on input line 209.
 )
 (/usr/local/texlive/2021/texmf-dist/tex/latex/textgreek/textgreek.sty
 Package: textgreek 2011/10/09 v0.7 Greek symbols in text
@@ -1372,28 +1380,28 @@ Package csquotes Info: Redefining alias 'default' -> 'english'.
  (./Ion Chemistry for ElSpec.aux)
 \openout1 = `"Ion Chemistry for ElSpec.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 93.
-LaTeX Font Info:    ... okay on input line 93.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 93.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 94.
 LaTeX Font Info:    Trying to load font information for LGR+cmr on input line 9
-3.
+4.
 
 (/usr/local/texlive/2021/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
 File: lgrcmr.fd 2017/07/29 v1.2 Greek European Computer Regular
 )
-LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    ... okay on input line 94.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1466,77 +1474,107 @@ Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file '"Ion Chemistry for ElSpec".bbl' found.
 
 (./Ion Chemistry for ElSpec.bbl)
-Package biblatex Info: Reference section=0 on input line 93.
-Package biblatex Info: Reference segment=0 on input line 93.
+Package biblatex Info: Reference section=0 on input line 94.
+Package biblatex Info: Reference segment=0 on input line 94.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-Package chemgreek Info: Activating mapping `textgreek' on line 93.
+Package chemgreek Info: Activating mapping `textgreek' on line 94.
 
  [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-<../log/testing/plots/IC_0_NO+ Density.pdf, id=30, 463.7325pt x 347.2975pt>
+<../log/testing/plots/IC_0_NO+ Density.pdf, id=31, 463.7325pt x 347.2975pt>
 File: ../log/testing/plots/IC_0_NO+ Density.pdf Graphic file (type pdf)
 <use ../log/testing/plots/IC_0_NO+ Density.pdf>
 Package pdftex.def Info: ../log/testing/plots/IC_0_NO+ Density.pdf  used on inp
-ut line 245.
+ut line 246.
 (pdftex.def)             Requested size: 220.50887pt x 165.1429pt.
-<../log/testing/Figure_7.png, id=31, 462.528pt x 346.896pt>
-File: ../log/testing/Figure_7.png Graphic file (type png)
-<use ../log/testing/Figure_7.png>
-Package pdftex.def Info: ../log/testing/Figure_7.png  used on input line 260.
-(pdftex.def)             Requested size: 220.50887pt x 165.38072pt.
-<../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf, id=33, 614.295p
-t x 794.97pt>
-File: ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf Graphic fil
-e (type pdf)
-<use ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf>
-Package pdftex.def Info: ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_I
-C_0.pdf  used on input line 278.
-(pdftex.def)             Requested size: 264.60995pt x 342.43695pt.
 
-Overfull \hbox (44.10109pt too wide) in paragraph at lines 278--280
- [][] 
- []
 
-<../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf, id=34, 614.295p
-t x 794.97pt>
-File: ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf Graphic fil
-e (type pdf)
-<use ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf>
-Package pdftex.def Info: ../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_I
-C_6.pdf  used on input line 283.
-(pdftex.def)             Requested size: 264.60995pt x 342.43695pt.
+LaTeX Warning: File `"../log/testing/Figure_7.png"' not found on input line 261
+.
 
-Overfull \hbox (44.10109pt too wide) in paragraph at lines 283--285
- [][] 
- []
 
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 3
-38.
+! Package pdftex.def Error: File `../log/testing/Figure_7.png' not found: using
+ draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.261 ...textwidth]{"../log/testing/Figure_7.png"}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
+61.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-Overfull \hbox (68.25143pt too wide) in paragraph at lines 339--339
+
+LaTeX Warning: File `"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0
+.pdf"' not found on input line 279.
+
+
+! Package pdftex.def Error: File `../log/testing/2023.02.27_16_39_35 mixf=1/ElS
+pec-iqt_IC_0.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.279 ....27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf"}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (44.10109pt too wide) in paragraph at lines 279--281
+ [][] 
+ []
+
+
+LaTeX Warning: File `"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6
+.pdf"' not found on input line 284.
+
+
+! Package pdftex.def Error: File `../log/testing/2023.02.27_16_39_35 mixf=1/ElS
+pec-iqt_IC_6.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.284 ....27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf"}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (44.10109pt too wide) in paragraph at lines 284--286
+ [][] 
+ []
+
+
+Overfull \hbox (68.25143pt too wide) in paragraph at lines 340--340
 \T1/cmr/m/it/10 phys-i-cal Re-search Let-ters \T1/cmr/m/n/10 37.22 (2010). _epr
 int: https://onlinelibrary.wiley.com/doi/pdf/10.1029/2010GL045406.
  []
 
-[3 <../log/testing/plots/IC_0_NO+ Density.pdf>] [4 <../log/testing/Figure_7.png
-> <../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf> <../log/testi
-ng/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf>] [5]
+[3 <../log/testing/plots/IC_0_NO+ Density.pdf>] [4] [5]
 (./Ion Chemistry for ElSpec.aux)
 Package logreq Info: Writing requests to '"Ion Chemistry for ElSpec".run.xml'.
 \openout1 = `"Ion Chemistry for ElSpec.run.xml"'.
 
  ) 
 Here is how much of TeX's memory you used:
- 27047 strings out of 478994
- 526774 string characters out of 5858185
- 1343743 words of memory out of 5000000
- 44075 multiletter control sequences out of 15000+600000
- 420128 words of font info for 61 fonts, out of 8000000 for 9000
+ 27194 strings out of 478994
+ 529533 string characters out of 5858185
+ 1345097 words of memory out of 5000000
+ 44188 multiletter control sequences out of 15000+600000
+ 424239 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  97i,21n,102p,1745b,1658s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
@@ -1545,28 +1583,29 @@ Here is how much of TeX's memory you used:
 usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
 r/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
 local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/lo
-cal/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/t
-exlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texl
-ive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive
-/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
-2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/20
-21/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/2021
-/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2021/t
-exmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2021/tex
-mf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021/texmf
--dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/texlive/2021/texmf-d
-ist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/texmf-dis
-t/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2021/texmf-dist/
-fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-dist/fo
-nts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dist/font
-s/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/
-type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/ty
-pe1/public/cm-super/sftt1000.pfb>
-Output written on "Ion Chemistry for ElSpec.pdf" (5 pages, 688104 bytes).
+cal/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/lo
+cal/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></us
+r/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loc
+al/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
+texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
+live/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
+e/2021/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/texlive/
+2021/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/20
+21/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2021
+/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/texlive/2021/t
+exmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb></usr/local/texlive/2021/tex
+mf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2021/texmf
+-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-d
+ist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2021/texmf-dis
+t/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2021/texmf-dist/
+fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2021/texmf-dist/fo
+nts/type1/public/cm-super/sftt1000.pfb>
+Output written on "Ion Chemistry for ElSpec.pdf" (5 pages, 359743 bytes).
 PDF statistics:
- 257 PDF objects out of 1000 (max. 8388607)
- 169 compressed objects within 2 object streams
+ 165 PDF objects out of 1000 (max. 8388607)
+ 93 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 18 words of extra memory for PDF output out of 10000 (max. 10000000)
 
