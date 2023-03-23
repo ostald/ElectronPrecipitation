@@ -260,7 +260,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     c_order = np.array([c.name for c in model.all_species])
     order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
     for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
-        print(c)
+        #print(c)
         exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
     # print(Op_4S)
 

@@ -301,7 +301,7 @@ checkFAdev = @(x) (isnumeric(x)&length(x)==1);
 
 % custom densities
 defaultiri_ic = 0;
-checkiri_ic = @(x) (ismatrix(x));
+checkiri_ic = @(x) 1; %(ismatrix(x));
 
 % custom recombintaion rates
 defaultalpha_eff = 0;
@@ -343,6 +343,10 @@ if exist('inputParser') %#ok<EXIST>
   addParameter(p,'Outfilename',defaultOutfilename,checkOutfilename);
   addParameter(p,'Ietype',defaultIetype,checkIetype);
   addParameter(p,'InterpSpec',defaultInterpSpec,checkInterpSpec);
+
+  addParameter(p,'alpha_eff',defaultalpha_eff,checkalpha_eff);
+  addParameter(p,'iri_ic',defaultiri_ic,checkiri_ic);
+
   parse(p,varargin{:})
   
   %out = struct;
@@ -728,6 +732,9 @@ while iStart < numel(dt)
                            out.iri(:,7,iHalfway), ...
                            out.iri(:,1,iHalfway),...
                            out.ionomodel, out.I);
+
+  A(isnan(A)) = 0;
+
 
   % 2nd fit spectrum for the entire event
   [cAICc,cpolycoefs,cbest_order,cn_params,cne,cneEnd,cIe,cexitflag] = AICcFitParSeq(pp(:,iStart:iEnd),...

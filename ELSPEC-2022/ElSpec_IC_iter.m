@@ -10,7 +10,7 @@ function ElSpec_IC_iter(iter, log_dir)
 % Simply modify the path below to point to the directory where ELSPEC-2022
 % is installed. That should be it.
 %addpath /bigdata/Campaigns/ELSPEC-2022 -end
-addpath 'ELSPEC-2022' -end
+%addpath 'ELSPEC-2022' -end
 
 %% 2 Setup of parameters controlling ELSPEC
 
@@ -130,20 +130,21 @@ ErrType = 'l'; % L for Lorentzian.
 %   
 % end
 
-if iter > 1
-    m2 = iter - 2;
-    nStepsm2 = load(fullfile('..', log_dir, ["/ElSpec-iqt_IC_" + m2 + ".mat"])).ElSpecOut.nSteps;
-    m1 = iter - 1;
-    nStepsm1 = load(fullfile('..', log_dir, ["/ElSpec-iqt_IC_" + m1 + ".mat"])).ElSpecOut.nSteps;
-    if nStepsm2 == nStepsm1
-        nstep = nStepsm2;
-        disp('nstep copied')
-    else
-        nstep = 1;
-    end
-else
-    nstep = 1;
-end
+%try soemthing with same partitioning:
+% if iter > 1
+%     m2 = iter - 2;
+%     nStepsm2 = load(fullfile('..', log_dir, ["/ElSpec-iqt_IC_" + m2 + ".mat"])).ElSpecOut.nSteps;
+%     m1 = iter - 1;
+%     nStepsm1 = load(fullfile('..', log_dir, ["/ElSpec-iqt_IC_" + m1 + ".mat"])).ElSpecOut.nSteps;
+%     if nStepsm2 == nStepsm1
+%         nstep = nStepsm2;
+%         disp('nstep copied')
+%     else
+%         nstep = 1;
+%     end
+% else
+%     nstep = 1;
+% end
 
 j = iter - 1;
 icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
@@ -170,8 +171,7 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'ninteg',ninteg,...
                                        'Outfilename',Outname,...
                                        'iri_ic', iri_ic, ...
-                                       'alpha_eff', alpha_eff, ...
-                                       'nstep', nstep);
+                                       'alpha_eff', alpha_eff)
 ElSpecPlot(ElSpecQT_iqtOutliers_L5, ieelim = [10, 15], faclim = [0, 20], plim = [0, 100]);
 [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
 print('-depsc','-vector',[Outname]);
