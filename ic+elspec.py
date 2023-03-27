@@ -32,6 +32,7 @@ call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
 i = 0
 start_t = time.time()
 #os.system(call_matlab + "\"ElSpec_IC(\\\""+log_directory+"\\\")\" -nodisplay")
+os.system(call_matlab + "\"ElSpec_IC_iter(" + str(i) + ", \\\"" + log_directory + "\\\")\" -nodisplay")
 
 while True:
     ic4elspec.ic(log_directory, chemistry_config, 'ElSpec-iqt_IC_', i, mixf = mixf)

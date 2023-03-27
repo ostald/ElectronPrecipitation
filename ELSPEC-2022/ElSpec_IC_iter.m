@@ -146,12 +146,16 @@ ErrType = 'l'; % L for Lorentzian.
 %     nstep = 1;
 % end
 
-j = iter - 1;
-icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
-%icdir = "../" + log_dir + "IC_" + j + ".mat";
-icdata = load(icdir);
-iri_ic = icdata.elspec_iri_sorted;
-alpha_eff = icdata.eff_rr;
+if iter > 0
+    j = iter - 1;
+    icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
+    %icdir = "../" + log_dir + "IC_" + j + ".mat";
+    icdata = load(icdir);
+    iri_ic = icdata.elspec_iri_sorted;
+    alpha_eff = icdata.eff_rr;
+else
+    iri_ic = 0;
+end
 
 %Outname = sprintf('../' + log_dir + 'ElSpec-iqt_IC_0');
 Outname = fullfile("..", log_dir, ["ElSpec-iqt_IC_" + iter]);
