@@ -15,7 +15,7 @@ path_eiscat_data = 'Data/Eiscat'
 mixf = 1
 
 #setup log directory
-setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf)#, no_timecode=True)
+setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode=True)
 log_directory = setup_._log_directory
 
 matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
@@ -31,7 +31,7 @@ call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
 #start model
 i = 0
 start_t = time.time()
-os.system(call_matlab + "\"ElSpec_IC(\\\""+log_directory+"\\\")\" -nodisplay")
+#os.system(call_matlab + "\"ElSpec_IC(\\\""+log_directory+"\\\")\" -nodisplay")
 
 while True:
     ic4elspec.ic(log_directory, chemistry_config, 'ElSpec-iqt_IC_', i, mixf = mixf)

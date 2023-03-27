@@ -1,4 +1,4 @@
-function ElSpecOut = ElSpec_iqt(varargin)
+function ElSpecOut = ElSpec_iqt_ic(varargin)
 % ElSpec Estimate primary energy spectra of precipitating electrons from
 % EISCAT incoherent scatter data.
 %
@@ -499,7 +499,7 @@ else
         end
     end
 
-    if size(out.iri_ic) ~= [1 1]
+    if numel(out.iri_ic) > 1
         %replace density model with IC values
         out.iri = out.iri_ic;
     end
