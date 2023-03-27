@@ -179,10 +179,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         startt = time.time()
 
         for h in range(model.n_heights):
-            import sys
-            sys.stdout.write('\r' + (' ' * 2))
-            sys.stdout.write("\r{0}".format(h))
-            sys.stdout.flush()
             n = np.array([c.density[h, 0] for c in model.all_species])
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
                                t_eval=ts_, max_step=0.44, atol = 1e-3)
@@ -248,10 +244,18 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     n_ic_ = np.array([r.y for r in res])
     n_ic = np.empty(n_ic_.shape)
 
-    print(mixf)
+    print('mixf =', mixf)
     if iteration == 0:
-        for i in range(n_ic_.shape[2]):
-            n_ic[:, :, i] = (n_ic_[:, :, i] + mixf * n_ic_[:, :, 0]) / (1 + mixf)
+        if n_ic_.shape[2] == ne.shape[1]:
+            print('untested')
+            # breakpoint()
+            n_ic_old = np.array([c.density for c in model.all_species]).swapaxes(0, 1)
+            n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
+        else:
+            # interpolate
+            n_ic_old = np.array(
+                [[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
+            n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
             [ts_, z, n_ic_old, eff_rr_old] = pickle.load(pf)
