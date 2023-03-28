@@ -48,6 +48,8 @@ class setup:
         self._today = datetime.now()
         #self._log_directory = self._directory + '/log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S')
         if not os.path.isdir('log/testing/'):
+            if not os.path.isdir('log/'):
+                os.mkdir('log/')
             os.mkdir('log/testing/')
         if self.no_timecode == True:
             self._log_directory = 'log/testing/'
