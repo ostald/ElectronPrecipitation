@@ -15,7 +15,7 @@ path_eiscat_data = 'Data/Eiscat'
 mixf = 1
 
 #setup log directory
-setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode=True)
+setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf)#, no_timecode=True)
 log_directory = setup_._log_directory
 
 matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
