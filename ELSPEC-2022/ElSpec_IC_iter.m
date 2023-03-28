@@ -155,6 +155,7 @@ if iter > 0
     alpha_eff = icdata.eff_rr;
 else
     iri_ic = 0;
+    alpha_eff = 0;
 end
 
 %Outname = sprintf('../' + log_dir + 'ElSpec-iqt_IC_0');
@@ -174,9 +175,9 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'MaxOrder',maxorder,...
                                        'ninteg',ninteg,...
                                        'Outfilename',Outname,...
-                                       'iri_ic', iri_ic)%, ...
-                                       %'alpha_eff', alpha_eff)
-ElSpecPlot(ElSpecQT_iqtOutliers_L5, ieelim = [10, 15], faclim = [0, 20], plim = [0, 100]);
+                                       'iri_ic', iri_ic, ...
+                                       'alpha_eff', alpha_eff)
+ElSpecPlot(ElSpecQT_iqtOutliers_L5, ieelim = [10, 14], faclim = [0, 10], plim = [0, 60]);
 [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
 print('-depsc','-vector',[Outname]);
 print('-dpdf', '-painters', [Outname]);

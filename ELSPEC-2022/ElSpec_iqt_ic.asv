@@ -640,19 +640,18 @@ A(isnan(A)) = 0;
 
 % update the effective recombination coefficient. Assume N2+
 % density to be zero
-if numel(out.alpha_eff) > 1
-    %replace standart model with IC values
-    out.alpha = out.alpha_eff; 
-else
-    for it = 1:numel(out.ts)
-      out.alpha(:,it) = effective_recombination_coefficient(out.h, ...
+if out.alpha_eff
+for it = 1:numel(out.ts)
+  out.alpha(:,it) = effective_recombination_coefficient(out.h, ...
                                                     out.par(:,3,it), ...
                                                     out.iri(:,9,it), ...
                                                     out.iri(:,9,it).*0, ...
                                                     out.iri(:,8,it), ...
                                                     out.recombmodel );
-    end
 end
+%replace standart model with IC values
+out.alpha = out.alpha_eff; 
+
 
 % save interval is 100 step, independently from the time resolution
 ndtsave = 20;%ceil(mean(120./out.dt));

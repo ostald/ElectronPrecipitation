@@ -10,7 +10,7 @@ import pickle
 
 direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/'
 file = 'ElSpec-iqt_IC_'
-iteration = 0
+iteration = 1
 
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 
@@ -26,6 +26,7 @@ if True:
         n_model = con["iri"]
         [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
         # normalise charged species to fit electron density
+        #test
         [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
         # setting start time [0] to 0:
@@ -37,7 +38,7 @@ if True:
         ts_ = np.copy(ts)
         ts[0] = -30 * 60
         ts_show = np.arange(ts[0], te[-1], 0.01)
-        ts_int = ts_ #set which time array to use for integration etc.
+        ts_int = ts_show  #set which time array to use for integration etc.
 
         def stepped_prod_t(prod, t):
             """
@@ -254,7 +255,7 @@ if True:
                 ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
                 # for t in ts_: plt.axvline(t, alpha = 0.1)
                 plt.tight_layout()
-                #plt.show()
+                plt.show()
                 plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
                 plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.eps')
             break
