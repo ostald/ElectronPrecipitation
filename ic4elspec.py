@@ -238,7 +238,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             ax2.set_ylabel('Electron production [m-3s-1]')
             # for t in ts_: plt.axvline(t, alpha = 0.1)
 
-            plt.savefig(direc + 'plots/' + c.name + ' Density.svg' + '_IC_' + str(iteration))
+            plt.savefig(direc + 'plots/' + c.name + ' Density' + '_IC_' + str(iteration) + '.svg')
         break
 
     n_ic_ = np.array([r.y for r in res])
