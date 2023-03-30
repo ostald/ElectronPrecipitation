@@ -18,7 +18,7 @@ mixf = 1
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf)#, no_timecode=True)
 log_directory = setup_._log_directory
 
-matlabroot_dir = "/Applications/MATLAB_R2022b.app/bin/./matlab"
+matlabroot_dir = "/Applications/MATLAB_R2023a.app/bin/./matlab"
 if sys.platform == 'linux':
     matlabroot_dir = "/usr/local/bin/matlab"
 

@@ -19,7 +19,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     n_model = con["iri"]
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     #normalise charged species to fit electron density
-    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
+    if iteration == 0:
+        [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
     # setting start time [0] to 0:
     ts = con["ts"] - con["ts"][0]
@@ -30,6 +31,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     ts_ = np.copy(ts)
     ts[0] = -30*60
     ts_show = np.arange(ts[0], te[-1], 0.01)
+    ts_int = ts_  #set which time array to use for integration etc.
 
     def stepped_prod_t(prod, t):
         """
@@ -84,7 +86,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
     model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
-    model.check_chargeNeutrality()
+    #model.check_chargeNeutrality()
 
     for c in model.all_species:
         c.prod = e_prod * 0
@@ -97,7 +99,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
 
     # create smooth function for production
-    t = np.arange(0, te[-1], 0.01)
+    t = np.arange(0, te[-1], 0.001)
 
     stepf = np.array([stepped_prod_t(e_prod, i) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf)
@@ -179,14 +181,17 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         startt = time.time()
 
         for h in range(model.n_heights):
+            #breakpoint()
             n = np.array([c.density[h, 0] for c in model.all_species])
+
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                               t_eval=ts_, max_step=0.44, atol = 1e-3)
+                               t_eval=ts_int, max_step=0.44, atol = 1e-3)
 
             import sys
             sys.stdout.write('\r' + (' ' * 22))
             sys.stdout.write("\r Height {0}. Mean time {1}".format(h, (time.time() - startt) / (h + 1)))
             sys.stdout.flush()
+
 
             if res[h].status != 0:
                 print(h)
@@ -218,27 +223,29 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     for h, i in enumerate(res):
         for c in model.all_species:
             plt.figure()
-            plt.plot(i.t, i.y[c.c_ID, :], label=c.name)
-            if c == model.e: plt.plot(ts_, ne[h, :], label='ElSpec ne')
-            if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec N2')
-            if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec O2')
-            if c == model.O: plt.plot(ts_, nO[h], label='ElSpec O ')
-            if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec NOp')
-            if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec O2p')
-            # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec Op ')
+            plt.plot(i.t, i.y[c.c_ID, :], label='n('+c.name+')')
+            if c == model.e: plt.plot(ts_, ne[h, :], label='ElSpec n(e)')
+            if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec n(N2)')
+            if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec n(O2)')
+            if c == model.O: plt.plot(ts_ , nO[h],  label='ElSpec n(O) ')
+            if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec n(NO+)')
+            if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec n(O2+)')
+            # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec n(O+) ')
             plt.legend(loc=2)
             plt.yscale('log')
             plt.xlabel('Time [s]')
-            plt.ylabel('Density [m-3]')
-            plt.title(c.name + ' Density')
+            plt.ylabel(r'Density [m$^{-3}$]')
+            #plt.title(c.name + ' Density')
             ax2 = plt.gca().twinx()
-            ax2.plot(ts_, e_prod[h, :], '.', color='green', label='q_e')
+            ax2.plot(ts_, e_prod[h, :], '.', color='green', label=r'$q_e$')
             ax2.set_yscale('log')
             ax2.legend(loc=1)
-            ax2.set_ylabel('Electron production [m-3s-1]')
+            ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
             # for t in ts_: plt.axvline(t, alpha = 0.1)
-
-            plt.savefig(direc + 'plots/' + c.name + ' Density' + '_IC_' + str(iteration) + '.svg')
+            plt.tight_layout()
+            #plt.show()
+            plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
+            plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.eps')
         break
 
     n_ic_ = np.array([r.y for r in res])
@@ -252,9 +259,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             n_ic_old = np.array([c.density for c in model.all_species]).swapaxes(0, 1)
             n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
         else:
-            # interpolate
-            n_ic_old = np.array(
-                [[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
+            #interpolate
+            n_ic_old = np.array([[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
             n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
@@ -264,7 +270,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     c_order = np.array([c.name for c in model.all_species])
     order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
     for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
-        #print(c)
+        print(c)
         exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
     # print(Op_4S)
 
@@ -277,7 +283,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
     elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
-    #if iteration == 0:
+    # if iteration == 0:
     #    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
@@ -350,4 +356,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     plt.title('Deviation from previous eff. rec. rate [m3s-1]')
     plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + \
                 'Deviation from previous eff rec rate.svg')
+
+
 
