@@ -1,0 +1,16 @@
+__pycache__/*
+.DS_Store
+.idea/.gitignore
+.ipynb_checkpoints/
+Data/.DS_Store
+Data/Eiscat/.DS_Store
+ELSPEC-2022.zip
+ELSPEC-2022/.gitignore
+ELSPEC-2022_old/.DS_Store
+ELSPEC-2022_old/ElSpec-Outliers-L-5-2.mat
+ELSPEC-2022_old/ElSpec-iqtOutliers-L-5-.mat
+ELSPEC-recursive-2023.zip
+ELSPEC-recursive/.gitignore
+ipynb/*
+log/*
+writing/*
