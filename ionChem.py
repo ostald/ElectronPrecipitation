@@ -377,6 +377,7 @@ class ionChem:
             plt.xlabel('Relative Charge density deviation [C]')
             plt.ylabel('Altitude [km]')
             plt.title('Relative Charge Density profile at time ' + str(self.time) + ', step: ' + str(self.iteration_step)                       + '\n (should be 0, -1 means double as many electrons)')
+            breakpoint()
             raise RuntimeError('Charge neutrality violated')
         
         if con.print:

@@ -18,9 +18,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     ne = con["ne"]
     n_model = con["iri"]
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+
     #normalise charged species to fit electron density
-    if iteration == 0:
-        [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
+    #necessary for every timestep, as ne changes in ElSpec, but n(ions) does not
+    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
     # setting start time [0] to 0:
     ts = con["ts"] - con["ts"][0]
@@ -32,25 +33,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     ts[0] = -30*60
     ts_show = np.arange(ts[0], te[-1], 0.01)
     ts_int = ts_  #set which time array to use for integration etc.
-
-    def stepped_prod_t(prod, t):
-        """
-        returns the production according to the ELSPEC model
-        of any species where prod is defined
-        at arbitrary times
-        using the last ts: ts <= t from ELSPEC
-        """
-        if t < ts[0]:
-            return 0
-        if t > te[-1]:
-            return 0
-        else:
-            i_max_ts = len(ts[ts <= t]) - 1
-            if i_max_ts < 0:
-                print(i_max_ts)
-                raise RuntimeError
-            prod_t = prod[:, i_max_ts]
-            return prod_t
 
     model = ionChem.ionChem(chemistry_config, z_model)
 
@@ -101,16 +83,16 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # create smooth function for production
     t = np.arange(0, te[-1], 0.001)
 
-    stepf = np.array([stepped_prod_t(e_prod, i) for i in t])
+    stepf = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf)
 
-    stepf = np.array([stepped_prod_t(Op_prod, i) for i in t])
+    stepf = np.array([stepped_prod_t(Op_prod, i, ts, te) for i in t])
     Op_prod_smooth = PchipInterpolator(t, stepf)
 
-    stepf = np.array([stepped_prod_t(O2p_prod, i) for i in t])
+    stepf = np.array([stepped_prod_t(O2p_prod, i, ts, te) for i in t])
     O2p_prod_smooth = PchipInterpolator(t, stepf)
 
-    stepf = np.array([stepped_prod_t(N2p_prod, i) for i in t])
+    stepf = np.array([stepped_prod_t(N2p_prod, i, ts, te) for i in t])
     N2p_prod_smooth = PchipInterpolator(t, stepf)
 
     # zero function for species that dont feel production
@@ -185,7 +167,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             n = np.array([c.density[h, 0] for c in model.all_species])
 
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                               t_eval=ts_int, max_step=0.44, atol = 1e-3)
+                               t_eval=ts_int, max_step=0.44, atol = 1e-3, dense_output=True)
 
             import sys
             sys.stdout.write('\r' + (' ' * 22))
@@ -220,34 +202,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
 
-    for h, i in enumerate(res):
-        for c in model.all_species:
-            plt.figure()
-            plt.plot(i.t, i.y[c.c_ID, :], label='n('+c.name+')')
-            if c == model.e: plt.plot(ts_, ne[h, :], label='ElSpec n(e)')
-            if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec n(N2)')
-            if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec n(O2)')
-            if c == model.O: plt.plot(ts_ , nO[h],  label='ElSpec n(O) ')
-            if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec n(NO+)')
-            if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec n(O2+)')
-            # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec n(O+) ')
-            plt.legend(loc=2)
-            plt.yscale('log')
-            plt.xlabel('Time [s]')
-            plt.ylabel(r'Density [m$^{-3}$]')
-            #plt.title(c.name + ' Density')
-            ax2 = plt.gca().twinx()
-            ax2.plot(ts_, e_prod[h, :], '.', color='green', label=r'$q_e$')
-            ax2.set_yscale('log')
-            ax2.legend(loc=1)
-            ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
-            # for t in ts_: plt.axvline(t, alpha = 0.1)
-            plt.tight_layout()
-            #plt.show()
-            plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.svg')
-            plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + c.name + ' Density.eps')
-        break
-
     n_ic_ = np.array([r.y for r in res])
     n_ic = np.empty(n_ic_.shape)
 
@@ -264,7 +218,12 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
     else:
         with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-            [ts_, z, n_ic_old, eff_rr_old] = pickle.load(pf)
+            data = pickle.load(pf)
+            ts = data[0]
+            z = data[1]
+            n_ic_old = data[2]
+            eff_rr_old = data[3]
+            ne_init_old = data[4]
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
     c_order = np.array([c.name for c in model.all_species])
@@ -272,7 +231,9 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     for c, n in zip(order.split(','), n_ic.swapaxes(0, 1)):
         print(c)
         exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
+
     # print(Op_4S)
+    ne_init = e[:, 0]
 
     eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
               rrate.T[:, 1, :] * n_ic[:, 6, :] + \
@@ -286,13 +247,51 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # if iteration == 0:
     #    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
-    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr}
+    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr, "ne_init": ne_init}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
 
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump([ts_, z_model, n_ic, eff_rr], f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([ts_, z_model, n_ic, eff_rr, ne_init, res], f, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    for h, i in enumerate(res):
+        for c in model.all_species:
+            plt.figure()
+            ax = plt.gca()
+            plt.plot(i.t, i.y[c.c_ID, :], label=r'$n_{'+c.name+'}$')
+            if c == model.e:
+                plt.plot(ts, ne[h, :], label=r'ElSpec $n_e$')
+                ax.plot(ts, np.sqrt(e_prod_smooth(ts)[:, 0] / eff_rr[0, :]), '--', color='red', label=r'$ne_{ss}$')
+                ax.plot(ts_show, i.sol(ts_show)[c.c_ID, :], label = r'$ne_{ode}$')
+            if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec n(N2)')
+            if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec n(O2)')
+            if c == model.O: plt.plot(ts_ , nO[h],  label='ElSpec n(O) ')
+            if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec n(NO+)')
+            if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec n(O2+)')
+            # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec n(O+) ')
+            #ax.plot(ts_int, np.sqrt(e_prod_smooth(ts_int)[:, 0]/eff_rr[0, :]), '--', color = 'red', label = 'ne_ss')
+            plt.legend(loc=2)
+            plt.yscale('log')
+            plt.xlabel('Time [s]')
+            plt.ylabel(r'Density [m$^{-3}$]')
+            #plt.title(c.name + ' Density')
+            ax = plt.gca()
+            ax2 = ax.twinx()
+            ax2.plot(ts, e_prod[h, :], '.', color='green', label=r'$q_e$')
+            if c == model.e:
+                ax2.plot(ts_show, e_prod_smooth(ts_show)[:, 0], '--', color = 'green', label = r'$q_{e, intp}$')
+            ax2.set_yscale('log')
+            ax2.legend(loc=1)
+            ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
+            # for t in ts_: plt.axvline(t, alpha = 0.1)
+            plt.tight_layout()
+            #plt.show()
+            plt.savefig(direc + 'plots/' + c.name + '_Density_IC_' + str(iteration) + '.svg')
+            plt.savefig(direc + 'plots/' + c.name + '_Density_IC_' + str(iteration) + '.eps')
+        break
+
 
     d_effrr = con["alpha"] - eff_rr
 
@@ -359,3 +358,21 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
 
 
+def stepped_prod_t(prod, t, ts, te):
+    """
+    returns the production according to the ELSPEC model
+    of any species where prod is defined
+    at arbitrary times
+    using the last ts: ts <= t from ELSPEC
+    """
+    if t < ts[0]:
+        return 0
+    if t > te[-1]:
+        return 0
+    else:
+        i_max_ts = len(ts[ts <= t]) - 1
+        if i_max_ts < 0:
+            print(i_max_ts)
+            raise RuntimeError
+        prod_t = prod[:, i_max_ts]
+        return prod_t

@@ -46,7 +46,7 @@ tres = 'best';
 maxorder = 5;
 % ninteg set to 5, here that only means that this is the number of
 % time-steps to integrate for the initial condition
-ninteg = 5;
+ninteg = 20;
 % For additional settings see the help of ElSpec, ElSpec_iqt and ElSpec_qt
 
 %% Outlier-specification
@@ -153,9 +153,11 @@ if iter > 0
     icdata = load(icdir);
     iri_ic = icdata.elspec_iri_sorted;
     alpha_eff = icdata.eff_rr;
+    ne_init = icdata.ne_init;
 else
     iri_ic = 0;
     alpha_eff = 0;
+    ne_init = 0;
 end
 
 %Outname = sprintf('../' + log_dir + 'ElSpec-iqt_IC_0');
@@ -176,7 +178,9 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'ninteg',ninteg,...
                                        'Outfilename',Outname,...
                                        'iri_ic', iri_ic, ...
-                                       'alpha_eff', alpha_eff);
+                                       'alpha_eff', alpha_eff, ...
+                                       'iteration', iter, ...
+                                       'ne_init', ne_init);
 ElSpecPlot(ElSpecQT_iqtOutliers_L5, ieelim = [10, 14], faclim = [0, 10], plim = [0, 60]);
 [fnm1,fnm2,fnm3] = fileparts(ElSpecQT_iqtOutliers_L5.Outfilename) ;
 print('-depsc','-vector',[Outname]);

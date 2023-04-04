@@ -56,6 +56,8 @@ function ElSpecOut = ElSpec_iqt_ic(varargin)
 %  alpha_eff    effective recombination rates calculated from IC
 %               integration
 %  iri_ic       species densities at times ts calculated with IC integration    
+%  iteration    iteration of convergence algorithm
+%  ne_init      initial electron density          
 %
 % OUTPUT:
 %  ElSpecOut    A MATLAB structure with fields:...
@@ -131,7 +133,7 @@ function ElSpecOut = ElSpec_iqt_ic(varargin)
 % This is free software, licensed under GNU GPL version 2 or later
 
 persistent ElSpecLicenseShown
-
+ElSpecLicenseShown = true;
 
 % display the copyright message only once
 if isempty(ElSpecLicenseShown)
@@ -307,6 +309,14 @@ checkiri_ic = @(x) 1; %(ismatrix(x));
 defaultalpha_eff = 0;
 checkalpha_eff = @(x) (ismatrix(x) || 0);
 
+% custom recombintaion rates
+defaultiteration = 0;
+checkiteration = @(x) (isnumeric(x) & (numel(x)==1));
+
+% defined initial electron density
+default_ne_init = 0;
+check_ne_init = @(x) ((isvector(x) & all(x>0)) || x==0);
+
 
 if exist('inputParser') %#ok<EXIST> 
   % parse the input
@@ -346,6 +356,8 @@ if exist('inputParser') %#ok<EXIST>
 
   addParameter(p,'alpha_eff',defaultalpha_eff,checkalpha_eff);
   addParameter(p,'iri_ic',defaultiri_ic,checkiri_ic);
+  addParameter(p,'iteration',defaultiri_ic,checkiri_ic);
+  addParameter(p,'ne_init',default_ne_init,check_ne_init);
 
   parse(p,varargin{:})
   
@@ -390,7 +402,9 @@ else
   
   def_pars.iri_ic = defaultiri_ic;
   def_pars.alpha_eff = defaultalpha_eff;
-
+  def_pars.iteration = defaultiteration;
+  def_pars.ne_init = default_ne_init
+                    
 
   out = parse_pv_pairs(def_pars,varargin);
   out.E = out.egrid;
@@ -685,6 +699,7 @@ dt = out.dt;
 polycoefs = out.polycoefs;
 ieprior = out.ieprior;
 stdprior = out.stdprior;
+
 % 1st fit spectrum for ne0 from the first few electron-density-profiles
 [AICc1,polycoefs1,best_order1,n_params1,ne1,neEnd1,Ie1] = AICcFitParSeq(pp(:,1:Directives.ninteg),...
                                                   ppstd(:,1:Directives.ninteg),...
@@ -698,7 +713,12 @@ stdprior = out.stdprior;
                                                   [],... % Ie(t) constant
                                                   Directives);
 ne0 = sqrt(A*(Ie1(:,1).*out.dE')./alpha(:,1));% neEnd(:,end);
+%replace ne with value from IC
+if numel(out.ne_init) > 1
+    ne0 = out.ne_init';
+end
 Ie0 = Ie1;
+
 % $$$ [AICc1,polycoefs1,best_order1,n_params1,ne1,neEnd1,Ie1] = AICcFitParSeq(pp(:,1:Directives.ninteg),...
 % $$$                                      ppstd(:,1:Directives.ninteg),...
 % $$$                                      alpha(:,1:Directives.ninteg),...
@@ -793,7 +813,8 @@ while iStart < numel(dt)
     exitflag_all   = [exitflag_all,   cexitflag];
     nSteps_all     = [nSteps_all,     cnSteps];
   end
-  iStart = iStart + iIntervall;
+  %iStart = iStart + iIntervall;
+  iStart = iEnd + 1;
 end
 % 5th collect output
 out.polycoefs = polycoefs_all;
@@ -1016,6 +1037,8 @@ function [ne,neEnd,Ie,polycoefs,best_order,n_params,exitflag,nSteps,idx_out] = r
                       Directives.ErrWidth );
     end
     
+    %disp([AICFull, AIChalves, AICthirds])
+
     if AIChalves < AICFull & AIChalves <= AICthirds
       % Divide into 2 halves
       [ne1_2,neEnd1_2,Ie1_2,polycoefs1_2,best_order1_2,n_params1_2,exitflag1_2,nSteps1_2,idx_out1_2] = recurse_AICfit(ne1_2,...
