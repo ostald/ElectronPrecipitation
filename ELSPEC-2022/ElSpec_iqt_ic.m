@@ -713,10 +713,22 @@ stdprior = out.stdprior;
                                                   [],... % Ie(t) constant
                                                   Directives);
 ne0 = sqrt(A*(Ie1(:,1).*out.dE')./alpha(:,1));% neEnd(:,end);
-%replace ne with value from IC
-if numel(out.ne_init) > 1
-    ne0 = out.ne_init';
-end
+out.ne0 = ne0
+out.q0 = A*(Ie1(:,1).*out.dE')
+
+% figure
+% hold on
+% plot(ne0, out.h)
+% legend('ne0')
+% drawnow()
+
+%replace ne with value from IC 
+% removed 05.04.23 bc ne_init is based on old q, new alpha
+%       assuming steady state (both the case here and with 30min time
+%       window in IC), ne = sqrt(q/alpha) => newly fittet q is better
+%if numel(out.ne_init) > 1
+%    ne0 = out.ne_init';
+%end
 Ie0 = Ie1;
 
 % $$$ [AICc1,polycoefs1,best_order1,n_params1,ne1,neEnd1,Ie1] = AICcFitParSeq(pp(:,1:Directives.ninteg),...
@@ -794,6 +806,11 @@ while iStart < numel(dt)
                                                     out);
   % disp(['returned from recurse_AICfit, nt: ',num2str(numel(cnSteps))])
   ne0 = cneEnd(:,end);
+
+  % plot(cne(:, 1), out.h)
+  % legend('ne0', 'cne1')
+  % pause()  
+
   if iStart == 1
     ne_all         = cne;
     neEnd_all      = cneEnd;

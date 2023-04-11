@@ -11,6 +11,7 @@ from organizing import pcfg
 con = pcfg
 
 printing = con.print
+printing = 1
 
 def loadIRI(iri_file):
     #iri_file = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/iri.txt'
@@ -71,10 +72,21 @@ def loadIRI(iri_file):
 # In[2]:
 
 
-if con.print:
-    iri_file = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/iri.txt'
+if printing:
+    iri_file = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri.txt'
 
-    loadIRI(iri_file)
+    [z_iri
+        , ne_iri
+        , t_neutral
+        , t_ion
+        , t_e
+        , rel_o_p
+        , rel_n_p
+        , rel_h_p
+        , rel_he_p
+        , rel_o2_p
+        , rel_no_p
+     ] = loadIRI(iri_file)
     
     import matplotlib.pyplot as plt
     
@@ -105,11 +117,12 @@ if con.print:
     plt.plot(t_e, z_iri/1e3)
     plt.xlabel('ELectron Temperature [K]')
     plt.ylabel('Altitude [km]')
-    
+    plt.show()
+
     plt.figure()
     import import_ipynb
     from loadMSIS import *
-    MSISFile = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/msis.txt'
+    MSISFile = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/msis.rtf'
     [z_msis, n_o1_msis, n_n2_msis, n_o2_msis, mass_density, temp_n_msis, scale_height_msis] = loadMSIS(MSISFile)
     plt.plot(n_o1_msis, z_msis/1e3, label = 'O')
     plt.plot(n_o2_msis, z_msis/1e3, label = 'O2')

@@ -77,6 +77,33 @@ end
                                                   , exp , radar , ...
                                                  version , tres , FAdev );
 
+%size(pp)
+%size(ppstd)
+%size(par)
+%size(parstd)
+%replace all pp with repetitions of the first 5:
+% for i = n+1:n:length(ts)
+%     for j=1:n
+%         if i+j-1 <= length(ts)
+%             pp(:, i+j-1) = pp(:, j);
+%             ppstd(:, i+j-1) = ppstd(:, j);
+%             par(:, :, i+j-1) = par(:, :, j);
+%             parstd(:, :, i+j-1) = parstd(:, :, j);
+%         end
+%     end
+% end
+
+%n = 36
+%for i = 1:length(ts)
+%    pp(:, i) = mean(pp(:, 1:n), 2);
+%    ppstd(:, i) = mean(ppstd(:, 1:n), 2);
+%    par(:, :, i) = mean(par(:, :, 1:n), 3);
+%    parstd(:, :, i) = mean(parstd(:, :, 1:n), 3);
+%end
+%disp(pp(1, 1:20))
+
+
+
 % collect the model data in an array
 model = NaN(length(h),10,length(ts));
 f107 = NaN(length(ts),1);

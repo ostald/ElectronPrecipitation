@@ -98,8 +98,11 @@
 \maketitle
 
 \begin{abstract}
-The ionospheric composition is modeled for relevant major and minor species at 80 - 150 km during auroral precipitation. The model is combined with the ElSpec algorithm \cite{virtanen_electron_2018} to produce differential energy spectrum from incoherent scatter radar measurements. The impact of ionospheric variability on the inversion is shown. We find up to ... \% deviations in the differential energy spectrum and up to ...\% deviation in field aligned current compared to a constant ionosphere model.
+The ionospheric composition is modeled for relevant major and minor species at 80 - 150 km during auroral precipitation. The model is combined with the ElSpec algorithm \cite{virtanen_electron_2018} to produce the differential energy spectrum from incoherent scatter radar measurements. The impact of ionospheric variability on the inversion is shown. We find up to ... \% deviations in the differential energy spectrum and up to ...\% deviation in field aligned current compared to a constant ionosphere model.
 \end{abstract}
+
+
+%The impact of variability in the ionospheric densities on the inversion from electron density profiles to differential energy spectra during auroral precipitation is investigated. The ionospheric composition is modeled for relevant minor and major species at 80 - 150 km and combined with the ElSpec algorithm [Virtanen et al., 2018]. The results are compared to previous investigations. To handle the arising computational challenges, an iterative approach is adapted, switching between the inversion with a fixed ion composition and updating the ion composition with the ionospheric chemistry model.
 
 
 
@@ -249,7 +252,7 @@ The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} i
 \end{figure}
 %
 
-Lastly, deviations in densities are damped by a factor of 2 between iterations to suppress oscillations.
+Lastly, to suppress oscillations between iterations, the deviations in densities are damped by a factor of 2.
 
 %state the measurement time and date and radar facility etc
 

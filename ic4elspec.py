@@ -8,12 +8,10 @@ import loadMSIS
 import loadmat
 import pickle
 
-
-def ic(direc, chemistry_config, file, iteration, mixf = 0):
+def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # load content of last Elspec iteration
     f = direc + file + str(iteration)
-    mat = loadmat.loadmat(f)
-    con = mat["ElSpecOut"]
+    con = loadmat.loadmat(f)["ElSpecOut"]
 
     ne = con["ne"]
     n_model = con["iri"]
@@ -38,6 +36,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
 
     for c in model.all_species:
         c.density = nN2 * 0
+        c.prod = e_prod * 0
 
     # assign densities
     model.e.density = ne
@@ -68,10 +67,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
     model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
-    #model.check_chargeNeutrality()
-
-    for c in model.all_species:
-        c.prod = e_prod * 0
+    model.check_chargeNeutrality()
 
     Op_prod = e_prod * 0.56 * model.O.density / \
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
@@ -83,17 +79,25 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # create smooth function for production
     t = np.arange(0, te[-1], 0.001)
 
-    stepf = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
-    e_prod_smooth = PchipInterpolator(t, stepf)
+    stepf_e = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
+    e_prod_smooth = PchipInterpolator(t, stepf_e)
 
-    stepf = np.array([stepped_prod_t(Op_prod, i, ts, te) for i in t])
-    Op_prod_smooth = PchipInterpolator(t, stepf)
+    stepf_Op = np.array([stepped_prod_t(Op_prod, i, ts, te) for i in t])
+    Op_prod_smooth = PchipInterpolator(t, stepf_Op)
 
-    stepf = np.array([stepped_prod_t(O2p_prod, i, ts, te) for i in t])
-    O2p_prod_smooth = PchipInterpolator(t, stepf)
+    stepf_O2p = np.array([stepped_prod_t(O2p_prod, i, ts, te) for i in t])
+    O2p_prod_smooth = PchipInterpolator(t, stepf_O2p)
 
-    stepf = np.array([stepped_prod_t(N2p_prod, i, ts, te) for i in t])
-    N2p_prod_smooth = PchipInterpolator(t, stepf)
+    stepf_N2p = np.array([stepped_prod_t(N2p_prod, i, ts, te) for i in t])
+    N2p_prod_smooth = PchipInterpolator(t, stepf_N2p)
+
+    # plt.figure()
+    # plt.plot(ts_, e_prod[0], 'x')
+    # plt.plot(ts_show, e_prod_smooth(ts_show)[:, 0])
+    # plt.yscale('log')
+    # plt.ylabel('Electron Production')
+    # plt.xlabel('Time')
+    # plt.show()
 
     # zero function for species that dont feel production
     def zerof(t):
@@ -157,7 +161,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
                          for i in model.all_species])
         return dndt
 
-    def ic():
+    def solve_ic():
         res = np.empty(model.n_heights, dtype='object')
         import time
         startt = time.time()
@@ -165,9 +169,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         for h in range(model.n_heights):
             #breakpoint()
             n = np.array([c.density[h, 0] for c in model.all_species])
+            #print([c.name for c in model.all_species])
 
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
-                               t_eval=ts_int, max_step=0.44, atol = 1e-3, dense_output=True)
+                               t_eval=ts_int, max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
 
             import sys
             sys.stdout.write('\r' + (' ' * 22))
@@ -197,33 +202,29 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
         # return new_densities
         return res
 
-    res = ic()
+    res = solve_ic()
 
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
 
     n_ic_ = np.array([r.y for r in res])
-    n_ic = np.empty(n_ic_.shape)
 
     print('mixf =', mixf)
-    if iteration == 0:
-        if n_ic_.shape[2] == ne.shape[1]:
-            print('untested')
-            # breakpoint()
-            n_ic_old = np.array([c.density for c in model.all_species]).swapaxes(0, 1)
-            n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
-        else:
-            #interpolate
-            n_ic_old = np.array([[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
-            n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
+    if mixf == 0:
+        n_ic = n_ic_
     else:
-        with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-            data = pickle.load(pf)
-            ts = data[0]
-            z = data[1]
-            n_ic_old = data[2]
-            eff_rr_old = data[3]
-            ne_init_old = data[4]
+        if iteration == 0:
+            if n_ic_.shape[2] == ne.shape[1]:
+                print('untested')
+                # breakpoint()
+                n_ic_old = np.array([c.density for c in model.all_species]).swapaxes(0, 1)
+            else:
+                #interpolate
+                n_ic_old = np.array([[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
+        else:
+            with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
+                data = pickle.load(pf)
+                n_ic_old = data[2]
         n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
 
     c_order = np.array([c.name for c in model.all_species])
@@ -287,7 +288,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
             ax2.set_ylabel(r'Electron production [m$^{-3}$s$^{-1}$]')
             # for t in ts_: plt.axvline(t, alpha = 0.1)
             plt.tight_layout()
-            #plt.show()
+            if test == True:
+                plt.show()
             plt.savefig(direc + 'plots/' + c.name + '_Density_IC_' + str(iteration) + '.svg')
             plt.savefig(direc + 'plots/' + c.name + '_Density_IC_' + str(iteration) + '.eps')
         break
@@ -317,8 +319,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     plt.ylabel('Ratio of Charged Species')
     plt.legend(loc=2)
     plt.title('Charged Species Stackplot at height index ' + str(h))
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + \
-                'Charged Species Stackplot at height index ' + str(h) + '.svg')
+    plt.savefig(direc + 'plots/Charged Species Stackplot at height index ' + str(h) + 'IC_' + str(iteration) + '.svg')
 
     # check charge nuetrality!!
     sum_charged = np.sum(np.array([Op_4S, Op_2D, Op_2P, O2p_a4P, O2p, Np, N2p, NOp, Hp]), axis=0)
@@ -330,8 +331,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
     plt.title('Relative Charge imabalance $(n_{I^+} - n_{e^-})/n_{e^-}$')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + \
-                'Relative Charge imabalance.svg')
+    plt.savefig(direc + 'plots/Relative Charge imbalance IC_' + str(iteration) +'.svg')
 
     plt.figure()
     pc = plt.pcolor(ts_, z_model, eff_rr, label='alpha')
@@ -341,8 +341,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # plt.tight_layout()
     plt.colorbar(pc)
     plt.title('Effective Recombination rate [m3s-1]')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + \
-                'Effective Recombination rate.svg')
+    plt.savefig(direc + 'plots/Effective Recombination rate IC_' + str(iteration)+ '.svg')
 
     import matplotlib as mpl
     plt.figure()
@@ -353,8 +352,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0):
     # plt.tight_layout()
     plt.colorbar(pc)
     plt.title('Deviation from previous eff. rec. rate [m3s-1]')
-    plt.savefig(direc + 'plots/IC_' + str(iteration) + '_' + \
-                'Deviation from previous eff rec rate.svg')
+    plt.savefig(direc + 'plots/Deviation from previous eff rec rate IC_' + str(iteration) + '.svg')
 
 
 
