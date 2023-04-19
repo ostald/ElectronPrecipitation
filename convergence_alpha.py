@@ -6,16 +6,16 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.18_14_33_47 mixf=0/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
 
-nax = 5
+nax = 11
 
 all_data = []
 
-for i, f in enumerate(files[:nax**2]):
+for i, f in enumerate(files[:nax]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     print(f)
     with open(f, 'rb') as pf:
@@ -23,7 +23,7 @@ for i, f in enumerate(files[:nax**2]):
         all_data = [*all_data, data[:4]]
 
 fig,ax = plt.subplots()
-for i, f in enumerate(files[:nax**2]):
+for i, f in enumerate(files[:nax]):
     if True:
         data = all_data[i]
         eff_rr = data[3][:, 1:]
@@ -50,6 +50,6 @@ ax.set_ylabel(r"$\frac{\alpha_{eff, i-1}}{\alpha_{eff, i}} - 1$")
 ax.set_xlabel("Iteration i")
 ax.set_yscale('log')
 ax.legend()
-plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/alpha_rel_dev.png')
+#plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/alpha_rel_dev.png')
 #plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_rel_dev.png')
 plt.show()

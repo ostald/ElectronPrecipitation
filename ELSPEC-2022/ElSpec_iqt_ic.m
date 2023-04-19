@@ -520,10 +520,10 @@ else
 
 end
 
-figure
-pcolor(out.ts, out.h, squeeze(out.iri(:, 3, :)))
+%figure
+%pcolor(out.ts, out.h, squeeze(out.iri(:, 3, :)))
 
-if all(out.iri(:, 3, :) == repmat(squeeze(out.iri(:, 3, 1)), 1, max(size(out.iri(1, 3, :)))), 'all')
+if all(out.par(:, 3, :) == repmat(squeeze(out.par(:, 3, 1)), 1, max(size(out.par(1, 3, :)))), 'all')
     error("No Time variation in electron temperature.")
 end
 
