@@ -128,7 +128,7 @@ for it=1:length(ts)
     model(:,5,it) = nO2;
     model(:,6,it) = nO;
     model(:,7,it) = nAr;
-    model(:,8,it) = nNOp;
+    model(:,8,it) = nNOp; 
     model(:,9,it) = nO2p;
     model(:,10,it) = nOp;
 

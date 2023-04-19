@@ -4,20 +4,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.05_18_42_52 mixf=1/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/'
 file = 'ElSpec-iqt_IC_'
 iteration = 0
 
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 
-mixf = 0
+mixf = 1
 
-#ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = 0, test = True)
+ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = mixf, test = False)
 
+exit()
 savedir = direc + "IC_res_" + str(iteration) + '.pickle'
-
 with open(savedir, "rb") as f:
     data = pickle.load(f)
+    ts_int =  data[0]
     eff_rr = data[3]
     res = data[5]
 
@@ -28,14 +29,34 @@ h = con["h"]
 plt.figure()
 plt.plot(con["ne"][:, 0:20], h)
 plt.figure()
-plt.plot(con["alpha"][:, 0:42], h, label = 'Elsepc')
-plt.plot(eff_rr[:, 0:42], h, label = 'IC')
+plt.plot(con["alpha"][:, 0], h, label = 'Elsepc')
+plt.plot(eff_rr[:, 1], h, label = 'IC')
 plt.legend()
 plt.figure()
 plt.plot(con["q"][:, 0:20], h)
 plt.plot(np.sqrt(con["q"]/con["alpha"])[:, 0:20], h)
 
+plt.figure()
+plt.plot(con["q0"])
+e_prod = con["q"]
+e_prod = np.array([con["q0"], *e_prod.T]).T
+plt.plot(e_prod[:, 0])
+
+plt.figure()
+plt.plot(ts_int[1:], con["ne"][0,:], label = 'ne_ELS')
+plt.plot(ts_int[1], con["ne0"][0], 'x', label = 'ne_init')
+plt.plot(ts_int[1], np.sqrt(con["q0"][0]/con["alpha"][0,0]), 'o', label = 'ne_init_ss')
+plt.plot(ts_int[1:], np.sqrt(con["q"][0,:]/con["alpha"][0,:]), label = 'ne_ElS_SS')
+plt.plot(ts_int, np.sqrt(e_prod[0, :]/eff_rr[0, :]), label = 'ne_IC_SS')
+plt.yscale('log')
+plt.legend()
+
+
 plt.show()
+
+
+
+
 quit()
 
 

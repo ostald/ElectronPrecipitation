@@ -92,7 +92,7 @@ class reaction():
         Tn = self.ionChem_inst.Tn
         Tr = self.ionChem_inst.Tr
         #evaluating the function and ensuring it has the dimension of z_model
-        self.rr = eval(self.r_rate_string) * np.ones(self.ionChem_inst.n_heights)
+        self.rr = eval(self.r_rate_string) #* np.ones(self.ionChem_inst.n_heights)
         return self.rr
 
     def r_rate_t(self, Tn, Ti, Te):
@@ -468,7 +468,7 @@ class ionChem:
         plt.figure()
 
         for c in self.all_species:
-            rr_species = np.zeros([len(self.all_species), self.n_heights])
+            rr_species = np.zeros([len(self.all_species), *self.all_species[0].density.shape])
             
             for r in self.all_reactions:
                 if c.c_ID in r.educts_ID:

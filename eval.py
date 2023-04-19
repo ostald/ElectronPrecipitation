@@ -6,12 +6,11 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.03_16_45_00 mixf=3/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/'
 files = glob.glob(direc + '*.pickle')
 print(sorted(files))
 
-elspec_0 = loadmat.loadmat('/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/' +
-                           'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
+elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
 
 matfiles = glob.glob(direc + 'ElSpec*.mat')
 
@@ -25,16 +24,19 @@ spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N
 
 nax = 4
 
+all_data = []
+
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     print(f)
     with open(f, 'rb') as pf:
         data = pickle.load(pf)
-        ts = data[0]
+        all_data = [*all_data, data[:4]]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #ne_init_old = data[4]
 
     f = direc + 'ElSpec-iqt_IC_' + str(i) + '.mat'
@@ -48,7 +50,6 @@ for i, f in enumerate(files[:nax**2]):
     axs.flat[i].plot(ts, e[0], label=r'$n_{e}$')
     axs.flat[i].plot(ts, ne_es[h, :], label=r'ElSpec $n_e$')
     axs.flat[i].plot(ts, np.sqrt(e_prod[0, :] / eff_rr[0, :]), '--', color='red', label=r'$ne_{ss}$')
-
     plt.legend(loc=2)
     plt.yscale('log')
     plt.xlabel('Time [s]')
@@ -70,25 +71,25 @@ fig.supxlabel('Time [s]')
 fig.supylabel('Ratio of Charged Species')
 axs.flat[0].legend(loc = 2)
 fig.suptitle('Charged Species Stackplot at height index ' + str(h))
-plt.show()
-
 
 
 fig, axs = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
     print(f)
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    if True:
+        data = all_data[i]
+    #with open(f, 'rb') as pf:
+        #data = pickle.load(pf)
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
      Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1) / n_ic.swapaxes(0, 1)[0]
     axs.flat[i].stackplot(ts, O2p[h], Np[h], N2p[h], NOp[h], Hp[h], O2p_a4P[h], Op_2D[h], Op_4S[h], Op_2P[h],
-                 labels=['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+', 'O2p_a4P', 'Op_2D', 'Op_4S', 'Op_2P'])
+                 labels=['O2+', 'N+', 'N2+', 'NO+', 'H+', 'O2p_a4P', 'Op_2D', 'Op_4S', 'Op_2P'])
     axs.flat[i].set_title('Iteration ' + str(i))
 fig.supxlabel('Time [s]')
 fig.supylabel('Ratio of Charged Species')
@@ -98,12 +99,14 @@ fig.suptitle('Charged Species Stackplot at height index ' + str(h))
 fig4, axs4 = plt.subplots()
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    if True:
+        data = all_data[i]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
      Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
@@ -120,12 +123,14 @@ vmin = 0
 vmax = 0
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         den = n_ic.swapaxes(0, 1)[species]
         ma = np.max(den)
         if ma > vmax: vmax = ma
@@ -133,12 +138,14 @@ for i, f in enumerate(files[:nax**2]):
         if mi > vmin: vmin = mi
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     den = n_ic.swapaxes(0, 1)[species]
     pc = axs31.flat[i].pcolormesh(ts, z, den, norm= mpl.colors.LogNorm(vmax=vmax))
@@ -148,17 +155,19 @@ fig31.suptitle('Number Density of ' + spstr[species])
 fig31.supylabel('Number Density of ' + spstr[species])
 fig31.supxlabel('Time [s]')
 plt.colorbar(pc, ax = axs31)
-
+#plt.show()
 
 fig2, axs2 = plt.subplots()
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
      Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
@@ -175,12 +184,14 @@ vmin = 0
 vmax = 0
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
          Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
         ratioO2pNOp = O2p / NOp
@@ -191,12 +202,14 @@ for i, f in enumerate(files[:nax**2]):
 
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     [e, O, O2, O2p, Np, N2, N2p, NO, NOp, H, Hp, O_1D, O_1S, N_2D, N_4S, O2p_a4P, \
      Op_2D, Op_4S, Op_2P] = n_ic.swapaxes(0, 1)
@@ -217,15 +230,24 @@ fig,ax = plt.subplots()
 
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
     if i>0:
-        with open(direc + 'IC_res_'+str(i-1)+'.pickle', 'rb') as pf:
-            [ts_o, z_o, n_ic_o, eff_rr_o] = pickle.load(pf)
+        # with open(direc + 'IC_res_'+str(i-1)+'.pickle', 'rb') as pf:
+        #     data_o = pickle.load(pf)
+        if True:
+            data = all_data[i-1]
+            ts_o = data[0][1:]
+            z_o = data[1]
+            n_ic_o = data[2][:, :, 1:]
+            eff_rr_o = data[3][:, 1:]
+
     else: eff_rr_o = elspec_0["alpha"]
     d_effrr = eff_rr_o - eff_rr
     axs4.flat[i].set_title('Iteration ' + str(i))
@@ -244,7 +266,7 @@ ax.set_ylabel(r"Sum of Deviations in $\alpha_{eff}$")
 ax.set_xlabel("Iteration")
 ax.set_yscale('log')
 
-
+#plt.show()
 
 
 fig41, axs41 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
@@ -253,15 +275,23 @@ fig,ax = plt.subplots()
 
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
     if i>0:
-        with open(direc + 'IC_res_'+str(i-1)+'.pickle', 'rb') as pf:
-            [ts_o, z_o, n_ic_o, eff_rr_o] = pickle.load(pf)
+        if True:
+            data = all_data[i-1]
+            ts_o = data[0][1:]
+            z_o = data[1]
+            n_ic_o = data[2][:, :, 1:]
+            eff_rr_o = data[3][:, 1:]
+        #with open(direc + 'IC_res_'+str(i-1)+'.pickle', 'rb') as pf:
+        #    [ts_o, z_o, n_ic_o, eff_rr_o] = pickle.load(pf)
     else: eff_rr_o = elspec_0["alpha"]
     d_effrr_r = (eff_rr_o - eff_rr) / eff_rr
     axs41.flat[i].set_title('Iteration ' + str(i))
@@ -288,12 +318,14 @@ vmin = 0
 vmax = 0
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
         ma = np.max(eff_rr)
         if ma > vmax: vmax = ma
         mi = np.min(eff_rr)
@@ -301,12 +333,14 @@ for i, f in enumerate(files[:nax**2]):
 
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        ts = data[0]
+    # with open(f, 'rb') as pf:
+    #     data = pickle.load(pf)
+    if True:
+        data = all_data[i]
+        ts = data[0][1:]
         z = data[1]
-        n_ic = data[2]
-        eff_rr = data[3]
+        n_ic = data[2][:, :, 1:]
+        eff_rr = data[3][:, 1:]
     axs5.flat[i].set_title('Iteration ' + str(i))
     pc5 = axs5.flat[i].pcolor(ts, z, eff_rr, norm= mpl.colors.Normalize(vmin=vmin, vmax=vmax))
 
@@ -318,10 +352,12 @@ plt.colorbar(pc5, ax=axs5)
 fig6, axs6 = plt.subplots(nrows=nax, ncols=nax, sharex=True, sharey=True)
 vmin = 0
 vmax = 0
+all_data_mat = []
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
     print(f)
     elspec = loadmat.loadmat(f)["ElSpecOut"]
+    all_data_mat = [*all_data_mat, elspec]
     ts = elspec["ts"]
     ne = elspec["ne"]
     ma = np.max(ne)
@@ -331,7 +367,8 @@ for i, f in enumerate(matfiles[:nax**2]):
 
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
-    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    #elspec = loadmat.loadmat(f)["ElSpecOut"]
+    elspec = all_data_mat[i]
     ts = elspec["ts"]
     ne = elspec["ne"]
     z = elspec["h"]
@@ -350,7 +387,8 @@ vmax = 0
 matfiles = glob.glob(direc + 'ElSpec*.mat')
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
-    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    #elspec = loadmat.loadmat(f)["ElSpecOut"]
+    elspec = all_data_mat[i]
     ts = elspec["ts"]
     Ie = elspec["Ie"]
     ma = np.max(Ie)
@@ -360,7 +398,8 @@ for i, f in enumerate(matfiles[:nax**2]):
 
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
-    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    #elspec = loadmat.loadmat(f)["ElSpecOut"]
+    elspec = all_data_mat[i]
     ts = elspec["ts"]
     Ie = elspec["Ie"]
     egrid = elspec["egrid"]
@@ -370,7 +409,7 @@ for i, f in enumerate(matfiles[:nax**2]):
     axs7.flat[i].set_ylim(1, 100)
 
 fig7.suptitle('Electron Energy Spectrum')
-fig7.supylabel('Altitude [km]')
+fig7.supylabel('Energy [keV ]')
 fig7.supxlabel('Time [s]')
 plt.colorbar(pc7, ax=axs7)
 
@@ -381,7 +420,8 @@ vmax = 0
 matfiles = glob.glob(direc + 'ElSpec*.mat')
 for i, f in enumerate(matfiles[:nax**2]):
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
-    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    #elspec = loadmat.loadmat(f)["ElSpecOut"]
+    elspec = all_data_mat[i]
     ts = elspec["ts"]
     Ie = elspec["Ie"]
     ma = np.max(Ie)
@@ -391,11 +431,13 @@ for i, f in enumerate(matfiles[:nax**2]):
 
 for i, f in enumerate(matfiles[:nax**2]):
     f0 = direc + 'ElSpec-iqt_IC_0.mat'
-    elspec0 = loadmat.loadmat(f0)["ElSpecOut"]
+    #elspec0 = loadmat.loadmat(f0)["ElSpecOut"]
+    elspec0 = all_data_mat[0]
     Ie0 = elspec0["Ie"]
 
     f = direc + 'ElSpec-iqt_IC_'+str(i)+'.mat'
-    elspec = loadmat.loadmat(f)["ElSpecOut"]
+    # elspec = loadmat.loadmat(f)["ElSpecOut"]
+    elspec = all_data_mat[i]
     ts = elspec["ts"]
     Ie = elspec["Ie"]
     egrid = elspec["egrid"]
@@ -405,7 +447,7 @@ for i, f in enumerate(matfiles[:nax**2]):
     axs8.flat[i].set_ylim(1, 100)
 
 fig8.suptitle(' Difference in Electron Energy Spectrum to constant Ionospheric composotion')
-fig8.supylabel('Altitude [km]')
+fig8.supylabel('Energy [keV]')
 fig8.supxlabel('Time [s]')
 plt.colorbar(pc8, ax=axs8)
 plt.show()

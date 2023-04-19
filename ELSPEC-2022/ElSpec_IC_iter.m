@@ -33,7 +33,7 @@ hmax = 150;
 hmin = 95;
 % Time-limits
 btime = [2006, 12, 12, 19, 30, 0];
-etime = [2006, 12, 12, 19, 31, 0];
+etime = [2006, 12, 12, 19, 35, 0];
 % Selection of which ionisation-profile method to use
 ionomodel = 'Sergienko';
 % and which type of continuity-integration-method to use
@@ -148,14 +148,14 @@ ErrType = 'l'; % L for Lorentzian.
 
 if iter > 0
     j = iter - 1;
-    icdir = fullfile('..',log_dir,["IC_" + j + ".mat"])
+    icdir = fullfile('..',log_dir,["IC_" + j + ".mat"]);
     %icdir = "../" + log_dir + "IC_" + j + ".mat";
     icdata = load(icdir);
     iri_ic = icdata.elspec_iri_sorted;
     alpha_eff = icdata.eff_rr;
     ne_init = icdata.ne_init;
 
-    elspec_m1 = fullfile('..',log_dir,["ElSpec-iqt_IC_" + j + ".mat"])
+    elspec_m1 = fullfile('..',log_dir,["ElSpec-iqt_IC_" + j + ".mat"]);
     nsteps_old = load(elspec_m1).ElSpecOut.nSteps;
     %ninteg = nsteps_old(1); did not result in converging behaviour
 else

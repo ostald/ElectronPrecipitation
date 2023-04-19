@@ -231,6 +231,52 @@
       \verb https://www.sciencedirect.com/science/article/pii/003206337390069X
       \endverb
     \endentry
+    \entry{rees_physics_1989}{book}{}
+      \name{author}{1}{}{%
+        {{hash=f100df08243f695038601b5e9451f54a}{%
+           family={Rees},
+           familyi={R\bibinitperiod},
+           given={M.\bibnamedelimi H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{f100df08243f695038601b5e9451f54a}
+      \strng{fullhash}{f100df08243f695038601b5e9451f54a}
+      \strng{bibnamehash}{f100df08243f695038601b5e9451f54a}
+      \strng{authorbibnamehash}{f100df08243f695038601b5e9451f54a}
+      \strng{authornamehash}{f100df08243f695038601b5e9451f54a}
+      \strng{authorfullhash}{f100df08243f695038601b5e9451f54a}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This textbook focuses on the physics and chemistry of the Earth's upper atmosphere, which is bounded at the bottom by a pressure level at which most of the incoming ionizing radiation has been absorbed, and bounded at the top by the level at which the escape of gas becomes important. The plan of the book is to identify the multitude of processes that operate in the upper atmosphere, and to relate them to observed phenomena by detailed mathematical and physical descriptions of the governing processes. Basic information from many disciplines such as radiation physics and chemistry, fluid dynamics, optics, and spectroscopy is skilfully marshalled to give a coherent account of the upper atmosphere. This book is outstanding as an introduction to the primary literature and current problems for students of physics or chemistry. The text is supported by numerous diagrams, bibliography and index.}
+      \field{isbn}{978-0-521-36848-3}
+      \field{series}{Cambridge {Atmospheric} and {Space} {Science} {Series}}
+      \field{title}{Physics and {Chemistry} of the {Upper} {Atmosphere}}
+      \field{urlday}{8}
+      \field{urlmonth}{6}
+      \field{urlyear}{2022}
+      \field{year}{1989}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.1017/CBO9780511573118
+      \endverb
+      \verb{file}
+      \verb 01.0_pp_i_iv_Frontmatter.pdf:/Users/ost051/Documents/Zotero/storage/Q9IRT6Z6/01.0_pp_i_iv_Frontmatter.pdf:application/pdf;02.0_pp_v_vi_Contents.pdf:/Users/ost051/Documents/Zotero/storage/Z8BKMNYK/02.0_pp_v_vi_Contents.pdf:application/pdf;03.0_pp_vii_viii_Preface.pdf:/Users/ost051/Documents/Zotero/storage/3WEQ2HWT/03.0_pp_vii_viii_Preface.pdf:application/pdf;04.0_pp_ix_x_Acknowledgements.pdf:/Users/ost051/Documents/Zotero/storage/53S6U7MC/04.0_pp_ix_x_Acknowledgements.pdf:application/pdf;05.0_pp_1_7_An_overview.pdf:/Users/ost051/Documents/Zotero/storage/WLZXH9MP/05.0_pp_1_7_An_overview.pdf:application/pdf;06.0_pp_8_23_The_interaction_of_energetic_solar_photons_with_the_upper_atmosphere.pdf:/Users/ost051/Documents/Zotero/storage/HVG3N6E8/06.0_pp_8_23_The_interaction_of_energetic_solar_photons_with_the_upper_atmosphere.pdf:application/pdf;07.0_pp_24_56_The_interaction_of_energetic_electrons_and_ions_with_the_upper_atmosphere.pdf:/Users/ost051/Documents/Zotero/storage/C7RNUSES/07.0_pp_24_56_The_interaction_of_energetic_electrons_and_ions_with_the_upper_atmosphere.pdf:application/pdf;08.0_pp_57_81_Collisions_and_reactions.pdf:/Users/ost051/Documents/Zotero/storage/GPPWUW3P/08.0_pp_57_81_Collisions_and_reactions.pdf:application/pdf;09.0_pp_82_99_Ion_and_neutral_composition_of_the_upper_atmosphere.pdf:/Users/ost051/Documents/Zotero/storage/26NI56BC/09.0_pp_82_99_Ion_and_neutral_composition_of_the_upper_atmosphere.pdf:application/pdf;10.0_pp_100_137_Temperatures_in_the_upper_atmosphere.pdf:/Users/ost051/Documents/Zotero/storage/I4PY4S8Y/10.0_pp_100_137_Temperatures_in_the_upper_atmosphere.pdf:application/pdf;11.0_pp_138_185_Spectroscopic_emissions.pdf:/Users/ost051/Documents/Zotero/storage/IQP7VYKR/11.0_pp_138_185_Spectroscopic_emissions.pdf:application/pdf;12.0_pp_186_242_Dynamics_of_the_thermosphere_and_ionosphere.pdf:/Users/ost051/Documents/Zotero/storage/2D3346UY/12.0_pp_186_242_Dynamics_of_the_thermosphere_and_ionosphere.pdf:application/pdf;13.0_Appendices.pdf:/Users/ost051/Documents/Zotero/storage/5GAB8Q7X/13.0_Appendices.pdf:application/pdf;13.1_pp_243_255_The_neutral_atmosphere.pdf:/Users/ost051/Documents/Zotero/storage/I7RUDRU3/13.1_pp_243_255_The_neutral_atmosphere.pdf:application/pdf;13.2_pp_256_263_The_solar_irradiance_and_photon_cross_sections.pdf:/Users/ost051/Documents/Zotero/storage/M6MSSANR/13.2_pp_256_263_The_solar_irradiance_and_photon_cross_sections.pdf:application/pdf;13.3_pp_264_270_Energy_level_diagrams_and_potential_curves.pdf:/Users/ost051/Documents/Zotero/storage/TE6P97AW/13.3_pp_264_270_Energy_level_diagrams_and_potential_curves.pdf:application/pdf;13.4_pp_271_277_Cross_sections_for_collisions_between_energetic_electrons_protons_and_atoms_and_the_major_atmospheri.pdf:/Users/ost051/Documents/Zotero/storage/QGI8RSUV/13.4_pp_271_277_Cross_sections_for_collisions_between_energetic_electrons_protons_and_atoms_and_the_major_atmospheri.pdf:application/pdf;13.5_pp_278_281_Chemicalionic_reactions_in_the_thermosphere.pdf:/Users/ost051/Documents/Zotero/storage/7T7XTH3J/13.5_pp_278_281_Chemicalionic_reactions_in_the_thermosphere.pdf:application/pdf;13.6_pp_282_284_Transport_coefficients_polarizability_collision_frequencies_and_energy_transfer_rates.pdf:/Users/ost051/Documents/Zotero/storage/TAEAGJEM/13.6_pp_282_284_Transport_coefficients_polarizability_collision_frequencies_and_energy_transfer_rates.pdf:application/pdf;13.7_pp_285_286_Physical_constants_and_units.pdf:/Users/ost051/Documents/Zotero/storage/6655747P/13.7_pp_285_286_Physical_constants_and_units.pdf:application/pdf;14.0_pp_287_289_Index.pdf:/Users/ost051/Documents/Zotero/storage/M2B7LZB7/14.0_pp_287_289_Index.pdf:application/pdf;Snapshot:/Users/ost051/Documents/Zotero/storage/3BMFNJW8/B92A6E9E87492A19A407C4681E674EA6.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://www.cambridge.org/core/books/physics-and-chemistry-of-the-upper-atmosphere/B92A6E9E87492A19A407C4681E674EA6
+      \endverb
+      \verb{url}
+      \verb https://www.cambridge.org/core/books/physics-and-chemistry-of-the-upper-atmosphere/B92A6E9E87492A19A407C4681E674EA6
+      \endverb
+    \endentry
     \entry{semeter_determination_2005}{article}{}
       \name{author}{2}{}{%
         {{hash=a8c2035b4e6ad56b0e21b0feea979bc8}{%

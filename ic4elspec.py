@@ -15,11 +15,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     ne = con["ne"]
     n_model = con["iri"]
-    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
-
-    #normalise charged species to fit electron density
-    #necessary for every timestep, as ne changes in ElSpec, but n(ions) does not
-    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
+    [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+    [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
+    Tn = Tn_
+    Tr = (Ti + Tn) / 2
 
     # setting start time [0] to 0:
     ts = con["ts"] - con["ts"][0]
@@ -28,9 +27,18 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     z_model = con["h"]
 
     ts_ = np.copy(ts)
-    ts[0] = -30*60
+    #generate starting point 30 min in the past:
+    ts = np.array([-30*60, *ts])
+    e_prod = np.array([con["q0"], *e_prod.T]).T
+    ne = np.array([con["ne0"], *ne.T]).T
+    lam = lambda x: np.array([x[:, 0], *x.T]).T
+    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = map(lam, [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp])
     ts_show = np.arange(ts[0], te[-1], 0.01)
-    ts_int = ts_  #set which time array to use for integration etc.
+    ts_int = ts  #set which time array to use for integration etc.
+
+    # normalise charged species to fit electron density
+    # necessary for every timestep, as ne changes in ElSpec, but n(ions) does not
+    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
 
     model = ionChem.ionChem(chemistry_config, z_model)
 
@@ -77,7 +85,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
 
     # create smooth function for production
-    t = np.arange(0, te[-1], 0.001)
+    t = np.arange(-30*60, te[-1], 0.001)
 
     stepf_e = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf_e)
@@ -121,7 +129,33 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # new way to do ionospheric chemistry
     # 1. take all info from reaction (reaction rate, constituents)
     ode_mat = np.zeros((len(model.all_reactions), len(model.all_species)), dtype='object')
-    rrate = np.array([np.array([r.r_rate_t(*t) for r in model.all_reactions]) for t in zip(Tn.T, Ti.T, Te.T)])
+    rrate = np.array([np.array([r.r_rate_t(*temp) for r in model.all_reactions]) for temp in zip(Tn.T, Ti.T, Te.T)])
+
+    #investigating why there is no variation in alpha:
+    #we should see variation in Temp
+    plt.figure()
+    plt.pcolormesh(ts, z_model, rrate[:, 0, :].T)
+    plt.figure()
+    plt.pcolormesh(ts, z_model, Te)
+    plt.show()
+
+    loss_mat = np.zeros([len(model.all_reactions), len(model.all_species), len(z_model), len(ts)])
+    for i, r in enumerate(model.all_reactions):
+        ed0, ed1 = r.educts_ID
+        loss_mat[i, ed0, :, :] = rrate[:, i, :].T * model.all_species[ed1].density
+        loss_mat[i, ed1, :, :] = rrate[:, i, :].T * model.all_species[ed0].density
+    lossRate = np.sum(loss_mat, axis = 0)
+    plt.figure()
+    for i, c in enumerate(model.all_species):
+        if c.name not in ['O2+', 'NO+', 'N2+']: continue
+        line = plt.plot(lossRate[i, :, 0], z_model / 1e3, label=c.name)
+        plt.text(lossRate[i, 0, 0], z_model[1] / 1e3, c.name, color=line[0].get_color())
+    plt.xscale('log')
+    plt.xlabel('Loss rate [m-3 s-1]')
+    plt.ylabel('Altitude [km]')
+    # plt.legend()
+    #plt.show()
+
 
     for r in model.all_reactions:
         ed = r.educts_ID
@@ -234,43 +268,44 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         exec(f"global {c}; {c} = n")  # , {"n": n, f"{c}": c})
 
     # print(Op_4S)
-    ne_init = e[:, 0]
+    ne_init = e[:, 1]
 
     eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
               rrate.T[:, 1, :] * n_ic[:, 6, :] + \
               rrate.T[:, 2, :] * n_ic[:, 8, :] + \
               rrate.T[:, 3, :] * n_ic[:, 15, :]) / n_ic[:, 0, :]
 
-    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+    #[Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     # [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
-    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
+    elspec_iri_sorted = np.array([Tn_, Ti_, Te_, nN2[:, 1:], nO2[:, 1:], nO[:, 1:], nAr[:, 1:], NOp[:, 1:], O2p[:, 1:], Op_4S[:, 1:]]).swapaxes(0, 1)
 
     # if iteration == 0:
     #    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
-    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr, "ne_init": ne_init}
+    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr[:, 1:], "ne_init": ne_init}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
 
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
     with open(savedir, "wb") as f:
-        pickle.dump([ts_, z_model, n_ic, eff_rr, ne_init, res], f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([ts_int, z_model, n_ic, eff_rr, ne_init, res], f, protocol=pickle.HIGHEST_PROTOCOL)
 
-
+    #breakpoint()
     for h, i in enumerate(res):
         for c in model.all_species:
             plt.figure()
             ax = plt.gca()
-            plt.plot(i.t, i.y[c.c_ID, :], label=r'$n_{'+c.name+'}$')
+            plt.plot(ts_show, i.sol(ts_show)[c.c_ID, :], label=r'$n_{'+c.name+'}$')
+            #plt.plot(i.t, i.y[c.c_ID, :], label=r'$n_{'+c.name+'}$')
             if c == model.e:
-                plt.plot(ts, ne[h, :], label=r'ElSpec $n_e$')
-                ax.plot(ts, np.sqrt(e_prod_smooth(ts)[:, 0] / eff_rr[0, :]), '--', color='red', label=r'$ne_{ss}$')
+                plt.plot(ts_int, ne[h, :], label=r'ElSpec $n_e$')
+                ax.plot(ts_int, np.sqrt(e_prod_smooth(ts_int)[:, 0] / eff_rr[0, :]), '--', color='red', label=r'$ne_{ss}$')
                 ax.plot(ts_show, i.sol(ts_show)[c.c_ID, :], label = r'$ne_{ode}$')
-            if c == model.N2: plt.plot(ts_, nN2[h], label='ElSpec n(N2)')
-            if c == model.O2: plt.plot(ts_, nO2[h], label='ElSpec n(O2)')
-            if c == model.O: plt.plot(ts_ , nO[h],  label='ElSpec n(O) ')
-            if c == model.NOp: plt.plot(ts_, nNOp[h], label='ElSpec n(NO+)')
-            if c == model.O2p: plt.plot(ts_, nO2p[h], label='ElSpec n(O2+)')
+            if c == model.N2: plt.plot(ts_, nN2[h, 1:], label='ElSpec n(N2)')
+            if c == model.O2: plt.plot(ts_, nO2[h, 1:], label='ElSpec n(O2)')
+            if c == model.O: plt.plot(ts_ , nO[h, 1:],  label='ElSpec n(O) ')
+            if c == model.NOp: plt.plot(ts_, nNOp[h, 1:], label='ElSpec n(NO+)')
+            if c == model.O2p: plt.plot(ts_, nO2p[h, 1:], label='ElSpec n(O2+)')
             # if c == model.Op: plt.plot(ts_, nOp[h], label='ElSpec n(O+) ')
             #ax.plot(ts_int, np.sqrt(e_prod_smooth(ts_int)[:, 0]/eff_rr[0, :]), '--', color = 'red', label = 'ne_ss')
             plt.legend(loc=2)
@@ -295,11 +330,11 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         break
 
 
-    d_effrr = con["alpha"] - eff_rr
+    d_effrr = con["alpha"] - eff_rr[:, 1:]
 
     plt.figure()
     plt.plot(ts_, np.abs(d_effrr[0, :]), label='d_alpha')
-    plt.plot(ts_, eff_rr[0, :], label='alpha')
+    plt.plot(ts_, eff_rr[0, 1:], label='alpha')
     plt.xlabel('Time [s]')
     plt.ylabel('Eff. Recombination Rate [m3s-1]')
     plt.yscale('log')
@@ -313,7 +348,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
                                                                         NOp,
                                                                         H, Hp] / e
     plt.figure()
-    plt.stackplot(ts_, rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
+    plt.stackplot(np.array([-1, *ts_]), rOp[h], rO2p[h], rNp[h], rN2p[h], rNOp[h], rHp[h], \
                   labels=['O+', 'O2+', 'N+', 'N2+', 'NO+', 'H+'])
     plt.xlabel('Time [s]')
     plt.ylabel('Ratio of Charged Species')
@@ -326,7 +361,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     r = np.abs(sum_charged - e)
     r.shape
     plt.figure()
-    pm = plt.pcolor(ts_, z_model, r / e)
+    pm = plt.pcolor(np.array([-1, *ts_]), z_model, r / e)
     plt.gcf().colorbar(pm)
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
@@ -334,7 +369,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     plt.savefig(direc + 'plots/Relative Charge imbalance IC_' + str(iteration) +'.svg')
 
     plt.figure()
-    pc = plt.pcolor(ts_, z_model, eff_rr, label='alpha')
+    pc = plt.pcolor(np.array([-1, *ts_]), z_model, eff_rr, label='alpha')
     plt.xlabel('Time [s]')
     plt.ylabel('Altitude [km]')
     plt.legend()
@@ -353,7 +388,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     plt.colorbar(pc)
     plt.title('Deviation from previous eff. rec. rate [m3s-1]')
     plt.savefig(direc + 'plots/Deviation from previous eff rec rate IC_' + str(iteration) + '.svg')
-
 
 
 def stepped_prod_t(prod, t, ts, te):

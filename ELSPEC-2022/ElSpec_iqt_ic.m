@@ -519,6 +519,15 @@ else
     end
 
 end
+
+figure
+pcolor(out.ts, out.h, squeeze(out.iri(:, 3, :)))
+
+if all(out.iri(:, 3, :) == repmat(squeeze(out.iri(:, 3, 1)), 1, max(size(out.iri(1, 3, :)))), 'all')
+    error("No Time variation in electron temperature.")
+end
+
+
 % nt = 2^floor(log2(numel(out.ts)));
 nt = numel(out.ts); % 128*floor(numel(out.ts)/128); 
 % Change above since there is no FFT-type reason to stick to powers
@@ -713,8 +722,8 @@ stdprior = out.stdprior;
                                                   [],... % Ie(t) constant
                                                   Directives);
 ne0 = sqrt(A*(Ie1(:,1).*out.dE')./alpha(:,1));% neEnd(:,end);
-out.ne0 = ne0
-out.q0 = A*(Ie1(:,1).*out.dE')
+out.ne0 = ne0;
+out.q0 = A*(Ie1(:,1).*out.dE');
 
 % figure
 % hold on

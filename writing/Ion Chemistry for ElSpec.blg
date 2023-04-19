@@ -1,15 +1,15 @@
 [0] Config.pm:311> INFO - This is Biber 2.16
 [0] Config.pm:314> INFO - Logfile is 'Ion Chemistry for ElSpec.blg'
-[57] biber-darwin:340> INFO - === Mon Mar  6, 2023, 12:38:00
-[69] Biber.pm:415> INFO - Reading 'Ion Chemistry for ElSpec.bcf'
-[140] Biber.pm:952> INFO - Found 5 citekeys in bib section 0
-[152] Biber.pm:4340> INFO - Processing section 0
-[160] Biber.pm:4531> INFO - Looking for bibtex format file 'My Library.bib' for section 0
-[188] bibtex.pm:1689> INFO - LaTeX decoding ...
-[499] bibtex.pm:1494> INFO - Found BibTeX data source 'My Library.bib'
-[579] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[580] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[580] Biber.pm:4168> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[580] Biber.pm:4174> INFO - No sort tailoring available for locale 'en-US'
-[587] bbl.pm:654> INFO - Writing 'Ion Chemistry for ElSpec.bbl' with encoding 'UTF-8'
-[593] bbl.pm:757> INFO - Output to Ion Chemistry for ElSpec.bbl
+[52] biber-darwin:340> INFO - === Mon Apr 17, 2023, 14:27:59
+[66] Biber.pm:415> INFO - Reading 'Ion Chemistry for ElSpec.bcf'
+[134] Biber.pm:952> INFO - Found 6 citekeys in bib section 0
+[145] Biber.pm:4340> INFO - Processing section 0
+[153] Biber.pm:4531> INFO - Looking for bibtex format file 'My Library.bib' for section 0
+[192] bibtex.pm:1689> INFO - LaTeX decoding ...
+[500] bibtex.pm:1494> INFO - Found BibTeX data source 'My Library.bib'
+[597] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[598] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[598] Biber.pm:4168> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[598] Biber.pm:4174> INFO - No sort tailoring available for locale 'en-US'
+[606] bbl.pm:654> INFO - Writing 'Ion Chemistry for ElSpec.bbl' with encoding 'UTF-8'
+[612] bbl.pm:757> INFO - Output to Ion Chemistry for ElSpec.bbl

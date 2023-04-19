@@ -128,7 +128,9 @@ The ionospheric composition is modeled for relevant major and minor species at 8
 % to do :- field aligned current and comparison
 % coparison of energy spectrum 
 
-
+% - ideas for plots:
+% - alpha minus background (static sol., or just mean of every height bin) so to hihglight variation and correlation with ne/q/Ie?
+% - NO+: IC, ElSpec not corrected for charge balance (i.e. constant), ElSpec corrected for ccharge balance (same starting densities)
 
 
 
@@ -173,7 +175,7 @@ To model the ionospheric composition in response to the precipitation, the coupl
 	\label{eq:ode}
 	n_k(t) &= n_k(t_0) + \int_{t_0}^t \frac{dn_k}{dt} dt
 \end{align}
-where production and loss terms are of the form $q_k = \sum_{i, j \rightarrow k} \alpha_{ij} n_i n_j$ and $l_k = -\sum_{i, k} \alpha_{ik} n_i n_k$, summed over all relevant reactions. Table \ref{tab:ic} shows the reactions and reaction rates taken into account. In addition, ionization of major neutral species from electron precipitation is accounted for:
+where production and loss terms are of the form $q_k = \sum_{i, j \rightarrow k} \alpha_{ij} n_i n_j$ and $l_k = -\sum_{i, k} \alpha_{ik} n_i n_k$, summed over all relevant reactions. Table \ref{tab:ic} shows the reactions and reaction rates taken into account. In addition, ionization of major neutral species from electron precipitation is accounted for \cite{rees_physics_1989}:
 \begin{align}
 	q_{A, O^+}  = q_e \frac {0.56 \, n_O}{0.92\, n_{N_2} + n_{O_2} + 0.56\, n_O}\\
 	q_{A, N_2^+} = q_e \frac {0.92\, n_{N_2}}{0.92\, n_{N_2} + n_{O_2} + 0.56 \,n_O}\\
@@ -246,8 +248,8 @@ The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} i
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{"../log/testing/plots/IC_0_NO+ Density.pdf"}
-	\caption{The density of $NO^+$ at 96 km altitude is shown. During the first 30 minutes, the model ionosphere is allowed to find an equilibrium state.}
+	\includegraphics[width=0.5\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf"}
+	\caption{The density of $NO^+$ at 96 km altitude is shown. During the first 30 minutes, the model ionosphere is allowed to find an equilibrium state. Orange shows the assumed $NO^+$ density for ElSpec, corrected for charge neutrality. Blue shows the first iteration of the ionospheric chemistry model.}
 	\label{fig:dialin}
 \end{figure}
 %
@@ -261,14 +263,26 @@ A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{"../log/testing/Figure_7.png"}
-	\caption{The mean relative deviation in the effective recombination rate and the maximum value show that the effective recombination rate indeed converges to some value}
+	\includegraphics[width=0.5\textwidth]{"plots/alpha_rel_dev.png"}
+	\caption{The mean and maximum values of relative deviation of the effective recombination rate over iterations ($(\alpha_{i-1} - \alpha_{i})/\alpha_{i} $) show that the effective recombination rate indeed converges.}
 	\label{fig:convergence}
 \end{figure}
 %
 \par\medskip
 %
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{"plots/comp_alpha.png"}
+	\caption{The effective recombination rate is shown for (a) the first iteration of ElSpec, and (b) the last iteration of Ion Chemistry.}
+	\label{fig:alpha}
+\end{figure}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{"plots/o2p-nop.png"}
+	\caption{The ratio of $\mathrm{O_2^+/NO^+}$ is shown for (a) the first iteration of ElSpec and (b) the last iteration of Ion Chemistry.}
+	\label{fig:ratio_o2p_nop}
+\end{figure}
 %
 \par\medskip
 %
@@ -279,12 +293,12 @@ Figure \ref{fig:comp} shows a comparison between the inversion results obtained 
 	\centering
     	\begin{minipage}{0.5\textwidth}
 			\centering
-			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_0.pdf"}
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf"}
 			a
     	\end{minipage}%
     	\begin{minipage}{0.5\textwidth}
         	\centering
-			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.02.27_16_39_35 mixf=1/ElSpec-iqt_IC_6.pdf"}
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf"}
 			b
     	\end{minipage}
     \caption{ElSpec results with (a) constant ionospheric densities and (b) variable ionospheric densities.}
