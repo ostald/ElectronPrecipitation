@@ -58,8 +58,18 @@ def plot_compare(x, y, data1, data2, title, label, vminlimit = None):
         print(vmin, vmax)
 
 plot_compare(ts0, z0, con["ne"], con2["ne"], 'e- Density', r'$\mathrm{n_{e} \, [m^{3}s^{-1}]}$')
-plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_elspec_0_end.png')
+#plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_elspec_0_end.png')
 
+
+n_model = con["iri"]
+[Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+[nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * con2["ne"]
+f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/IC_res_28.pickle'
+with open(f2, 'rb') as pf2:
+    data2 = pickle.load(pf2)
+n_ic2 = data2[2]
+plot_compare(ts0, z0, nO2p/nNOp, n_ic2[:, 3, 1:]/n_ic2[:, 8, 1:], 'O2+/NO+ Density Ratio', r'$\mathrm{n(O_2^+)/n(NO^+)} \, [1]$')
 plt.show()
+plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ratio_o2+_no+.png')
 
 

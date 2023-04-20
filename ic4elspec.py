@@ -133,26 +133,26 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     #investigating why there is no variation in alpha:
     #we should see variation in Temp
-    plt.figure()
-    plt.pcolormesh(ts, z_model, rrate[:, 0, :].T)
-    plt.figure()
-    plt.pcolormesh(ts, z_model, Te)
-    plt.show()
+    # plt.figure()
+    # plt.pcolormesh(ts, z_model, rrate[:, 0, :].T)
+    # plt.figure()
+    # plt.pcolormesh(ts, z_model, Te)
+    # plt.show()
 
-    loss_mat = np.zeros([len(model.all_reactions), len(model.all_species), len(z_model), len(ts)])
-    for i, r in enumerate(model.all_reactions):
-        ed0, ed1 = r.educts_ID
-        loss_mat[i, ed0, :, :] = rrate[:, i, :].T * model.all_species[ed1].density
-        loss_mat[i, ed1, :, :] = rrate[:, i, :].T * model.all_species[ed0].density
-    lossRate = np.sum(loss_mat, axis = 0)
-    plt.figure()
-    for i, c in enumerate(model.all_species):
-        if c.name not in ['O2+', 'NO+', 'N2+']: continue
-        line = plt.plot(lossRate[i, :, 0], z_model / 1e3, label=c.name)
-        plt.text(lossRate[i, 0, 0], z_model[1] / 1e3, c.name, color=line[0].get_color())
-    plt.xscale('log')
-    plt.xlabel('Loss rate [m-3 s-1]')
-    plt.ylabel('Altitude [km]')
+    # loss_mat = np.zeros([len(model.all_reactions), len(model.all_species), len(z_model), len(ts)])
+    # for i, r in enumerate(model.all_reactions):
+    #     ed0, ed1 = r.educts_ID
+    #     loss_mat[i, ed0, :, :] = rrate[:, i, :].T * model.all_species[ed1].density
+    #     loss_mat[i, ed1, :, :] = rrate[:, i, :].T * model.all_species[ed0].density
+    # lossRate = np.sum(loss_mat, axis = 0)
+    # plt.figure()
+    # for i, c in enumerate(model.all_species):
+    #     if c.name not in ['O2+', 'NO+', 'N2+']: continue
+    #     line = plt.plot(lossRate[i, :, 0], z_model / 1e3, label=c.name)
+    #     plt.text(lossRate[i, 0, 0], z_model[1] / 1e3, c.name, color=line[0].get_color())
+    # plt.xscale('log')
+    # plt.xlabel('Loss rate [m-3 s-1]')
+    # plt.ylabel('Altitude [km]')
     # plt.legend()
     #plt.show()
 

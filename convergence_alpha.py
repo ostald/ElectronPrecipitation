@@ -11,7 +11,7 @@ files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
 
-nax = 11
+nax = 13
 
 all_data = []
 
@@ -50,6 +50,6 @@ ax.set_ylabel(r"$\frac{\alpha_{eff, i-1}}{\alpha_{eff, i}} - 1$")
 ax.set_xlabel("Iteration i")
 ax.set_yscale('log')
 ax.legend()
-#plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/alpha_rel_dev.png')
+plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/alpha_rel_dev_mixf0.png')
 #plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_rel_dev.png')
 plt.show()
