@@ -33,7 +33,7 @@ hmax = 150;
 hmin = 95;
 % Time-limits
 btime = [2006, 12, 12, 19, 30, 0];
-etime = [2006, 12, 12, 19, 30, 10];
+etime = [2006, 12, 12, 19, 35, 0];
 % Selection of which ionisation-profile method to use
 ionomodel = 'Sergienko';
 % and which type of continuity-integration-method to use
