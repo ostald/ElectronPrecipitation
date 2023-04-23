@@ -85,7 +85,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
 
     # create smooth function for production
-    t = np.arange(-30*60, te[-1], 0.001)
+    t = np.arange(-30*60, te[-1], 0.01)
 
     stepf_e = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf_e)
@@ -130,11 +130,17 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # 1. take all info from reaction (reaction rate, constituents)
     ode_mat = np.zeros((len(model.all_reactions), len(model.all_species)), dtype='object')
     rrate = np.array([np.array([r.r_rate_t(*temp) for r in model.all_reactions]) for temp in zip(Tn.T, Ti.T, Te.T)])
+#    rrate_smooth = np.array([PchipInterpolator(t, np.array([stepped_prod_t(r.T, i, ts, te) for i in t])) for r in rrate.swapaxes(0, 1)])
 
     #investigating why there is no variation in alpha:
     #we should see variation in Temp
+    plt.figure()
+    plt.pcolormesh(ts, z_model, rrate[:, 0, :].T)
+    plt.colorbar()
     # plt.figure()
-    # plt.pcolormesh(ts, z_model, rrate[:, 0, :].T)
+    # plt.pcolormesh(np.arange(0, 60, 0.001), z_model, rrate_smooth[0](np.arange(0, 60, 0.001)).T)
+    # plt.colorbar()
+    #plt.show()
     # plt.figure()
     # plt.pcolormesh(ts, z_model, Te)
     # plt.show()
@@ -181,18 +187,26 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         return arr.astype(int)
 
     # 3. produce DG with only relevant terms
-    def fun(t, n, h):
+    def fun(t, n, h, temp):
         if ts[0] <= t <= te[-1]:
             k = len(ts[ts <= t]) - 1
         else:
             print(t)
             raise RuntimeError
 
-        dndt = np.array([np.sum(((rrate[k, asint(ode_raw[i.c_ID][:, 0]), h].T * ode_raw[i.c_ID][:, 1]).T \
+        try:
+            rrate = np.array([r.r_rate_t2(*temp(t)) for r in model.all_reactions])
+        except:
+            print('error')
+
+#        dndt = np.array([np.sum(((rrate[k, asint(ode_raw[i.c_ID][:, 0]), h].T * ode_raw[i.c_ID][:, 1]).T \
+        dndt = np.array([np.sum(((rrate[asint(ode_raw[i.c_ID][:, 0])].T * ode_raw[i.c_ID][:, 1]).T \
                                  * n[asint(ode_raw[i.c_ID][:, 2])] * n[asint(ode_raw[i.c_ID][:, 3])] \
                                  ), axis=0) \
                          + prodMat[i.c_ID](t)[h] \
                          for i in model.all_species])
+
+
         return dndt
 
     def solve_ic():
@@ -204,15 +218,16 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             #breakpoint()
             n = np.array([c.density[h, 0] for c in model.all_species])
             #print([c.name for c in model.all_species])
+            t = np.arange(-30*60, te[-1], 0.01)
+            temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
 
-            res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h],
+            res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h, temp],
                                t_eval=ts_int, max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
 
             import sys
             sys.stdout.write('\r' + (' ' * 22))
             sys.stdout.write("\r Height {0}. Mean time {1}".format(h, (time.time() - startt) / (h + 1)))
             sys.stdout.flush()
-
 
             if res[h].status != 0:
                 print(h)
@@ -314,6 +329,9 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             plt.ylabel(r'Density [m$^{-3}$]')
             #plt.title(c.name + ' Density')
             ax = plt.gca()
+            ax3 = ax.twinx()
+            ax3.plot(ts, temp(ts)[:, 2], "--", label = "Te")
+            ax3.legend()
             ax2 = ax.twinx()
             ax2.plot(ts, e_prod[h, :], '.', color='green', label=r'$q_e$')
             if c == model.e:
@@ -389,6 +407,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     plt.title('Deviation from previous eff. rec. rate [m3s-1]')
     plt.savefig(direc + 'plots/Deviation from previous eff rec rate IC_' + str(iteration) + '.svg')
 
+    plt.close('all')
 
 def stepped_prod_t(prod, t, ts, te):
     """
@@ -407,4 +426,24 @@ def stepped_prod_t(prod, t, ts, te):
             print(i_max_ts)
             raise RuntimeError
         prod_t = prod[:, i_max_ts]
+        return prod_t
+
+
+def stepped_rrate_t(r, t, ts, te):
+    """
+    returns the production according to the ELSPEC model
+    of any species where prod is defined
+    at arbitrary times
+    using the last ts: ts <= t from ELSPEC
+    """
+    if t < ts[0]:
+        return 0
+    if t > te[-1]:
+        return 0
+    else:
+        i_max_ts = len(ts[ts <= t]) - 1
+        if i_max_ts < 0:
+            print(i_max_ts)
+            raise RuntimeError
+        prod_t = r[i_max_ts]
         return prod_t

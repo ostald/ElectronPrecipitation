@@ -42,7 +42,7 @@ beta4		; N(4S)     + NO    => N2     + O 		; 1.5e-18*(Tn**(0.50))		;				; 3.25		
 beta5		; N(2D)     + O     => N(4S)  + O 		; 2.0e-18			;				; 2.38			; R
 beta6		; N(2D)     + e-    => N(4S)  + e-		; 5.5e-16*((Te/300)**(0.5))	;				; 2.38 			; R
 beta7		; N(2D)     + NO    => N2     + O		; 7.0e-17			;				; 5.63 			; R
-gamma1		; O+(4S)    + N2    => NO+    + N(4S)		; np.array([5e-19 if T<=1000 else 4.5e-20*((T/300)**(2)) for T in Tr]) ;	; 1.1 	; R
+gamma1		; O+(4S)    + N2    => NO+    + N(4S)		; np.where(Tr <= 1000, 5e-19, 4.5e-20*((Tr/300)**(2)))	;	; 1.1 			; R
 gamma2		; O+(4S)    + O2    => O2+    + O		; 2.0e-17*((Tr/300)**(-0.40))	;				; 1.55 			; R
 gamma3		; O+(2D)    + N2    => N2+    + O 		; 1.0e-16			;				; 1.33 			; R		; BG has 8e-16 as reaction rate
 gamma4		; N2+       + O     => NO+    + N(2D)		; 1.4e-16*((Tr/300)**(-0.44))	;				; 1.89			; R		; R also mentions production of N(4S) => branching ratio?

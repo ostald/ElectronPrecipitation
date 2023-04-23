@@ -12,7 +12,7 @@ chemistry_config = 'Data/other/Reaction rates full set.txt'
 
 mixf = 1
 
-ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = mixf, test = False)
+ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = mixf, test = True)
 
 exit()
 savedir = direc + "IC_res_" + str(iteration) + '.pickle'
