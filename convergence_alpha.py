@@ -6,7 +6,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.18_14_33_47 mixf=0/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]

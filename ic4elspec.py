@@ -13,8 +13,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     f = direc + file + str(iteration)
     con = loadmat.loadmat(f)["ElSpecOut"]
 
-    ne = con["ne"]
+    ne = con["ne"].astype('float64')
+    assert ne.dtype == 'float64'
     n_model = con["iri"]
+    assert n_model.dtype == 'float64'
     [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
     Tn = Tn_
@@ -35,6 +37,37 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = map(lam, [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp])
     ts_show = np.arange(ts[0], te[-1], 0.01)
     ts_int = ts  #set which time array to use for integration etc.
+
+    # from scipy.interpolate import RegularGridInterpolator
+    # from matplotlib import cm
+    # X, Y = np.meshgrid(ts_, z_model)
+    # Z = Te[:, 1:]
+    # interp = RegularGridInterpolator((ts_, z_model), Z.T, method = 'pchip')
+    # X_, Y_ = np.meshgrid(np.arange(ts_[0], ts_[-1], 0.1), np.arange(z_model[0], z_model[-1], 1))
+    #
+    # fig = plt.figure()
+    # ax = fig.add_subplot(projection='3d')
+    #
+    # norm = plt.Normalize(Z.min(), Z.max())
+    # colors = cm.viridis(norm(Z))
+    # rcount, ccount, _ = colors.shape
+    #
+    # surf = ax.plot_surface(X, Y, Z, rcount=rcount, ccount=ccount,
+    #                        facecolors=colors, shade=False)
+    # surf.set_facecolor((0, 0, 0, 0))
+    #
+    # fig = plt.figure()
+    # ax = fig.add_subplot(projection='3d')
+    # Z_ = interp((X_, Y_))
+    # norm = plt.Normalize(Z_.min(), Z_.max())
+    # colors = cm.viridis(norm(Z_))
+    # rcount, ccount, _ = colors.shape
+    # surf = ax.plot_surface(X_, Y_, Z_, rcount=rcount, ccount=ccount,
+    #                        facecolors=colors, shade=False)
+    # surf.set_facecolor((0, 0, 0, 0))
+    #
+    # plt.show()
+
 
     # normalise charged species to fit electron density
     # necessary for every timestep, as ne changes in ElSpec, but n(ions) does not
@@ -182,31 +215,22 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     for i in model.all_species:
         #    print(np.array([o for o in ode_mat[:, i.c_ID] if type(o)!= int]))
         ode_raw[i.c_ID] = np.array([o for o in ode_mat[:, i.c_ID] if type(o) != int])
+        if i.name in ['H', 'O', 'O2', 'N2']:
+            ode_raw[i.c_ID] = np.zeros([1, 4])
+    #print(ode_raw)
 
     def asint(arr):
         return arr.astype(int)
 
     # 3. produce DG with only relevant terms
     def fun(t, n, h, temp):
-        if ts[0] <= t <= te[-1]:
-            k = len(ts[ts <= t]) - 1
-        else:
-            print(t)
-            raise RuntimeError
+        rrate = np.array([r.r_rate_t2(*temp(t)) for r in model.all_reactions])
 
-        try:
-            rrate = np.array([r.r_rate_t2(*temp(t)) for r in model.all_reactions])
-        except:
-            print('error')
-
-#        dndt = np.array([np.sum(((rrate[k, asint(ode_raw[i.c_ID][:, 0]), h].T * ode_raw[i.c_ID][:, 1]).T \
         dndt = np.array([np.sum(((rrate[asint(ode_raw[i.c_ID][:, 0])].T * ode_raw[i.c_ID][:, 1]).T \
                                  * n[asint(ode_raw[i.c_ID][:, 2])] * n[asint(ode_raw[i.c_ID][:, 3])] \
                                  ), axis=0) \
                          + prodMat[i.c_ID](t)[h] \
                          for i in model.all_species])
-
-
         return dndt
 
     def solve_ic():
@@ -330,7 +354,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             #plt.title(c.name + ' Density')
             ax = plt.gca()
             ax3 = ax.twinx()
-            ax3.plot(ts, temp(ts)[:, 2], "--", label = "Te")
+            temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
+            ax3.plot(ts_show, temp(ts_show)[:, 2], "--", label = "Te")
             ax3.legend()
             ax2 = ax.twinx()
             ax2.plot(ts, e_prod[h, :], '.', color='green', label=r'$q_e$')

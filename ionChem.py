@@ -372,6 +372,9 @@ class ionChem:
         density_cc = np.zeros(self.all_species[0].density.shape)
         for c in self.all_species:
             if c.charge != 0:
+                if c.density.dtype == 'complex128':
+                    breakpoint()
+                    raise RuntimeError('Complex Density')
                 total_charge_density += c.density * c.charge
                 density_cc += c.density
         reduced_tot_charge = total_charge_density / density_cc
