@@ -5,11 +5,11 @@ import pickle
 import glob
 import loadmat
 
-f1 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/IC_res_0.pickle'
-mat0 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.mat'
+f1 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_0.pickle'
+mat0 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.mat'
 
-f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/IC_res_29.pickle'
-mat2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.mat'
+f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_14.pickle'
+mat2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.mat'
 
 spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N_2D','N_4S','O2p_a4P','Op_2D', \
          'Op_4S','Op_2P']
@@ -26,6 +26,7 @@ q0 = con["q"]
 Ie0 = con["Ie"]
 E = con["E"][:-1]
 [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
+[ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
 
 con2 = loadmat.loadmat(mat2)["ElSpecOut"]
 q_final = con2["q"]
@@ -131,13 +132,14 @@ def plot_compare(x, y, data1, data2, title, label, vminlimit = None):
 
     norm = mpl.colors.LogNorm(vmin=vmin, vmax=vmax)
 
-    fig, axs = plt.subplots(nrows=5, ncols=1, sharex=True, figsize =(6.4, 8))
+    fig, axs = plt.subplots(nrows=6, ncols=1, sharex=True, figsize =(6.4, 9))
     pc0 = axs.flat[0].pcolormesh(x, y, data1, norm=norm)
     pc1 = axs.flat[1].pcolormesh(x, y, data2, norm=norm)
     pc2 = axs.flat[2].pcolormesh(x, y, rdiff, norm=mpl.colors.CenteredNorm(), \
                              label='alpha', cmap='RdBu')
     pc3 = axs.flat[3].pcolormesh(x, y, n_ic2[:, 0, 1:], norm = mpl.colors.LogNorm())
     pc4 = axs.flat[4].pcolormesh(x, y, q_final, norm = mpl.colors.LogNorm())
+    pc5 = axs.flat[5].pcolormesh(x, y, Te)#, norm = mpl.colors.LogNorm())
 
     fig.suptitle(title)
     fig.supylabel('Altitude [km]')
@@ -154,6 +156,7 @@ def plot_compare(x, y, data1, data2, title, label, vminlimit = None):
         plt.colorbar(pc2, ax = axs.flat[2], label = [1])
         plt.colorbar(pc3, ax = axs.flat[3], label = 'ne')
         plt.colorbar(pc4, ax = axs.flat[4], label = r'$q_{e}$')
+        plt.colorbar(pc5, ax = axs.flat[5], label = r'$T_{e}$')
     except ValueError:
         print(vmin, vmax)
 

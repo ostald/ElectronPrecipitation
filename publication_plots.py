@@ -4,9 +4,11 @@ import numpy as np
 import pickle
 import loadmat
 
-mat0 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.mat'
+mat0 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.mat'
 
-mat2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.mat'
+mat2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.mat'
+f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_14.pickle'
+
 
 con = loadmat.loadmat(mat0)["ElSpecOut"]
 ts0 = con['ts']
@@ -58,13 +60,12 @@ def plot_compare(x, y, data1, data2, title, label, vminlimit = None):
         print(vmin, vmax)
 
 plot_compare(ts0, z0, con["ne"], con2["ne"], 'e- Density', r'$\mathrm{n_{e} \, [m^{3}s^{-1}]}$')
-#plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_elspec_0_end.png')
+plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_elspec_0_end.png')
 
 
 n_model = con["iri"]
 [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
 [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * con2["ne"]
-f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.12_13_12_43 mixf=1/IC_res_28.pickle'
 with open(f2, 'rb') as pf2:
     data2 = pickle.load(pf2)
 n_ic2 = data2[2]

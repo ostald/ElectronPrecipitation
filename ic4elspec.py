@@ -18,6 +18,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     n_model = con["iri"]
     assert n_model.dtype == 'float64'
     [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+    if iter == 0:
+        temp = nNOp
+        nNOP = nO2p
+        nO2p = temp
     [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
     Tn = Tn_
     Tr = (Ti + Tn) / 2
