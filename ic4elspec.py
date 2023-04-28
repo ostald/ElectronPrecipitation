@@ -22,6 +22,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         temp = nNOp
         nNOP = nO2p
         nO2p = temp
+        print('Changing densities :P')
     [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
     Tn = Tn_
     Tr = (Ti + Tn) / 2
