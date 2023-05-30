@@ -5,7 +5,7 @@ import glob
 import loadmat
 import ionChem
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/'
+direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
 files = glob.glob(direc + '*.pickle')
 
 h = 20

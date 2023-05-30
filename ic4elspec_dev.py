@@ -4,21 +4,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_14_52_10_mixf=0/'
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
 file = 'ElSpec-iqt_IC_'
 iteration = 0
 
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 
-mixf = 1
+mixf = 0
 
-ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = mixf, test = True)
+ic4elspec.ic(direc, chemistry_config, file, iteration, mixf = mixf, test = False)
 
 exit()
 savedir = direc + "IC_res_" + str(iteration) + '.pickle'
 with open(savedir, "rb") as f:
     data = pickle.load(f)
-    ts_int =  data[0]
+    ts_int = data[0]
     eff_rr = data[3]
     res = data[5]
 

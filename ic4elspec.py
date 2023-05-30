@@ -18,11 +18,11 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     n_model = con["iri"]
     assert n_model.dtype == 'float64'
     [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
-    if iter == 0:
-        temp = nNOp
-        nNOP = nO2p
-        nO2p = temp
-        print('Changing densities :P')
+    # if iter == 0: # not proper, change densities already in ElSpec
+    #     temp = nNOp
+    #     nNOP = nO2p
+    #     nO2p = temp
+    #     print('Changing densities :P')
     [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
     Tn = Tn_
     Tr = (Ti + Tn) / 2
@@ -31,6 +31,11 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     ts = con["ts"] - con["ts"][0]
     te = con["te"] - con["ts"][0]
     e_prod = con["q"]
+    # print("WARNING: production deprecated")
+    # e_prod[:, 20:] = np.zeros(e_prod[:, 20:].shape)
+    # ts[-1] = 60*60*12
+    # te[-1] = 12*60*60 + 0.44
+
     z_model = con["h"]
 
     ts_ = np.copy(ts)
@@ -84,6 +89,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         c.density = nN2 * 0
         c.prod = e_prod * 0
 
+
     # assign densities
     model.e.density = ne
     model.N2.density = nN2
@@ -97,6 +103,21 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         model.Op_4S.density = nOp
 
     #custom ion densities:
+    print('Warnign: random densities in ionChem, line 106')
+    model.Np.density   = ne * 0
+    model.Hp.density   = ne * 0
+    model.N2p.density  = ne * 0
+    model.O2p.density  = ne * 0.1
+    model.NOp.density  = ne * 0.3
+    model.Op_4S.density  = ne * 0.6
+
+    # model.N_2D.density = 0
+    # model.N_4S.density = nO / nO[0] * 1e11
+    # model.NO.density   = nN2 / nN2[0] *5e11
+    # model.O_1D.density = nO / nO[0] * 1e12
+    # model.O_1S.density = nO / nO[0] * 1e11
+    # model.Op_4S.density= 0
+
     #if iteration == 0:
     #    model.NOp.density = model.NOp.density/2
     #    model.O2p.density = model.O2p.density*2
@@ -113,7 +134,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
     model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
-    model.check_chargeNeutrality()
+    #model.check_chargeNeutrality()
 
     Op_prod = e_prod * 0.56 * model.O.density / \
                (0.92 * model.N2.density + model.O2.density + 0.56 * model.O.density)
@@ -210,7 +231,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             ode_mat[r.r_ID, ed_i] = np.array([r.r_ID, -1, *ed])
         for pr_i, bra in zip(pr, br):
             ode_mat[r.r_ID, pr_i] = np.array([r.r_ID, +1 * bra, *ed])
-
         for ed_i in ed:
             for pr_i in pr:
                 if ed_i == pr_i: ode_mat[r.r_ID, ed_i] = 0
@@ -287,6 +307,12 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     n_ic_ = np.array([r.y for r in res])
 
+    if any(n_ic_.flat < 0):
+        print('Negative ion densities detected.')
+        for i, c in enumerate(n_ic_.swapaxes(1, 2).copy()):
+            if any(c.flat < 0):
+                print('Negative ion densities in ', i)
+
     print('mixf =', mixf)
     if mixf == 0:
         n_ic = n_ic_
@@ -358,10 +384,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             plt.ylabel(r'Density [m$^{-3}$]')
             #plt.title(c.name + ' Density')
             ax = plt.gca()
-            ax3 = ax.twinx()
-            temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
-            ax3.plot(ts_show, temp(ts_show)[:, 2], "--", label = "Te")
-            ax3.legend()
+            #ax3 = ax.twinx()
+            #temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
+            #ax3.plot(ts_show, temp(ts_show)[:, 2], "--", label = "Te")
+            #ax3.legend()
             ax2 = ax.twinx()
             ax2.plot(ts, e_prod[h, :], '.', color='green', label=r'$q_e$')
             if c == model.e:

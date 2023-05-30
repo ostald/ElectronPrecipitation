@@ -169,7 +169,7 @@ The ion densities are again given by their continuity equations. It has been sho
 
 \section{Method}
 \subsection{Ion Chemistry}
-To model the ionospheric composition in response to the precipitation, the coupled continuity equations for minor neutral and in species (H, H+, N(4S), N(2D), N+, N2+, NO, NO+, O(1D), O(1S), O+(4S), O2+) are integrated in time:
+To model the ionospheric composition in response to the precipitation, the coupled continuity equations for electrons, minor neutral and ion species (H, H+, N(4S), N(2D), N+, N2+, NO, NO+, O(1D), O(1S), O+(4S), O2+) are integrated in time:
 \begin{align}
 	\frac{dn_k}{dt} &= q_k - l_k\\
 	\label{eq:ode}
@@ -248,7 +248,7 @@ The International Reference Ionosphere (IRI) \cite{bilitza_international_2014} i
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf"}
+	\includegraphics[width=0.5\textwidth]{"plots/NO+_Density_IC_0.eps"}
 	\caption{The density of $\mathrm{NO^+}$ at 96 km altitude is shown. During the first 30 minutes, the model ionosphere is allowed to find an equilibrium state. Orange shows the assumed $\mathrm{NO^+}$ density for ElSpec, corrected for charge neutrality. Blue shows the first iteration of the ionospheric chemistry model.}
 	\label{fig:dialin}
 \end{figure}
@@ -263,7 +263,7 @@ A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{"plots/alpha_rel_dev.png"}
+	\includegraphics[width=0.5\textwidth]{"plots/alpha_rel_dev_mixf0.png"}
 	\caption{The mean and maximum values of relative deviation of the effective recombination rate over iterations ($(\alpha_{i-1} - \alpha_{i})/\alpha_{i} $) show that the effective recombination rate indeed converges.}
 	\label{fig:convergence}
 \end{figure}
@@ -279,7 +279,7 @@ A data set from the 12th of December 2006, recorded with the EISCAT UHF radar in
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{"plots/o2p-nop.png"}
+	\includegraphics[width=0.5\textwidth]{"plots/ratio_o2+_no+.png"}
 	\caption{The ratio of $\mathrm{O_2^+/NO^+}$ is shown for (a) the first iteration of ElSpec and (b) the last iteration of Ion Chemistry.}
 	\label{fig:ratio_o2p_nop}
 \end{figure}
@@ -293,12 +293,12 @@ Figure \ref{fig:comp} shows a comparison between the inversion results obtained 
 	\centering
     	\begin{minipage}{0.5\textwidth}
 			\centering
-			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf"}
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.pdf"}
 			a
     	\end{minipage}%
     	\begin{minipage}{0.5\textwidth}
         	\centering
-			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf"}
+			\includegraphics[width=1.2\textwidth]{"../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.pdf"}
 			b
     	\end{minipage}
     \caption{ElSpec results with (a) constant ionospheric densities and (b) variable ionospheric densities.}

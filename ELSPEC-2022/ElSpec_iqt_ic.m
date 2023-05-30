@@ -498,8 +498,14 @@ else
         readFitData( out.ppdir , out.fitdir , out.hmin , out.hmax , ...
                      out.btime , out.etime , out.experiment , out.radar , ...
                      out.version , out.tres , readIRI, p.Results.fadev , p.Results.bottomstdfail);
+    disp("WARNING: Densities adjusted in Elsepc_iqt_ic line 501")
+    nNOp = out.iri(:, 8, :);      
+    out.iri(:, 9, :) = nNOp*2; %set o2p to same as nop (0.33, 0.33 and 0.33 ne)     
+    out.iri(:,10, :) = nNOp/3; %set op to same as nop 
+
+
     if strcmp(out.recombmodel,'SheehanGrFlipchem')
-    out.iri = calculateFlipchemComposition(out.ts,out.h,out.par,out.pp,out.loc,out.iri);
+        out.iri = calculateFlipchemComposition(out.ts,out.h,out.par,out.pp,out.loc,out.iri);
     end
     % warn about the ESR compositions
     if strcmp(p.Results.radar,'esr')

@@ -30,10 +30,10 @@ con = organizing.pcfg
 con.disable()
 print('Printing: ', con.print)
 
-msis_config = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/msis.txt'
-iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/iri.txt'
-chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/Reaction rates.txt'
-path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Data/'
+msis_config = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/other/msis.txt'
+iri_config  = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/other/iri.txt'
+chemistry_config = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/other/Reaction rates.txt'
+path_eiscat_data = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/Eiscat/'
 
 setup_ = organizing.setup(msis_config, iri_config, chemistry_config, path_eiscat_data)
 log_directory = setup_._log_directory

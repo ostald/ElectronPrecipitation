@@ -73,7 +73,7 @@ def loadIRI(iri_file):
 
 
 if printing:
-    iri_file = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/iri.txt'
+    iri_file = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/other/iri.txt'
 
     [z_iri
         , ne_iri
@@ -122,7 +122,7 @@ if printing:
     plt.figure()
     import import_ipynb
     from loadMSIS import *
-    MSISFile = '/Users/ost051/Documents/PhD/Electron Precipitation/Data/other/msis.rtf'
+    MSISFile = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/other/msis.rtf'
     [z_msis, n_o1_msis, n_n2_msis, n_o2_msis, mass_density, temp_n_msis, scale_height_msis] = loadMSIS(MSISFile)
     plt.plot(n_o1_msis, z_msis/1e3, label = 'O')
     plt.plot(n_o2_msis, z_msis/1e3, label = 'O2')

@@ -76,16 +76,121 @@ gamma33		; N+        + O2    => O2+    + N(2D)		; 2.0e-16			;				; 0.1			; R
 
 _____________________________________________________________________________________________________________________
 Sources:
-R - Rees: Physics and Chemistry of the upper Atmosphere
+R  - Rees: Physics and Chemistry of the upper Atmosphere
 BG - Grydeland, Gustavsson et al.: Conditional integration of Incoherent Scattering in relation to flickering aurora
+
+A3		; O+(2P)	    => O+(4S)			; 0.047				;				; 2470 A ̊		; BG 
+A4		; O+(2P) 	    => O+(2D)			; 0.171				;				; 7320 A ̊		; BG 
+A5		; O+(2D) 	    => O+(4S)			; 7.7e-5			;				; 3726 A ̊ 		; BG 
+A7		; N(2D) 	    => N(4S)			; 1.06e-5			;				; 5200 A ̊ 		; BG 
+A8		; O2+(a4P)	    => O2+			; 1e-4				;				; 3060 A ̊ 		; BG 
+A9		; O(1S)		    => O(1D)			; 1.215				;				; 5577 A ̊ 		; BG 
+A10		; O(1S)		    => O			; 7.601e-2			;				; 2972 A ̊ 		; BG 
+A11		; O(1D)		    => O			; 7.45e-3			;				; 6300 A		; BG 
   
+ 
 
 
-
-
-
-
-
+# Ordering of the species (array of number densities [n_n x 1] (m^-3)):
+[ e, O+(4S), O+(2D), O+(2P), NO+, O2+, O2+(a4p), N2+, N+, H+, N(4S),N(2D), N(2P),  NO, O(1D), O(1S), N2, O,  O2,H]
+[ 1,      2,      3,      4,   5,   6,        7,   8,  9, 10,    11,    12,    13, 14,  15,    16   17, 18, 19,20]
+[-1,      1,      1,      1,   1,   1,        1,   1,  1,  1,     0,    0 ,    0 , 0 ,  0 ,    0    0 , 0 , 0 , 0]
+[1/1836.2,16,    16,     16,  30,  32,       32,  28, 14,  1,    14,   14 ,    14, 30,  16,   16    28, 16, 32, 1]
+# fcn;  i1      i2    -> j1 j2...jn        ; y1 y2...yn ; dE/hv eV/A
+# 1 Photon emission and absorption
+#  
+#   A1;       NO      -> N(4S)   O         ; 1 1; -1910 A
+#   A2;       NO      -> NO+     e         ; 1 1;  -1340 A
+   A3;       O+(2P)   -> O+(4S)            ;   1; 2470 A
+   A4;       O+(2P)   -> O+(2D)            ;   1; 7320 A
+   A5;       O+(2D)   -> O+(4S)            ;   1; 3726 A
+   A6;       N(2P)    -> N(2D)             ;   1; 10400 A
+   A7;       N(2D)    -> N(4S)             ;   1; 5200 A
+   A8;      O2+(a4p)  -> O2+               ;   1; 3060 A
+   A9;      O(1S)     -> O(1D)             ;   1; 5577 A
+  A11;      O(1S)     -> O               ;   1; 2972 A
+  A10;      O(1D)     -> O               ;   1; 6300 A
+# 
+# 2 Electron - ion reactions
+# TODO: check and correct yields for alfa1, alfa4
+alfa1;  O2+      e    -> O(1D)   O(1S) O    ; 1.2 .1 .7; 5 eV
+alfa2;  N2+      e    -> N(2D)   N(4S)      ; 1.9 .1   ; 1.04 eV
+alfa3;  NO+      e    -> O       N(2D) N(4S); 1 .85 .15; 0.9014 eV 
+alfa4;  O2+(a4p) e    -> O(1D)   O(1S) O    ; 1.2 .1 .7; 11 eV
+alfa5;  O+(2D)   e    -> O+(4S)  e          ; 1 1      ; 3.31 eV
+alfa7;  O+(2P)   e    -> O+(4S)  e          ; 1 1      ; 5 eV
+alfa8;  O+(2P)   e    -> O+(2D)  e          ; 1 1      ; 1.69 eV
+alfa9;  O+(4S)   e    -> O                  ; 1        ; 13.618 eV
+alfa10; N+       e    -> N(4S)              ; 1        ; 14.55 eV
+alfa11; H+       e    -> H                  ; 1        ; 13.6 eV
+#
+# 3 Neutral - Neutral (and electron) reactions
+#
+beta6; N(2D)    e     -> N(4S)   e         ; 1 1; 2.38 eV
+beta5; N(2D)    O     -> N(4S)   O         ; 1 1; 2.38 eV
+beta1; N(4S)    O2    -> NO      O         ; 1 1; 1.385 eV
+beta2; N(2D)    O2    -> NO      O O(1D)   ; 1 0.9 0.1; 3.76 eV
+beta3; N(2P)    O2    -> NO      O         ; 1 1; 4.95 eV
+beta4; N(4S)   NO     -> N2      O         ; 1 1; 3.25 eV
+beta7; N(2D)   NO     -> N2      O         ; 1 1; 5.63 eV
+beta8; N(2P)    O     -> N(4S)   O         ; 1 1; 3.58 eV
+   q6; O(1S)   O2     -> O2      O         ; 1 1; 4.17 eV
+   q7; O(1D)   N2     -> N2      O         ; 1 1; 1.96 eV
+   q8; O(1D)   O2     -> O2      O         ; 1 1; 1.96 eV
+   q9; O(1D)    e     ->  O      e         ; 1 1; 1.96 eV
+  q10; O(1D)    O     ->  O                ; 2  ; 1.96 eV
+ aO1D; O        e     -> O(1D)   e         ; 1 1; -1.96 eV
+#
+# 4 Ion - neutral reactions
+#
+#  g14; He+      N2    -> N+  N(4S) He       ; 1 1 1; 0.28 eV
+# Hydrogen ions
+  g20; H+       O     -> O+(4S)  H         ; 1 1; 0 eV
+# Atomic nitrogen ions
+  g28; N+       O     -> O+(4S)  N(4S)     ; 1 1; 0.93 eV
+  g33; N+       O2    -> O2+     N(2D)     ; 1 1; 0.1 eV
+  g27; N+       O2    -> O+(4S) NO         ; 1 1; 2.31 eV
+  g10; N+       O2    -> NO+     O  O(1D)  ; 1 0.2 0.8; 6.67 eV
+  g11; N+       O2    -> O2+     N(4S)     ; 1 1; 2.486 eV
+  g29; N+       H     -> H+      N(4S)     ; 1 1; 0.9 eV
+  g34; N+       NO    -> N2+     O         ; 1 1; 0 eV
+  g35; N+       NO    -> NO+     N(4S)     ; 1 1; 0 eV
+# Molecular nitrogen ions
+  g18;  N2+    NO     -> NO+     N2        ; 1 1; 6.33 eV
+  g19;  N2+     O     -> O+(4S)  N2        ; 1 1; 1.96 eV
+   g4;  N2+     O     -> NO+     N(2D)     ; 1 1; 1.89 eV
+   g5;  N2+     O2    -> N2      O2+       ; 1 1; 3.53 eV
+  g36;  N2+    N(4S)  -> N2      N+	   ; 1 1; 0 eV
+# Atomic oxygen ions
+  g12;  O+(4S)  H     -> H+      O         ; 1 1; 0 eV
+  g26;  O+(4S)  N(2D) -> N+      O         ; 1 1; 1.45 eV
+   g1;  O+(4S) N2     -> NO+     N(4S)     ; 1 1; 1.1 eV
+  g21;  O+(4S) NO     -> NO+     O         ; 1 1; 4.36 eV
+   g2;  O+(4S) O2     -> O2+     O         ; 1 1; 1.55 eV
+# Excited atomic oxygen ions
+   g3;  O+(2D)  N2    -> N2+     O         ; 1 1; 1.33 eV
+  g13;  O+(2D)   O    -> O+(4S)  O         ; 1 1; 3.31 eV
+  g22;  O+(2D)  O2    -> O2+     O         ; 1 1; 4.865 eV
+  g24;  O+(2D)  N2    -> O+(4S)  N2        ; 1 1; 3.31 eV
+  g32;  O+(2D)  N(4S) -> N+      O         ; 1 1; 1 eV
+  g39;  O+(2D)  N2    -> NO+     N         ; 1 1; 0 eV
+  g40;  O+(2D)  NO    -> NO+     O         ; 1 1; 0 eV
+  g41;  O+(2D)  O2    -> O2+     O         ; 1 1; 0 eV
+  g25;  O+(2P)  O     -> O+(4S)  O         ; 1 1; 5 eV
+  g30;  O+(2P)  N2    -> N+     NO         ; 1 1; 0.70 eV
+  g31;  O+(2P)  N(4S) -> N+      O         ; 1 1; 2.7 eV
+   g9;  O+(2P)  N2    -> N2+     O         ; 1 1; 3.02 eV
+  g41;  O+(2P)  O2    -> O2+     O         ; 1 1; 0 eV
+# Molecular oxygen ions
+  g16; O2+      N(4S) -> NO+     O         ; 1 1; 4.213 eV
+  g17; O2+      N(2D) -> N+      O2        ; 1 1; 0 eV
+  g15; O2+      NO    -> NO+     O2        ; 1 1; 2.813 eV
+   g8; O2+      N2    -> NO+    NO         ; 1 1; 0.933 eV
+  g37; O2+      N(2D) -> NO+     O	   ; 1 1; 0 eV
+  g38; O2+      N(2P) -> O2+    N(4S)      ; 1 1; 0 eV
+# Excited molecular oxygen ions
+   g6; O2+(a4p) N2    -> N2+     O2        ; 1 1; 0.523 eV
+   g7; O2+(a4p) O     -> O2+     O         ; 1 1; 4.05 eV
 
 
 

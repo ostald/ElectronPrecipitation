@@ -4,7 +4,7 @@ import pickle
 import glob
 import loadmat
 
-direc = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
 files = glob.glob(direc + '*.pickle')
 
 elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
@@ -42,7 +42,7 @@ ax.set_ylabel(r"$\frac{\alpha_{eff, i-1}}{\alpha_{eff, i}} - 1$")
 ax.set_xlabel("Iteration i")
 ax.set_yscale('log')
 ax.legend()
-plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/alpha_rel_dev_mixf0.png')
+plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/alpha_rel_dev_mixf0.png')
 
 
 fig,ax = plt.subplots()
@@ -67,6 +67,6 @@ ax.set_ylabel(r"$\frac{n_{e, i-1}}{n_{e, i}} - 1$")
 ax.set_xlabel("Iteration i")
 ax.set_yscale('log')
 ax.legend()
-plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/ne_rel_dev.png')
+plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/ne_rel_dev.png')
 plt.show()
 

@@ -5,14 +5,15 @@ import pickle
 import glob
 import loadmat
 
-f1 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_0.pickle'
-mat0 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.mat'
+f1 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_7.pickle'
+mat0 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_7.mat'
 
-f2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_14.pickle'
-mat2 = '/Users/ost051/Documents/PhD/Electron Precipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.mat'
+f2 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.05.12_09_56_23_mixf=0/IC_res_7.pickle'
+mat2 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.05.12_09_56_23_mixf=0/ElSpec-iqt_IC_7.mat'
 
 spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N_2D','N_4S','O2p_a4P','Op_2D', \
          'Op_4S','Op_2P']
+
 
 con = loadmat.loadmat(mat0)["ElSpecOut"]
 n_model = con["iri"]
@@ -46,20 +47,57 @@ dnNOp = nNOp - n_ic2[:, 8, 1:]
 dnO2p = nO2p - n_ic2[:, 3, 1:]
 dnOp = nOp - n_ic2[:, 16, 1:]
 
+def loadpar(dir):
+    f1 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/'+dir+'/IC_res_7.pickle'
+    mat0 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/'+dir+'/ElSpec-iqt_IC_7.mat'
+
+    f2 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/'+dir+'/IC_res_7.pickle'
+    mat2 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/'+dir+'/ElSpec-iqt_IC_7.mat'
+
+    con = loadmat.loadmat(mat0)["ElSpecOut"]
+    n_model = con["iri"]
+    [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
+    eff_rr0 = con['alpha']
+    ts0 = con['ts']
+    ts0 = ts0 - ts0[0]
+    z0 = con["h"]
+    ne = con["ne"]
+    q0 = con["q"]
+    Ie0 = con["Ie"]
+    E = con["E"][:-1]
+    [nNOp, nO2p, nOp] = np.array([nNOp, nO2p, nOp]) / np.sum(np.array([nNOp, nO2p, nOp]), axis=0) * ne
+    [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
+
+    con2 = loadmat.loadmat(mat2)["ElSpecOut"]
+    q_final = con2["q"]
+    Ief = con2["Ie"]
+
+    with open(f1, 'rb') as pf1:
+        data1 = pickle.load(pf1)
+        [ts1, z1, n_ic1, eff_rr1] = data1[:4]
+
+    with open(f2, 'rb') as pf2:
+        data2 = pickle.load(pf2)
+        [ts2, z2, n_ic2, eff_rr2] = data2[:4]
+
+    dnNOp = nNOp - n_ic2[:, 8, 1:]
+    dnO2p = nO2p - n_ic2[:, 3, 1:]
+    dnOp = nOp - n_ic2[:, 16, 1:]
+
 
 #norm = mpl.colors.LogNorm()
 fig, axs = plt.subplots(nrows=3, ncols=1, sharex=True, figsize =(6.4, 5))
 pc0 = axs.flat[0].pcolormesh(ts2[1:], z2, n_ic2[:, 3, 1:], norm=mpl.colors.LogNorm())
 pc1 = axs.flat[1].pcolormesh(ts2[1:], z2, n_ic2[:, 8, 1:], norm=mpl.colors.LogNorm())
 pc2 = axs.flat[2].pcolormesh(ts2[1:], z2, n_ic2[:,17, 1:], norm=mpl.colors.LogNorm())
-plt.colorbar(pc0, ax = axs.flat[0], label=r'$\mathrm{n_{O_2^+}}$')
-plt.colorbar(pc1, ax = axs.flat[1], label=r'$\mathrm{n_{NO^+}}$')
-plt.colorbar(pc2, ax = axs.flat[2], label=r'$\mathrm{n_{O^+}}$')
+plt.colorbar(pc0, ax = axs.flat[0], label=r'$\mathrm{n_{O_2^+ [m^{-3}]}}$')
+plt.colorbar(pc1, ax = axs.flat[1], label=r'$\mathrm{n_{NO^+ [m^{-3}]}}$')
+plt.colorbar(pc2, ax = axs.flat[2], label=r'$\mathrm{n_{O^+ [m^{-3}]}}$')
 #fig.suptitle('asdf')
 fig.supylabel('Altitude [km]')
 fig.supxlabel('Time [s]')
 #plt.show()
-plt.savefig('/Users/ost051/Documents/PhD/Electron Precipitation/writing/plots/n_ions.png')
+#plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/n_ions.png')
 
 
 
@@ -114,7 +152,7 @@ try:
 except ValueError:
     print(vmin, vmax)
 
-#plt.show()
+plt.show()
 
 def plot_compare(x, y, data1, data2, title, label, vminlimit = None):
     vmin = min(data1.min(), data2.min())
@@ -175,7 +213,6 @@ plot_compare(ts0, z0, nOp, n_ic2[:, 17, 1:], 'O+ Density', r'$\mathrm{n(O^+) \, 
 
 plot_compare(ts0, z0, nO2p/nNOp, n_ic2[:, 3, 1:]/n_ic2[:, 8, 1:], 'O2+/NO+ Density Ratio', r'$\mathrm{n(O_2^+)/n(NO^+)} \, [1]$')
 
-plt.show()
 #no difference in major species
 # plot_compare(ts0, z0, nN2, n_ic2[:, 5, 1:], 'N2 Density', r'$\mathrm{n(N_2)} \, [m^{3}s^{-1}$]')
 # plot_compare(ts0, z0, nO2, n_ic2[:, 2, 1:], 'O2 Density', r'$\mathrm{n(O_2)} \, [m^{3}s^{-1}$]')
@@ -183,13 +220,13 @@ plt.show()
 
 
 
-#plt.show()
-
-
-
-
-for i in range(15):
-    plot_compare(ts1[1:], z1, n_ic1[:, i, 1:], n_ic2[:, i, 1:], spstr[i], 'b', vminlimit=1)
 plt.show()
+
+
+
+
+# for i in range(15):
+#     plot_compare(ts1[1:], z1, n_ic1[:, i, 1:], n_ic2[:, i, 1:], spstr[i], 'b', vminlimit=1)
+# plt.show()
 
 

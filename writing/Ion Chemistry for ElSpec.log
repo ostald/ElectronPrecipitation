@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.6)  18 APR 2023 11:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.6)  30 APR 2023 15:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1484,35 +1484,45 @@ Package chemgreek Info: Activating mapping `textgreek' on line 94.
  [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf, id=24, 4
-63.7325pt x 347.2975pt>
-File: ../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf Grap
-hic file (type pdf)
-<use ../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf>
-Package pdftex.def Info: ../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_De
-nsity_IC_0.pdf  used on input line 251.
+Package epstopdf Info: Source file: <plots/NO+_Density_IC_0.eps>
+(epstopdf)                    date: 2023-04-30 15:36:09
+(epstopdf)                    size: 59970 bytes
+(epstopdf)             Output file: <plots/NO+_Density_IC_0-eps-converted-to.pd
+f>
+(epstopdf)                    date: 2023-04-30 15:56:51
+(epstopdf)                    size: 85328 bytes
+(epstopdf)             Command: <repstopdf --outfile=plots/NO+_Density_IC_0-eps
+-converted-to.pdf plots/NO+_Density_IC_0.eps>
+(epstopdf)             \includegraphics on input line 251.
+Package epstopdf Info: Output file is already uptodate.
+<plots/NO+_Density_IC_0-eps-converted-to.pdf, id=24, 463.7325pt x 347.2975pt>
+File: plots/NO+_Density_IC_0-eps-converted-to.pdf Graphic file (type pdf)
+<use plots/NO+_Density_IC_0-eps-converted-to.pdf>
+Package pdftex.def Info: plots/NO+_Density_IC_0-eps-converted-to.pdf  used on i
+nput line 251.
 (pdftex.def)             Requested size: 220.50887pt x 165.1429pt.
-<plots/alpha_rel_dev.png, id=25, 462.528pt x 346.896pt>
-File: plots/alpha_rel_dev.png Graphic file (type png)
-<use plots/alpha_rel_dev.png>
-Package pdftex.def Info: plots/alpha_rel_dev.png  used on input line 266.
+<plots/alpha_rel_dev_mixf0.png, id=25, 462.528pt x 346.896pt>
+File: plots/alpha_rel_dev_mixf0.png Graphic file (type png)
+<use plots/alpha_rel_dev_mixf0.png>
+Package pdftex.def Info: plots/alpha_rel_dev_mixf0.png  used on input line 266.
+
 (pdftex.def)             Requested size: 220.50887pt x 165.38072pt.
-<plots/comp_alpha.png, id=27, 462.528pt x 334.6101pt>
+<plots/comp_alpha.png, id=27, 462.528pt x 578.16pt>
 File: plots/comp_alpha.png Graphic file (type png)
 <use plots/comp_alpha.png>
 Package pdftex.def Info: plots/comp_alpha.png  used on input line 275.
-(pdftex.def)             Requested size: 220.50887pt x 159.5235pt.
-<plots/o2p-nop.png, id=28, 462.528pt x 334.6101pt>
-File: plots/o2p-nop.png Graphic file (type png)
-<use plots/o2p-nop.png>
-Package pdftex.def Info: plots/o2p-nop.png  used on input line 282.
-(pdftex.def)             Requested size: 220.50887pt x 159.5235pt.
-<../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf, id=29, 614.295p
+(pdftex.def)             Requested size: 220.50887pt x 275.63455pt.
+<plots/ratio_o2+_no+.png, id=28, 462.528pt x 361.35pt>
+File: plots/ratio_o2+_no+.png Graphic file (type png)
+<use plots/ratio_o2+_no+.png>
+Package pdftex.def Info: plots/ratio_o2+_no+.png  used on input line 282.
+(pdftex.def)             Requested size: 220.50887pt x 172.27159pt.
+<../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.pdf, id=29, 614.295p
 t x 794.97pt>
-File: ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf Graphic fil
+File: ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.pdf Graphic fil
 e (type pdf)
-<use ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf>
-Package pdftex.def Info: ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_I
+<use ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.pdf>
+Package pdftex.def Info: ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_I
 C_0.pdf  used on input line 296.
 (pdftex.def)             Requested size: 264.60995pt x 342.43695pt.
 
@@ -1520,13 +1530,13 @@ Overfull \hbox (44.10109pt too wide) in paragraph at lines 296--298
  [][] 
  []
 
-<../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf, id=30, 614.295
+<../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.pdf, id=30, 614.295
 pt x 794.97pt>
-File: ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf Graphic fi
+File: ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.pdf Graphic fi
 le (type pdf)
-<use ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf>
-Package pdftex.def Info: ../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_I
-C_29.pdf  used on input line 301.
+<use ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.pdf>
+Package pdftex.def Info: ../log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_I
+C_14.pdf  used on input line 301.
 (pdftex.def)             Requested size: 264.60995pt x 342.43695pt.
 
 Overfull \hbox (44.10109pt too wide) in paragraph at lines 301--303
@@ -1537,10 +1547,10 @@ LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 3
 56.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-) [2] [3 <../log/testing/2023.04.12_13_12_43 mixf=1/plots/NO+_Density_IC_0.pdf>
-] [4 <./plots/alpha_rel_dev.png> <./plots/comp_alpha.png> <./plots/o2p-nop.png>
-] [5 <../log/testing/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_0.pdf> <../log/te
-sting/2023.04.12_13_12_43 mixf=1/ElSpec-iqt_IC_29.pdf>]
+) [2] [3 <./plots/NO+_Density_IC_0-eps-converted-to.pdf>] [4 <./plots/alpha_rel
+_dev_mixf0.png> <./plots/comp_alpha.png>] [5 <./plots/ratio_o2+_no+.png> <../lo
+g/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_0.pdf> <../log/testing/2023.
+04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.pdf>]
 Overfull \hbox (68.25143pt too wide) in paragraph at lines 357--357
 \T1/cmr/m/it/10 phys-i-cal Re-search Let-ters \T1/cmr/m/n/10 37.22 (2010). _epr
 int: https://onlinelibrary.wiley.com/doi/pdf/10.1029/2010GL045406.
@@ -1553,7 +1563,7 @@ Package logreq Info: Writing requests to '"Ion Chemistry for ElSpec".run.xml'.
  ) 
 Here is how much of TeX's memory you used:
  27168 strings out of 478994
- 528441 string characters out of 5858185
+ 528323 string characters out of 5858185
  1343180 words of memory out of 5000000
  44175 multiletter control sequences out of 15000+600000
  424239 words of font info for 79 fonts, out of 8000000 for 9000
@@ -1588,7 +1598,7 @@ ts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2021/texmf-dist/fonts
 ype1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2021/texmf-dist/fonts/typ
 e1/public/cm-super/sfti1000.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1
 /public/cm-super/sftt1000.pfb>
-Output written on "Ion Chemistry for ElSpec.pdf" (6 pages, 1191294 bytes).
+Output written on "Ion Chemistry for ElSpec.pdf" (6 pages, 1286000 bytes).
 PDF statistics:
  282 PDF objects out of 1000 (max. 8388607)
  182 compressed objects within 2 object streams
