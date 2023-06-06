@@ -49,9 +49,13 @@ else
   else
     Xend = X0(1,:);
   end
-  for it4s = numel(dt):-1:1
-    X_curr = X0(1,:) + (t(it4s)-t(1))/(t(end)-t(1))*(Xend - X0(1,:));
-    s(it4s,:) = model_spectrum( X_curr, E, s_type );
+  if numel(dt) > 1
+    for it4s = numel(dt):-1:1
+      X_curr = X0(1,:) + (t(it4s)-t(1))/(t(end)-t(1))*(Xend - X0(1,:));
+      s(it4s,:) = model_spectrum( X_curr, E, s_type );
+    end
+  else
+    s(1,:) = model_spectrum( X0, E, s_type );  
   end
 end
 % the updated model ne profile

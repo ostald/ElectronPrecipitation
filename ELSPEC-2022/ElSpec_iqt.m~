@@ -229,8 +229,8 @@ defaultNinteg = 6; % 30 s in beata, note that only the first is used
 checkNinteg = @(x) (isnumeric(x) & length(x)==1 & all(x>0));
 
 % number of time-slices to proceed on each time-step
-defaultNstep = 1;
-checkNstep = @(x) (isnumeric(x) & length(x)==1 & all(x>0));
+% defaultNstep = 1;
+% checkNstep = @(x) (isnumeric(x) & length(x)==1 & all(x>0));
 
 % save the  large flux covariance matrix?
 defaultSaveiecov = false;
@@ -295,7 +295,7 @@ checkInterpSpec = @(x) ((numel(x) == 1) & isnumeric(x) & ...
 defaultFAdev = 3;
 checkFAdev = @(x) (isnumeric(x)&length(x)==1);
                     
-if exist('inputParser') %#ok<EXIST> 
+if exist('inputParser') == 2
   % parse the input
   p = inputParser;
   
@@ -319,7 +319,7 @@ if exist('inputParser') %#ok<EXIST>
   addParameter(p,'ieprior',defaultIeprior,checkIeprior);
   addParameter(p,'stdprior',defaultStdprior,checkStdprior);
   addParameter(p,'ninteg',defaultNinteg,checkNinteg);
-  addParameter(p,'nstep',defaultNstep,checkNstep);
+%   addParameter(p,'nstep',defaultNstep,checkNstep);
   addParameter(p,'saveiecov',defaultSaveiecov,checkSaveiecov);
 %   addParameter(p,'Tdir',defaultTdir,checkTdir);
   addParameter(p,'fadev',defaultFAdev,checkFAdev);
@@ -363,7 +363,7 @@ else
   def_pars.nstep = defaultNstep;
   def_pars.saveiecov = defaultSaveiecov;
   
-  %def_pars.Tdir = defaultTdir;
+  def_pars.Tdir = defaultTdir;
   def_pars.ErrType = defaultErrType;
   def_pars.ErrWidth = defaultErrWidth;
   def_pars.Outliers = defaultOutliers;
@@ -696,7 +696,7 @@ while iStart < numel(dt)
   if iEnd > numel(dt) || abs(iEnd-numel(dt)) < 16
       iEnd = numel(dt);
   end
-  disp([datestr(now,'HH:MM:SS'),' ',num2str([iStart iIntervall iEnd])])
+  disp([iStart iIntervall iEnd])
   iHalfway = floor((iStart+iEnd)/2);
   [A,Ec,dE] = ion_production(out.E, ...
                            out.h*1000, ...
@@ -720,7 +720,7 @@ while iStart < numel(dt)
                                                     Ie0(:,end),...
                                                     out);
   % 3rd enter the recursion
-  % disp(['Calling recurse_AICfit, nt: ',num2str(numel(dt(iStart:iEnd)))])
+  disp(['Calling recurse_AICfit, nt: ',num2str(numel(dt(iStart:iEnd)))])
   [cne,cneEnd,cIe,cpolycoefs,cbest_order,cn_params,cexitflag,cnSteps] = recurse_AICfit(cne,...
                                                     cneEnd,...
                                                     pp(:,iStart:iEnd),...
@@ -739,7 +739,7 @@ while iStart < numel(dt)
                                                     stdprior,...
                                                     Ie0(:,end),...
                                                     out);
-  % disp(['returned from recurse_AICfit, nt: ',num2str(numel(cnSteps))])
+  disp(['returned from recurse_AICfit, nt: ',num2str(numel(cnSteps))])
   ne0 = cneEnd(:,end);
   if iStart == 1
     ne_all         = cne;
@@ -885,7 +885,7 @@ function [ne,neEnd,Ie,polycoefs,best_order,n_params,exitflag,nSteps,idx_out] = r
 %  savename = sprintf('in-%03i-%03i.mat',idx_in(1),numel(idx_in));
 %  save(savename,'ne00')
   nSteps = numel(dt).*ones(size(dt(:)'));
-  % disp(['Entering recurse_AICfit, nt: ',num2str(numel(dt))])
+  disp(['Entering recurse_AICfit, nt: ',num2str(numel(dt))])
   AICFull = AICc( pp, ...
                   ppstd.^2, ...
                   ne, ...
@@ -1150,7 +1150,7 @@ function [ne,neEnd,Ie,polycoefs,best_order,n_params,exitflag,nSteps,idx_out] = r
   end
   % savename = sprintf('ut-%03i-%03i.mat',idx_in(1),numel(idx_in));
   % save(savename,'neEnd')
-  % disp(['Leaving recurse_AICfit, nt: ',num2str(numel(idx_out))])
+  disp(['Leaving recurse_AICfit, nt: ',num2str(numel(idx_out))])
 
 end
 
