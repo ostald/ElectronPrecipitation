@@ -1,4 +1,4 @@
-function ElSpec_IC_iter(iter, log_dir)
+function ElSpec_IC_iter(iter, log_dir, ppdir)
 %% ElSpec extended with Ion Chemitry
 %% Based on Example-script for ElSpec_iqt usage
 % This script should be possible to adapt for anyone with basic skills in
@@ -25,7 +25,7 @@ egrid = logspace(1,5,400);
 fitdir = '../Data/Eiscat/fit';
 %ppdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/tmp-ionlines/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf-pp';
-ppdir = '../Data/Eiscat/pp';
+%ppdir = '../Data/Eiscat/pp';
 % Flag for specifying which EISCAT-experiment it is
 experiment = 'arc1';
 % Altitude-limits.
