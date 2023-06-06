@@ -5,16 +5,19 @@ import sys
 import setup
 import loadmat
 
+dirname = 'flipchem'
+
 #defining file paths
 msis_config = 'Data/other/msis.rtf'
 iri_config  = 'Data/other/iri.txt'
 chemistry_config = 'Data/other/Reaction rates full set.txt'
+#path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
 path_eiscat_data = 'Data/Eiscat'
 
 mixf = 0
 
 #setup log directory
-setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf)#, no_timecode=True)
+setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, dirname=dirname)#, no_timecode=True)
 log_directory = setup_._log_directory
 
 matlabroot_dir = "/Applications/MATLAB_R2023a.app/bin/./matlab"

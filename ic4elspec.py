@@ -103,13 +103,13 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         model.Op_4S.density = nOp
 
     #custom ion densities:
-    print('Warnign: random densities in ionChem, line 106')
-    model.Np.density   = ne * 0
-    model.Hp.density   = ne * 0
-    model.N2p.density  = ne * 0
-    model.O2p.density  = ne * 0.1
-    model.NOp.density  = ne * 0.3
-    model.Op_4S.density  = ne * 0.6
+    # print('Warnign: random densities in ionChem, line 106')
+    # model.Np.density   = ne * 0
+    # model.Hp.density   = ne * 0
+    # model.N2p.density  = ne * 0
+    # model.O2p.density  = ne * 0.1
+    # model.NOp.density  = ne * 0.3
+    # model.Op_4S.density  = ne * 0.6
 
     # model.N_2D.density = 0
     # model.N_4S.density = nO / nO[0] * 1e11
@@ -365,7 +365,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         for c in model.all_species:
             plt.figure()
             ax = plt.gca()
-            plt.plot(ts_show, i.sol(ts_show)[c.c_ID, :], label=r'$n_{'+c.name+'}$')
+            plt.plot(ts_show, i.sol(ts_show)[c.c_ID, :], label=r'IC n('+c.name+')')
             #plt.plot(i.t, i.y[c.c_ID, :], label=r'$n_{'+c.name+'}$')
             if c == model.e:
                 plt.plot(ts_int, ne[h, :], label=r'ElSpec $n_e$')

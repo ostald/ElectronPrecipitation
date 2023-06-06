@@ -95,6 +95,8 @@ def plot_compare_alpha(x, y, data1, data2, title, label, vminlimit = None):
     axs.flat[0].text(5, 142, 'a')
     axs.flat[1].text(5, 142, 'b')
     axs.flat[2].text(5, 142, 'c')
+    axs.flat[3].text(5, 142, 'd')
+    axs.flat[4].text(5, 142, 'e')
     #axs.flat[0].set_title('Initial Values')
     #axs.flat[1].set_title('Final Values')
     #axs.flat[2].set_title('Relative Difference')
@@ -133,7 +135,7 @@ n_ic2 = data2[2]
 ts2 = data2[0]
 plot_compare(ts2[1:], z0, nO2p/nNOp, n_ic2[:, 3, 1:]/n_ic2[:, 8, 1:], 'O2+/NO+ Density Ratio', r'$\mathrm{n(O_2^+)/n(NO^+)} \, [1]$', vminlimit=0.1)
 #plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/ratio_o2+_no+.png')
-plt.show()
+#plt.show()
 
 
 with open(f2, 'rb') as pf2:
@@ -145,12 +147,37 @@ with open(f2, 'rb') as pf2:
 fig, axs = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6.4, 5))
 pc0 = axs.flat[0].pcolormesh(ts2[1:], z2, n_ic2[:, 3, 1:], norm=mpl.colors.LogNorm())
 pc1 = axs.flat[1].pcolormesh(ts2[1:], z2, n_ic2[:, 8, 1:], norm=mpl.colors.LogNorm())
-pc2 = axs.flat[2].pcolormesh(ts2[1:], z2, n_ic2[:, 17, 1:], norm=mpl.colors.LogNorm())
+pc2 = axs.flat[2].pcolormesh(ts2[1:], z2, n_ic2[:,17, 1:], norm=mpl.colors.LogNorm())
 plt.colorbar(pc0, ax=axs.flat[0], label=r'$\mathrm{n_{O_2^+} [m^{-3}]}$')
 plt.colorbar(pc1, ax=axs.flat[1], label=r'$\mathrm{n_{NO^+} [m^{-3}]}$')
 plt.colorbar(pc2, ax=axs.flat[2], label=r'$\mathrm{n_{O^+} [m^{-3}]}$')
 fig.supylabel('Altitude [km]')
 fig.supxlabel('Time [s]')
 plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/n_ions.png')
-plt.show()
+#plt.show()
 
+
+
+fig, axs = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6.4, 5))
+pc0 = axs.flat[0].pcolormesh(ts2[1:], z2, n_ic2[:, 3, 1:]/n_ic2[:, 0, 1:], vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+pc1 = axs.flat[1].pcolormesh(ts2[1:], z2, n_ic2[:, 8, 1:]/n_ic2[:, 0, 1:], vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+pc2 = axs.flat[2].pcolormesh(ts2[1:], z2, n_ic2[:,17, 1:]/n_ic2[:, 0, 1:], vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+plt.colorbar(pc0, ax=axs.flat[0], label=r'$\mathrm{n_{O_2^+} [m^{-3}]}$')
+plt.colorbar(pc1, ax=axs.flat[1], label=r'$\mathrm{n_{NO^+} [m^{-3}]}$')
+plt.colorbar(pc2, ax=axs.flat[2], label=r'$\mathrm{n_{O^+} [m^{-3}]}$')
+fig.supylabel('Altitude [km]')
+fig.supxlabel('Time [s]')
+plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/n_ions_rel_i13.png')
+
+
+fig, axs = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6.4, 5))
+pc0 = axs.flat[0].pcolormesh(ts0, z0, con["iri"][:, 8, :]/np.sum(con["iri"][:, 7:, :], axis = 1), vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+pc1 = axs.flat[1].pcolormesh(ts0, z0, con["iri"][:, 7, :]/np.sum(con["iri"][:, 7:, :], axis = 1), vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+pc2 = axs.flat[2].pcolormesh(ts0, z0, con["iri"][:, 9, :]/np.sum(con["iri"][:, 7:, :], axis = 1), vmin=0, vmax=1)#, norm=mpl.colors.LogNorm())
+plt.colorbar(pc0, ax=axs.flat[0], label=r'$\mathrm{n_{O_2^+} [m^{-3}]}$')
+plt.colorbar(pc1, ax=axs.flat[1], label=r'$\mathrm{n_{NO^+} [m^{-3}]}$')
+plt.colorbar(pc2, ax=axs.flat[2], label=r'$\mathrm{n_{O^+} [m^{-3}]}$')
+fig.supylabel('Altitude [km]')
+fig.supxlabel('Time [s]')
+plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/n_ions_rel_i0.png')
+plt.show()

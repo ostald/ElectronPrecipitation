@@ -32,14 +32,13 @@ pcfg = print_config()
 
 
 class setup:
-    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode = False):
+    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode = False, dirname = None):
         #self._directory = os.path.abspath('')
         self.no_timecode = no_timecode
         self.mixf = mixf
-        self._create_directory()
+        self._create_directory(dirname)
         self._copy_config(msis_config, iri_config, chemistry_config, path_eiscat_data)
-     
-    def _create_directory(self):
+    def _create_directory(self, name = None):
         """
         Creates a directory to store the configuration and results of this run.
         The directory is labeled with the time of starting the program.
@@ -54,7 +53,10 @@ class setup:
         if self.no_timecode == True:
             self._log_directory = 'log/testing/'
         else:
-            self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '_mixf=' + str(self.mixf) +'/'
+            if name == None:
+                self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '_mixf=' + str(self.mixf) +'/'
+            else:
+                self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + name + '_mixf=' + str(self.mixf) +'/'
             os.mkdir(self._log_directory)
         if not os.path.isdir( self._log_directory + 'Simulation/'):
             os.mkdir(self._log_directory + '/Simulation')
