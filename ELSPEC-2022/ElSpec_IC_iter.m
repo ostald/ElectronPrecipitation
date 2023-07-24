@@ -22,7 +22,8 @@ egrid = logspace(1,5,400);
 % power-profiles.
 %fitdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
 %fitdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
-fitdir = '../Data/Eiscat/fit';
+%fitdir = '../Data/Eiscat/fit';
+fitdir = ppdir
 %ppdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/tmp-ionlines/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '../Data/Eiscat/pp';
@@ -32,8 +33,8 @@ experiment = 'arc1';
 hmax = 150;
 hmin = 95;
 % Time-limits
-btime = [2006, 12, 12, 19, 30, 0];
-etime = [2006, 12, 12, 19, 35, 0];
+btime = [2012, 12, 11, 20, 30, 0];
+etime = [2012, 12, 11, 23, 55, 0];
 % Selection of which ionisation-profile method to use
 ionomodel = 'Sergienko';
 %recombmodel = 'SheehanGrFlipchem';

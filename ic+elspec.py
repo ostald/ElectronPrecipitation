@@ -11,7 +11,8 @@ dirname = 'longTime'
 msis_config = 'Data/other/msis.rtf'
 iri_config  = 'Data/other/iri.txt'
 chemistry_config = 'Data/other/Reaction rates full set.txt'
-path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
+#path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
+path_eiscat_data = '../Data/2012-12-11_arc1_4@uhf' #Data/Eiscat'
 #path_eiscat_data = '../Data/Eiscat/pp'
 
 mixf = 0

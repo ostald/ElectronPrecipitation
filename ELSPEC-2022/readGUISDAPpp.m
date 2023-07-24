@@ -355,7 +355,11 @@ for k = 1:length(ff)
       for iDX = 1:numel(i_end)
         curr_idx = i_start(iDX):i_end(iDX);
         curr_set = find(numel(curr_idx)==nh_all);
-        h{curr_set}(:,idx_profs(curr_set)) = r_pprange(curr_idx);
+        try
+            h{curr_set}(:,idx_profs(curr_set)) = r_pprange(curr_idx);
+        catch
+            continue
+        end
         pp{curr_set}( : ,idx_profs(curr_set)) = r_pp(curr_idx);
         ppstd{curr_set}( :,idx_profs(curr_set)) = r_pperr(curr_idx);
         idx_profs(curr_set) = idx_profs(curr_set)+1;

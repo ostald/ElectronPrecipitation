@@ -14,3 +14,4 @@ ELSPEC-recursive/.gitignore
 ipynb/*
 log/*
 writing/*
+Data/*
