@@ -960,7 +960,7 @@ for it = 1:numel(out.ts)
 end
 ElSpecOut = out;
 try
-  save(outfilename,'ElSpecOut')
+  save(outfilename,'ElSpecOut', "-v7.3")
 catch
   disp(['Failed to save ElSpecOut into file:',outfilename])
 end
