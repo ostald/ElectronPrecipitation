@@ -170,6 +170,7 @@ end
 Outname = fullfile("..", log_dir, ["ElSpec-iqt_IC_" + iter]);
 disp(Outname)
 
+opengl hardwarebasic
 
 ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'ppdir',ppdir,...
