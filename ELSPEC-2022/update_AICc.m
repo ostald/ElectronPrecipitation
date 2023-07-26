@@ -80,8 +80,6 @@ else
     switch lower(integtype)
       case 'endne'
         integ_type_end = 'endNe';
-      case 'neend'
-        integ_type_end = 'endNe';
       case 'integrate'
         integ_type_end = 'endNe';
       case 'linearend'
@@ -123,9 +121,8 @@ AIC = AICc( nemeas(:) , stdmeas(:).^2 , nemod(:) , nParams , ...
 
 % slight regularization for all coefficients
 AIC = AIC + sum(X0.^2./1e5.*10.^[1:size(X0,2)],'all') - ...
-      1e25*diff(s(end-1:end)).*(diff(s(end-1:end))<0) - ...
-      1e25*diff(s([end-10,end])).*(diff(s([end-10,end]))<0);
-      % BG: yeah, I really dont like Ie ever-increasing with E
+      diff(s(end-1:end)).*(diff(s(end-1:end))<0);
+
 %% the spectrum should go to zero at the high energy end
 %AIC = AIC + s(end)^2;
 
