@@ -1,10 +1,10 @@
-function AIC = update_AICc(ne,stdne,ne0,A,alpha,dt,X0,E,dE, ...
+function AICres = update_AICc_residuals(ne,stdne,ne0,A,alpha,dt,X0,E,dE, ...
                            integtype,IePrior,stdPrior , nmeas,eType,eWidth,varargin)
 %
 % Calculate corrected Akaike information criterion value for model
 % value of the  next electron density profile.
 %
-% ne = update_AICc(ne,stdne,ne0,A,alpha,dt,E0,Y0,gamma,E,integtype)
+% AICres = update_AICc_residuals(ne,stdne,ne0,A,alpha,dt,E0,Y0,gamma,E,integtype)
 %
 % INPUT:
 %  ne         measured electron density profile
@@ -25,7 +25,9 @@ function AIC = update_AICc(ne,stdne,ne0,A,alpha,dt,X0,E,dE, ...
 %
 %
 % OUTPUT:
-%  AIC        corrected Akaike information criterion value
+%  AICres     array with scale-and-weighted residuals - for optimising
+%             corrected Akaike information criterion value and model
+%             selsction
 %
 %
 % IV 2017
@@ -80,8 +82,6 @@ else
     switch lower(integtype)
       case 'endne'
         integ_type_end = 'endNe';
-      case 'neend'
-        integ_type_end = 'endNe';
       case 'integrate'
         integ_type_end = 'endNe';
       case 'linearend'
@@ -117,15 +117,17 @@ end
 %AIC = AICc( nemeas(:) , stdmeas(:).^2 , nemod(:) , numel(X0) , ...
 %            nmeas, eType,eWidth );
 nParams = size(X0,2).*max(1,size(X0,1)/2);
-AIC = AICc( nemeas(:) , stdmeas(:).^2 , nemod(:) , nParams , ...
-            nmeas, eType,eWidth );
+AICres = AICc_residuals( nemeas(:) , stdmeas(:).^2 , nemod(:) , nParams , ...
+                      nmeas, eType,eWidth );
 % Ougth to be numel(X0) above: BG-20220630?
 
 % slight regularization for all coefficients
-AIC = AIC + sum(X0.^2./1e5.*10.^[1:size(X0,2)],'all') - ...
-      1e25*diff(s(end-1:end)).*(diff(s(end-1:end))<0) - ...
-      1e25*diff(s([end-10,end])).*(diff(s([end-10,end]))<0);
-      % BG: yeah, I really dont like Ie ever-increasing with E
+% BG: skipping this because below "reason"
+% AIC = [AIC; % BG: Dont understans this term? + sum(X0.^2./1e5.*10.^[1:size(X0,2)],'all') - ...
+AICres = [AICres; 
+          -1e25*diff(s(end-1:end)).*(diff(s(end-1:end))<0);       % These two terms bias
+          -1e25*diff(s([end-10,end])).*(diff(s([end-10,end]))<0)];% agains increasing Ie 
+
 %% the spectrum should go to zero at the high energy end
 %AIC = AIC + s(end)^2;
 
@@ -146,7 +148,8 @@ AIC = AIC + sum(X0.^2./1e5.*10.^[1:size(X0,2)],'all') - ...
 
 % try with a prior model (from an equilibrium solution...)
 if ~isempty(IePrior)
-    AIC = AIC + mean( ( s(:) - IePrior(:) ).^2 ./(stdPrior(:)).^2);
+    AICres = [AICres; 
+           2*(s(:) - IePrior(:))./(stdPrior(:)).^2];
 end
 
 % tell the solver that flux at 100 eV is probably not huge...
