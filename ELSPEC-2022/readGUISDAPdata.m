@@ -200,20 +200,77 @@ end
 par = NaN(nh,4,nt);
 parstd = NaN(nh,4,nt);
 if ~isempty(fitdir)
-    ntpar = length(tepar);
-    par2 = NaN(nh,4,ntpar);
-    parstd2 = NaN(nh,4,ntpar);
-    for k=1:ntpar
-        ii = ~isnan(hpar(:,k));
-        % interpolate, some tricks at edges
-        par2(:,:,k) = interp1([0;hpar(ii,k);1e6],[par1(ii(1),:,k);par1(ii,:,k);par1(ii(end),:,k)],h,'linear','extrap');
-        parstd2(:,:,k) = interp1([0;hpar(ii,k);1e6],[parstd1(ii(1),:,k);parstd1(ii,:,k);parstd1(ii(end),:,k)],h,'linear','extrap');
-    end
-    for k=1:nh
+    % ntpar = length(tepar);
+    % par2 = NaN(nh,4,ntpar);
+    % parstd2 = NaN(nh,4,ntpar);
+    % for k=1:ntpar
+    %     ii = ~isnan(hpar(:,k));
+    %     % interpolate, some tricks at edges
+    %     par2(:,:,k) = interp1([0;hpar(ii,k);1e6],[par1(ii(1),:,k);par1(ii,:,k);par1(ii(end),:,k)],h,'linear','extrap');
+    %     parstd2(:,:,k) = interp1([0;hpar(ii,k);1e6],[parstd1(ii(1),:,k);parstd1(ii,:,k);parstd1(ii(end),:,k)],h,'linear','extrap');
+    % end
+    % for k=1:nh
+    %     for l=1:4
+    %         par(k,l,:) = interp1([0;tepar;1e20],[squeeze(par2(k,l,1));squeeze(par2(k,l,:));squeeze(par2(k,l,end))],te,'linear','extrap');
+    %         parstd(k,l,:) = interp1([0;tepar;1e20],[squeeze(parstd2(k,l,1));squeeze(parstd2(k,l,:));squeeze(parstd2(k,l,end))],te,'linear','extrap');
+    %     end
+    % end
+%end
+
+    %replace interpolation with 2d interpolation for a smooth
+    %altitude profile
+
+    % first, interpolate in time to fill all NANs with finite values
+    % go wide with clipping, so that 2d interpolation later has no need to
+    % extrapolate
+    tmidpar = (tspar + tepar)/2;
+    i_tpar_min = find(tmidpar>=t1, 1)-1;
+    i_tpar_max = find(tmidpar<=t2, 1, 'last')+1;
+    tpar_ = tmidpar(i_tpar_min:i_tpar_max);
+    ntpar_ = length(tpar_);
+    
+    nhpar = size(hpar, 1);
+    
+    par3 = NaN(nhpar,4,ntpar_);
+    parstd3 = NaN(nhpar,4,ntpar_);
+    for k=1:nhpar
         for l=1:4
-            par(k,l,:) = interp1([0;tepar;1e20],[squeeze(par2(k,l,1));squeeze(par2(k,l,:));squeeze(par2(k,l,end))],te,'linear','extrap');
-            parstd(k,l,:) = interp1([0;tepar;1e20],[squeeze(parstd2(k,l,1));squeeze(parstd2(k,l,:));squeeze(parstd2(k,l,end))],te,'linear','extrap');
+            ii = ~isnan(squeeze(par1(k, l, :)));
+            p_curr = squeeze(par1(k,l,ii));
+            p_currstd = squeeze(parstd1(k,l,ii));
+            par3(k,l,:) = interp1([0;tmidpar(ii);1e20],[p_curr(1); p_curr; p_curr(end)],tpar_,'pchip','extrap');
+            parstd3(k,l,:) = interp1([0;tmidpar(ii);1e20],[p_currstd(1); p_currstd; p_currstd(end)],tpar_,'pchip','extrap');
         end
+    end
+
+    %Then interpolate to a uniform, coarse hpar_ ≈ hpar (might not be
+    %necessary, since relative deviations in hpar are <1%)
+    hpar_ = mean(hpar, 2);
+    i_hpar_min = find(hpar_>=hmin, 1)-1;
+    i_hpar_max = find(hpar_<=hmax, 1, 'last')+1;
+    hpar_ = hpar_(i_hpar_min:i_hpar_max);
+    nhpar_ = length(hpar_);
+
+    par2 = NaN(nhpar_,4,ntpar_);
+    parstd2 = NaN(nhpar_,4,ntpar_);
+    for k=1:ntpar_ 
+        ii = ~isnan(hpar(:,k));
+        % interpolate, some tricks at edges (i.e. extra repetition in the
+        % front and the end (?? there might be a bug => fixed with p_curr)
+        p_curr = par3(ii,:,k);
+        p_currstd = parstd3(ii,:,k);
+        par2(:,:,k) = interp1([0;hpar(ii,k);1e6],p_curr([1,1:end,end],:),hpar_,'pchip','extrap'); 
+        parstd2(:,:,k) = interp1([0;hpar(ii,k);1e6],p_currstd([1,1:end,end],:),hpar_,'pchip','extrap');
+        
+    end
+
+    %finally, do 2d interpolation to upscale to desired resolution
+    tmid = (ts+te)/2;
+    [X, Y] = meshgrid(tpar_, hpar_);
+    [Xq, Yq] = meshgrid(tmid, h);
+    for l=1:4
+        par(:, l, :) = interp2(X, Y, squeeze(par2(:, l, :)), Xq, Yq, 'makima');
+        parstd(:, l, :) = interp2(X, Y, squeeze(parstd2(:, l, :)), Xq, Yq, 'makima');
     end
 end
 

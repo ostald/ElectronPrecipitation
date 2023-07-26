@@ -376,7 +376,7 @@ else
   
 end
 % check that we have either ppdir or fitdir, or both
-if isempty(out.ppdir) && isempty(out.fitdir)
+if isempty(out.ppdir) & isempty(out.fitdir)
     error('Either ppdir or fitdir must be given')
 end
 
