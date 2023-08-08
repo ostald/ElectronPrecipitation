@@ -15,7 +15,7 @@ function ElSpec_IC_iter(iter, log_dir, ppdir)
 %% 2 Setup of parameters controlling ELSPEC
 
 % Energy grid - between 10 ad 100 keV in 400 logarithmic/exponential steps
-egrid = logspace(1,5,400);
+egrid = logspace(1,5,200);
 
 % Data directories
 % The paths to the directories with the ionospheric parameters and the
@@ -24,6 +24,7 @@ egrid = logspace(1,5,400);
 %fitdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
 %fitdir = '../Data/Eiscat/fit';
 fitdir = ppdir
+ppdir = strcat(ppdir, '-pp')
 %ppdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/tmp-ionlines/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '../Data/Eiscat/pp';
@@ -33,8 +34,8 @@ experiment = 'arc1';
 hmax = 150;
 hmin = 95;
 % Time-limits
-btime = [2012, 12, 11, 20, 30, 0];
-etime = [2012, 12, 11, 23, 55, 0];
+btime = [2012, 12, 11, 20, 00, 0];
+etime = [2012, 12, 11, 22, 00, 0];
 % Selection of which ionisation-profile method to use
 ionomodel = 'Sergienko';
 %recombmodel = 'SheehanGrFlipchem';
