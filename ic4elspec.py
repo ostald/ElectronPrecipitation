@@ -7,22 +7,21 @@ import matplotlib.pyplot as plt
 import loadMSIS
 import loadmat
 import pickle
+import mat73
 
 def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # load content of last Elspec iteration
     f = direc + file + str(iteration)
-    con = loadmat.loadmat(f)["ElSpecOut"]
-
+    try:
+        con = loadmat.loadmat(f)["ElSpecOut"]
+    except:
+        print("Exception cought")
+        con = mat73.loadmat(f + ".mat")["ElSpecOut"]
     ne = con["ne"].astype('float64')
     assert ne.dtype == 'float64'
     n_model = con["iri"]
     assert n_model.dtype == 'float64'
     [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
-    # if iter == 0: # not proper, change densities already in ElSpec
-    #     temp = nNOp
-    #     nNOP = nO2p
-    #     nO2p = temp
-    #     print('Changing densities :P')
     [ne_, Ti, Te, _] = con["par"].swapaxes(0, 1)
     Tn = Tn_
     Tr = (Ti + Tn) / 2
@@ -145,6 +144,13 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     # create smooth function for production
     t = np.arange(-30*60, te[-1], 0.01)
+    
+    
+    
+    #-----------------start here with julia implementation---------------------------------------#
+    
+    
+    
 
     stepf_e = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf_e)
@@ -181,7 +187,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         # print(c.name)
         if c.name == 'e':   prodMat[i] = e_prod_smooth
         if c.name == 'O+':  prodMat[i] = Op_prod_smooth
-        if c.name == 'O+(4S)': prodMat[i] = Op_prod_smooth
+        if c.name == 'O+(4S)':prodMat[i]=Op_prod_smooth
         if c.name == 'O2+': prodMat[i] = O2p_prod_smooth
         if c.name == 'N2+': prodMat[i] = N2p_prod_smooth
 
@@ -354,6 +360,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr[:, 1:], "ne_init": ne_init}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
+
+    return 0
 
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)

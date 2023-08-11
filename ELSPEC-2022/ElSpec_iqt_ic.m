@@ -530,9 +530,9 @@ end
 %figure
 %pcolor(out.ts, out.h, squeeze(out.iri(:, 3, :)))
 
-if all(out.par(:, 3, :) == repmat(squeeze(out.par(:, 3, 1)), 1, max(size(out.par(1, 3, :)))), 'all')
-    error("No Time variation in electron temperature.")
-end
+% if all(out.par(:, 3, :) == repmat(squeeze(out.par(:, 3, 1)), 1, max(size(out.par(1, 3, :)))), 'all')
+%     error("No Time variation in electron temperature.")
+% end
 
 
 % nt = 2^floor(log2(numel(out.ts)));
@@ -601,7 +601,7 @@ out.ne = NaN(nh,nt);   % an array for electron density estimates
 out.neEnd = NaN(nh,nt);   % an array for electron density estimates
                           % at integration end points
 out.neEndStd = NaN(nh,nt);   % an array for electron density estimates
-out.neEndCov = NaN(nh,nh,nt);   % an array for electron density estimates
+%out.neEndCov = NaN(nh,nh,nt);   % an array for electron density estimates
 
 out.Ie = NaN(nE,nt);   % an array for flux estimates
 out.AICc = NaN(out.maxorder,nt); % an array for the information
