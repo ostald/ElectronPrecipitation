@@ -106,6 +106,12 @@ class reaction():
         #evaluating the function and ensuring it has the dimension of z_model
         self.rr = eval(self.r_rate_string)
         return self.rr
+
+    def r_rate_t3(self, Tn, Ti, Te):
+        Tr = (Ti + Tn)/2
+        #evaluating the function and ensuring it has the dimension of z_model
+        self.rr = eval(self.r_rate_string)*np.ones(Tn.shape)
+        return self.rr
     
     
 

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
-direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.08.09_13_40_41longTime_mixf=0/'
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.05.03_14_07_04_mixf=0/'
 file = 'ElSpec-iqt_IC_'
 iteration = 0
 

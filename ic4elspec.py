@@ -144,13 +144,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     # create smooth function for production
     t = np.arange(-30*60, te[-1], 0.01)
-    
-    
-    
-    #-----------------start here with julia implementation---------------------------------------#
-    
-    
-    
 
     stepf_e = np.array([stepped_prod_t(e_prod, i, ts, te) for i in t])
     e_prod_smooth = PchipInterpolator(t, stepf_e)
@@ -226,6 +219,17 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # plt.ylabel('Altitude [km]')
     # plt.legend()
     #plt.show()
+
+    print('ckpnt 1')
+
+    # -----------------start here with julia implementation---------------------------------------#
+
+    n0 = np.array([c.density[:, 0] for c in model.all_species])
+    temp_ = np.array([Tn, Ti, Te]).swapaxes(1, 2).swapaxes(0, 1)
+    temp_2 = np.array([Tn, Ti, Te])
+    temp = PchipInterpolator(ts, temp_)
+    return ts, te, n0, prodMat, e_prod, temp, temp_2, len(z_model), [c.name for c in model.all_species]
+
 
 
     for r in model.all_reactions:
