@@ -5,15 +5,15 @@ import sys
 import setup
 import loadmat
 
-dirname = 'longTime'
+dirname = 'comp_flipchem'
 
 #defining file paths
 msis_config = 'Data/other/msis.rtf'
 iri_config  = 'Data/other/iri.txt'
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 #path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
-path_eiscat_data = '../Data/2012-12-11_arc1_4@uhf' #Data/Eiscat'
-#path_eiscat_data = '../Data/Eiscat/pp'
+#path_eiscat_data = '../Data/2012-12-11_arc1_4@uhf' #Data/Eiscat'
+path_eiscat_data = '../Data/Eiscat/pp'
 
 mixf = 0
 
@@ -21,7 +21,7 @@ mixf = 0
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, dirname=dirname)#, no_timecode=True)
 log_directory = setup_._log_directory
 
-matlabroot_dir = "/Applications/MATLAB_R2023a.app/bin/./matlab"
+matlabroot_dir = "/Applications/MATLAB_R2023b.app/bin/./matlab"
 if sys.platform == 'linux':
     matlabroot_dir = "/usr/local/bin/matlab"
 
@@ -42,3 +42,14 @@ while True:
     i = i+1
     print('Mean Iteration Duration:', (time.time() - start_t)/i, 's')
     os.system(call_matlab + "\"ElSpec_IC_iter(" + str(i) + ", \\\"" + log_directory + "\\\", \\\"" + path_eiscat_data + "\\\")\" -nodisplay")
+
+
+"""
+to adapt this script for processing batches of 15minutes:
+ 1. divide data set in batches
+ 2. adapt this script for batches
+ 2. adapt ic4elspec such that
+    a. time starts at the proper time (no 30 min beforehand, or only optionally)
+    b. 
+3. adapt matlab function such that time intervals can be set, and initial parameters are loaded (ie ne, composition)
+"""

@@ -22,23 +22,26 @@ egrid = logspace(1,5,200);
 % power-profiles.
 %fitdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
 %fitdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf';
-%fitdir = '../Data/Eiscat/fit';
-fitdir = ppdir
-ppdir = strcat(ppdir, '-pp')
+fitdir = '../Data/Eiscat/fit';
+%fitdir = ppdir
+%ppdir = strcat(ppdir, '-pp')
 %ppdirUM = '/media/bgu001/5f5e8978-a828-4fd4-aabf-2032a3fb895b/Data/EISCAT/tmp-ionlines/2006-12-12_arc1_4@uhf-pp';
 %ppdir = '/mnt/data/bjorn/EISCAT/Analysed/2006-12-12_arc1_4@uhf-pp';
-%ppdir = '../Data/Eiscat/pp';
+ppdir = '../Data/Eiscat/pp';
 % Flag for specifying which EISCAT-experiment it is
 experiment = 'arc1';
 % Altitude-limits.
 hmax = 150;
 hmin = 95;
 % Time-limits
-btime = [2012, 12, 11, 20, 00, 0];
-etime = [2012, 12, 11, 21, 55, 0];
+%btime = [2012, 12, 11, 20, 00, 0];
+%etime = [2012, 12, 11, 21, 55, 0];
+
+btime = [ 2006 12 12 19 30 0];
+etime = [ 2006 12 12 19 35 0];
 % Selection of which ionisation-profile method to use
 ionomodel = 'Sergienko';
-%recombmodel = 'SheehanGrFlipchem';
+recombmodel = ['SheehanGr'];
 % and which type of continuity-integration-method to use
 integtype = 'integrate';
 % Time-resolution to use
@@ -189,7 +192,8 @@ ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...
                                        'iri_ic', iri_ic, ...
                                        'alpha_eff', alpha_eff, ...
                                        'iteration', iter, ...
-                                       'ne_init', ne_init);
+                                       'ne_init', ne_init, ...
+                                       'recombmodel', recombmodel);
 
 %with recombmodel:
 % ElSpecQT_iqtOutliers_L5 = ElSpec_iqt_ic('fitdir',fitdir,...

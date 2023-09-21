@@ -220,16 +220,14 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # plt.legend()
     #plt.show()
 
-    print('ckpnt 1')
-
-    # -----------------start here with julia implementation---------------------------------------#
-
-    n0 = np.array([c.density[:, 0] for c in model.all_species])
-    temp_ = np.array([Tn, Ti, Te]).swapaxes(1, 2).swapaxes(0, 1)
-    temp_2 = np.array([Tn, Ti, Te])
-    temp = PchipInterpolator(ts, temp_)
-    return ts, te, n0, prodMat, e_prod, temp, temp_2, len(z_model), [c.name for c in model.all_species]
-
+    # print('ckpnt 1')
+    #
+    # #-----------------start here with julia implementation---------------------------------------#
+    # n0 = np.array([c.density[:, 0] for c in model.all_species])
+    # temp_ = np.array([Tn, Ti, Te]).swapaxes(1, 2).swapaxes(0, 1)
+    # temp_2 = np.array([Tn, Ti, Te])
+    # temp = PchipInterpolator(ts, temp_)
+    # return ts, te, n0, prodMat, e_prod, temp, temp_2, len(z_model), [c.name for c in model.all_species]
 
 
     for r in model.all_reactions:
@@ -280,8 +278,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
             t = np.arange(-30*60, te[-1], 0.01)
             temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
 
+           #res[h] = solve_ivp(fun, (0, 1), n, method='BDF', vectorized=False, args=[h, temp],
+           #                    t_eval=np.arange(0, 1, 0.01), max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
             res[h] = solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h, temp],
-                               t_eval=ts_int, max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
+                              t_eval=ts_int, max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
 
             import sys
             sys.stdout.write('\r' + (' ' * 22))
