@@ -3,11 +3,17 @@ import numpy as np
 import pickle
 import glob
 import loadmat
+import mat73
 
-direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
-files = glob.glob(direc + '*.pickle')
+#direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.09.21_14_47_50comp_no_flipchem_no_lsqnonlin_mixf=0/'
+#files = glob.glob(direc + '*.pickle')
+files = glob.glob(direc + 'IC*')
 
-elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
+try:
+    elspec_0 = loadmat.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
+except:
+    elspec_0 = mat73.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
 
 nax = 13
 
@@ -15,20 +21,31 @@ all_data = []
 
 plt.rcParams.update({'font.size': 12})
 
+# for i, f in enumerate(files[:nax]):
+#     f = direc + 'IC_res_'+str(i)+'.pickle'
+#     print(f)
+#     with open(f, 'rb') as pf:
+#         data = pickle.load(pf)
+#         all_data = [*all_data, data[:4]]
+
 for i, f in enumerate(files[:nax]):
-    f = direc + 'IC_res_'+str(i)+'.pickle'
+    f = direc + 'IC_'+str(i)+'.mat'
     print(f)
-    with open(f, 'rb') as pf:
-        data = pickle.load(pf)
-        all_data = [*all_data, data[:4]]
+    try:
+        data = loadmat.loadmat(f)
+    except:
+        data = mat73.loadmat(f)
+    all_data = [*all_data, data]
 
 fig,ax = plt.subplots(figsize=(6.4, 5))
 for i, f in enumerate(files[:nax]):
     data = all_data[i]
-    eff_rr = data[3][:, 1:]
+    #eff_rr = data[3][:, 1:]
+    eff_rr = data['eff_rr']
     if i>0:
         data = all_data[i-1]
-        eff_rr_o = data[3][:, 1:]
+        #eff_rr_o = data[3][:, 1:]
+        eff_rr_o = data['eff_rr']
     else:
         eff_rr_o = elspec_0["alpha"]
     d_effrr_r = (eff_rr_o - eff_rr) / eff_rr
@@ -44,8 +61,9 @@ ax.set_ylabel(r"$(\alpha_{eff, i-1}/\alpha_{eff, i}) - 1$")
 ax.set_xlabel("Iteration i")
 ax.set_yscale('log')
 ax.legend()
-plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/alpha_rel_dev_mixf0.png')
-
+#plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/alpha_rel_dev_mixf0.png')
+plt.show()
+exit()
 
 fig,ax = plt.subplots(figsize=(6.4, 5))
 for i, f in enumerate(files[:nax]):

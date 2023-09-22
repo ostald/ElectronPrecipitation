@@ -5,7 +5,7 @@ import sys
 import setup
 import loadmat
 
-dirname = 'comp_flipchem'
+dirname = 'comp_no_flipchem_no_lsqnonlin'
 
 #defining file paths
 msis_config = 'Data/other/msis.rtf'

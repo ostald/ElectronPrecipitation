@@ -365,7 +365,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr[:, 1:], "ne_init": ne_init}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
 
-    return 0
+    #return 0
 
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)
