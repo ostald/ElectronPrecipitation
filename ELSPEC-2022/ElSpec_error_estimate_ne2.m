@@ -18,7 +18,6 @@ function [neStd,neCov] = ElSpec_error_estimate_ne2( ne0 , P , ne0Pcov , dt , A ,
 % density at the fit convergence point
 nefit =  integrate_continuity_equation( ne0 , model_spectrum( P , Ec(:) ) , dt , A , dE , alpha , integ_type );
 
-
 % number of height gates
 nh = length(ne0);
 
@@ -47,15 +46,23 @@ m = [ P' ; ne0 ];
 % combined steps
 dm  = [dP';dne0];
 
-% linearize integrate_continuity_equation in vicinity of nefit
+%% linearize integrate_continuity_equation in vicinity of nefit
 B = zeros(nh,nm);
 for im = 1:nm
     mdiff = m;
     mdiff(im) = mdiff(im) + dm(im);
-    B(:,im) = reshape(( integrate_continuity_equation( mdiff(nP+1:end), ...
+    
+    %debugging OS 27,09,223
+    B(:,im) = (reshape( integrate_continuity_equation( mdiff(nP+1:end), ...
                                               model_spectrum(mdiff(1:nP),Ec(:)),dt,A,dE, ...
                                               alpha,integ_type), [], 1) - ...
-                reshape(nefit, [], 1) ) / dm(im);
+                reshape(nefit, [], 1)) / dm(im);
+    %______________
+
+    % B(:,im) = reshape(( integrate_continuity_equation( mdiff(nP+1:end), ...
+    %                                           model_spectrum(mdiff(1:nP),Ec(:)),dt,A,dE, ...
+    %                                           alpha,integ_type), [], 1) - ...
+    %             reshape(nefit, [], 1) ) / dm(im);
 end
 
 neCov = B * (ne0Pcov * B');

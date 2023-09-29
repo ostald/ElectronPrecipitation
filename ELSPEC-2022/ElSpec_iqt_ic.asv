@@ -888,8 +888,6 @@ xCovar = ElSpec_error_estimate_polycoefs( out.pp(:,1:out.nSteps(1)), ...
 
 it = 1;
 while it+out.nSteps(it)<=numel(out.te)
-
-  ne0 = out.ne(:, it+[0:out.nSteps(it)-1])
   
   xCovar = ElSpec_error_estimate_polycoefs( out.pp(:,it+[0:out.nSteps(it)-1]), ...
                                             out.ppstd(:,it+[0:out.nSteps(it)-1]),...
@@ -933,11 +931,7 @@ while it+out.nSteps(it)<=numel(out.te)
                                                             out.Ec, ...
                                                             out.dE(:), ...
                                                             out.alpha(:,(it+out.nSteps(it)-1)), ...
-                                                          'endNe' );
-
-  ne0Cov = currneEndCov
-  %take currneEndCov for input for next  ne0Cov
-  %collect output
+  %take currneEndCov for input for next                                                          'endNe' );
 
 
   % for tt = it:(it+out.nSteps(it)-1)
