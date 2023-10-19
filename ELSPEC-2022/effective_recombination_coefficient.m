@@ -105,7 +105,6 @@ switch lower(type)
            '''','ReesNO+''',', ''','delPozo1''',', ''','delPozo2''',', ''','SheehanGr''',', ''','SheehanEx''',', and ''','const''','.'],type)
 
 
-dbstop if ~isreal(alpha)
 
 end
 

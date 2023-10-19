@@ -601,7 +601,7 @@ out.ne = NaN(nh,nt);   % an array for electron density estimates
 out.neEnd = NaN(nh,nt);   % an array for electron density estimates
                           % at integration end points
 out.neEndStd = NaN(nh,nt);   % an array for electron density estimates
-%out.neEndCov = NaN(nh,nh,nt);   % an array for electron density estimates
+out.neEndCov = NaN(nh,nh,nt);   % an array for electron density estimates
 
 out.Ie = NaN(nE,nt);   % an array for flux estimates
 out.AICc = NaN(out.maxorder,nt); % an array for the information
@@ -683,11 +683,11 @@ else
                                                     out.recombmodel );
       if any(~isreal(out.alpha(:, it)))
           disp(it)
+		error("Imaginary alpha detected")
           dbstop if true
       end
     end
 end
-
 
 % save interval is 100 step, independently from the time resolution
 ndtsave = 20;%ceil(mean(120./out.dt));
@@ -720,7 +720,6 @@ dt = out.dt;
 polycoefs = out.polycoefs;
 ieprior = out.ieprior;
 stdprior = out.stdprior;
-
 
 % 1st fit spectrum for ne0 from the first few electron-density-profiles
 [AICc1,polycoefs1,best_order1,n_params1,ne1,neEnd1,Ie1] = AICcFitParSeq(pp(:,1:Directives.ninteg),...
@@ -1311,10 +1310,10 @@ function [AICcSec,polycoefs,best_order,n_params,ne,neEnd,Ie,exitflags] = AICcFit
 % xOut.best_orderX, xOut.IeX, xOut.neX, xOut.neEndX
 
   S_type = Directives.Ietype;
-  fms_opts = optimset('lsqnonlin');
+  fms_opts = optimset('fminsearch');
   fms_opts.Display = 'off';%'off';%'final';
   fms_opts.MaxFunEvals = 1e4;
-  %fms_opts.MaxIter = 50;
+  fms_opts.MaxIter = 50;
   fms_opts.MaxIter = 1e6;
   fms_opts.TolFun = 1e-8;
   fms_opts.TolX = 1e-8;
@@ -1458,7 +1457,7 @@ function [AICcSec,polycoefs,best_order,n_params,ne,neEnd,Ie,exitflags] = AICcFit
 
     else
       % the normal fit
-      [x,fval,exitflag] = fminsearchbnd( @(p) ElSpec_fitfun(p, ...
+      [x,fval,exitflag] = fminsearchbnd( @(p) ElSpec_fitfun(p, ...          %if else statement does the same thing, so can be done in one. OS 02.10.23
                                                         pp, ...
                                                         ppstd, ...
                                                         ne00, ...

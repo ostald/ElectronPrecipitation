@@ -5,7 +5,7 @@ import sys
 import setup
 import loadmat
 
-dirname = 'comp_no_flipchem_no_lsqnonlin'
+dirname = 'testing_convergence_lsqnonlin'
 
 #defining file paths
 msis_config = 'Data/other/msis.rtf'
@@ -13,9 +13,10 @@ iri_config  = 'Data/other/iri.txt'
 chemistry_config = 'Data/other/Reaction rates full set.txt'
 #path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
 #path_eiscat_data = '../Data/2012-12-11_arc1_4@uhf' #Data/Eiscat'
-path_eiscat_data = '../Data/Eiscat/pp'
+#path_eiscat_data = '../Data/Eiscat/pp'
+path_eiscat_data = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/Eiscat/pp'
 
-mixf = 0
+mixf = 1
 
 #setup log directory
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, dirname=dirname)#, no_timecode=True)
@@ -29,7 +30,8 @@ cwd = os.getcwd()
 print('Current working Dir: ', cwd)
 
 #call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -r "
-call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
+#call_matlab = matlabroot_dir + " -sd \"" + cwd + "/ELSPEC-2022\" -batch "
+call_matlab = matlabroot_dir + " -sd \"" + cwd + "/../ELSPEC\" -batch "
 
 #start model
 i = 0

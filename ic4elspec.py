@@ -315,31 +315,23 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
 
-    n_ic_ = np.array([r.y for r in res])
+    n_ic = np.array([r.y for r in res])
 
-    if any(n_ic_.flat < 0):
+    if any(n_ic.flat < 0):
         print('Negative ion densities detected.')
-        for i, c in enumerate(n_ic_.swapaxes(1, 2).copy()):
+        for i, c in enumerate(n_ic.swapaxes(1, 2).copy()):
             if any(c.flat < 0):
                 print('Negative ion densities in ', i)
 
+    eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
+              rrate.T[:, 1, :] * n_ic[:, 6, :] + \
+              rrate.T[:, 2, :] * n_ic[:, 8, :] + \
+              rrate.T[:, 3, :] * n_ic[:, 15, :]) / n_ic[:, 0, :]
+
     print('mixf =', mixf)
-    if mixf == 0:
-        n_ic = n_ic_
-    else:
-        if iteration == 0:
-            if n_ic_.shape[2] == ne.shape[1]:
-                print('untested')
-                # breakpoint()
-                n_ic_old = np.array([c.density for c in model.all_species]).swapaxes(0, 1)
-            else:
-                #interpolate
-                n_ic_old = np.array([[PchipInterpolator(ts, d)(ts_int) for d in c.density] for c in model.all_species]).swapaxes(0, 1)
-        else:
-            with open(direc + "IC_res_" + str(iteration - 1) + '.pickle', 'rb') as pf:
-                data = pickle.load(pf)
-                n_ic_old = data[2]
-        n_ic = (n_ic_ + mixf * n_ic_old) / (1 + mixf)
+    if mixf != 0:
+        eff_rr_old = con["alpha"]
+        eff_rr = (eff_rr[:, 1:] + mixf * eff_rr_old) / (1 + mixf)
 
     c_order = np.array([c.name for c in model.all_species])
     order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
@@ -350,11 +342,6 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # print(Op_4S)
     ne_init = e[:, 1]
 
-    eff_rr = (rrate.T[:, 0, :] * n_ic[:, 3, :] + \
-              rrate.T[:, 1, :] * n_ic[:, 6, :] + \
-              rrate.T[:, 2, :] * n_ic[:, 8, :] + \
-              rrate.T[:, 3, :] * n_ic[:, 15, :]) / n_ic[:, 0, :]
-
     #[Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = n_model.swapaxes(0, 1)
     # [e, O, Op, O2, O2p, N, Np, N2, N2p, NO, NOp, H, Hp] = n_ic.swapaxes(0, 1)
     elspec_iri_sorted = np.array([Tn_, Ti_, Te_, nN2[:, 1:], nO2[:, 1:], nO[:, 1:], nAr[:, 1:], NOp[:, 1:], O2p[:, 1:], Op_4S[:, 1:]]).swapaxes(0, 1)
@@ -362,10 +349,10 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # if iteration == 0:
     #    elspec_iri_sorted = np.array([Tn, Ti, Te, nN2, nO2, nO, nAr, NOp, O2p, Op_4S]).swapaxes(0, 1)
 
-    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr[:, 1:], "ne_init": ne_init}
+    mdict = {"elspec_iri_sorted": elspec_iri_sorted, "eff_rr": eff_rr, "ne_init": ne_init}
     spio.savemat(direc + 'IC_' + str(iteration) + '.mat', mdict)
 
-    #return 0
+    return 0
 
     savedir = direc + "IC_res_" + str(iteration) + '.pickle'
     print(savedir)

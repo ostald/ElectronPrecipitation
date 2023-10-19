@@ -6,7 +6,7 @@ import loadmat
 import mat73
 
 #direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
-direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.09.21_14_47_50comp_no_flipchem_no_lsqnonlin_mixf=0/'
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.10.03_12_05_57testing_convergence_lsqnonlin_mixf=0/'
 #files = glob.glob(direc + '*.pickle')
 files = glob.glob(direc + 'IC*')
 
@@ -15,7 +15,7 @@ try:
 except:
     elspec_0 = mat73.loadmat(direc + 'ElSpec-iqt_IC_0.mat')["ElSpecOut"]
 
-nax = 13
+nax = 10
 
 all_data = []
 
