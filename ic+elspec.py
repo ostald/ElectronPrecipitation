@@ -5,7 +5,7 @@ import sys
 import setup
 import loadmat
 
-dirname = 'testing_convergence_lsqnonlin'
+dirname = 'test'
 
 #defining file paths
 msis_config = 'Data/other/msis.rtf'
@@ -14,15 +14,15 @@ chemistry_config = 'Data/other/Reaction rates full set.txt'
 #path_eiscat_data = '/mnt/data/bjorn/EISCAT/Analysed/2012-12-11_arc1_4@uhf' #Data/Eiscat'
 #path_eiscat_data = '../Data/2012-12-11_arc1_4@uhf' #Data/Eiscat'
 #path_eiscat_data = '../Data/Eiscat/pp'
-path_eiscat_data = '/Users/ost051/Documents/PhD/ElectronPrecipitation/Data/Eiscat/pp'
+path_eiscat_data = '/Users/ost051/Documents/PhD/Data/Eiscat/pp'
 
-mixf = 1
+mixf = 0
 
 #setup log directory
 setup_ = setup.setup(msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, dirname=dirname)#, no_timecode=True)
 log_directory = setup_._log_directory
 
-matlabroot_dir = "/Applications/MATLAB_R2023b.app/bin/./matlab"
+matlabroot_dir = "/Applications/MATLAB_R2023b.app/bin/./mat lab"
 if sys.platform == 'linux':
     matlabroot_dir = "/usr/local/bin/matlab"
 

@@ -43,6 +43,7 @@ fp = listGUISDAPfiles( ppdir );
 
 % if no files available
 if isempty(fp)
+    disp('No files available!')
     h=[];
     ts=[];
     te=[];
@@ -82,7 +83,7 @@ end
 FAele = abs(I);
 FAaz = D+180;
 if I<0
-    FAaz = D;
+    FAaz = D
 end
 while FAaz < 0
     FAaz = FAaz + 360;

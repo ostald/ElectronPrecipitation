@@ -175,10 +175,10 @@ end
 %     disp(dpar(1:k))
 % end
 
-% imagesc(covar)
-% drawnow
-% pause(.5)
-% disp('Elspec_error_estimate_polycoefs')
-% disp(covar)
+%imagesc(covar)
+%drawnow
+%pause(.5)
+%disp('Elspec_error_estimate_polycoefs')
+%disp(covar)
 end
 

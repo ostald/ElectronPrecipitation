@@ -38,6 +38,7 @@ persistent Epowers
     
 end
 
+%Old code from BG ,still relevant?
 %   persistent Epowers
 %   if isempty(Epowers) || size(Epowers,1) < numel(X0)
 %     Epowers = ones(size(E));
