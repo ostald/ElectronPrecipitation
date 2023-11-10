@@ -15,7 +15,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     try:
         con = loadmat.loadmat(f)["ElSpecOut"]
     except:
-        print("Exception cought")
+        print("Exception caught")
         con = mat73.loadmat(f + ".mat")["ElSpecOut"]
     ne = con["ne"].astype('float64')
     assert ne.dtype == 'float64'

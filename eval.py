@@ -16,13 +16,13 @@ matfiles = glob.glob(direc + 'ElSpec*.mat')
 
 z = elspec_0["h"]
 h = 0
-species = 10
+species = 3
 #spstr = ['e','O','Op','O2','O2p','N','Np','N2','N2p','NO','NOp','H','Hp']
 spstr = ['e','O','O2','O2p','Np','N2','N2p','NO','NOp','H','Hp','O_1D','O_1S','N_2D','N_4S','O2p_a4P','Op_2D', \
          'Op_4S','Op_2P']
 
 
-nax = 4
+nax = 2
 
 all_data = []
 
@@ -132,9 +132,11 @@ for i, f in enumerate(files[:nax**2]):
         n_ic = data[2][:, :, 1:]
         eff_rr = data[3][:, 1:]
         den = n_ic.swapaxes(0, 1)[species]
-        ma = np.max(den)
+        e_den = n_ic.swapaxes(0, 1)[0]
+        rden = den/e_den
+        ma = np.max(rden)
         if ma > vmax: vmax = ma
-        mi = np.min(den)
+        mi = np.min(rden)
         if mi > vmin: vmin = mi
 for i, f in enumerate(files[:nax**2]):
     f = direc + 'IC_res_'+str(i)+'.pickle'
@@ -148,14 +150,15 @@ for i, f in enumerate(files[:nax**2]):
         eff_rr = data[3][:, 1:]
         #[ts, n_ic] = pickle.load(pf)
     den = n_ic.swapaxes(0, 1)[species]
-    pc = axs31.flat[i].pcolormesh(ts, z, den, norm= mpl.colors.LogNorm(vmax=vmax))
+    e_den = n_ic.swapaxes(0, 1)[0]
+    pc = axs31.flat[i].pcolormesh(ts, z, den/e_den, norm=mpl.colors.Normalize(vmin=0, vmax=1))#, norm= mpl.colors.LogNorm(vmax=vmax))
     axs31.flat[i].set_title('Iteration ' + str(i))
 
 fig31.suptitle('Number Density of ' + spstr[species])
 fig31.supylabel('Number Density of ' + spstr[species])
 fig31.supxlabel('Time [s]')
 plt.colorbar(pc, ax = axs31)
-#plt.show()
+plt.show()
 
 fig2, axs2 = plt.subplots()
 for i, f in enumerate(files[:nax**2]):

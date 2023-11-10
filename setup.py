@@ -1,14 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import os
 from datetime import datetime
 from shutil import copy
 import pickle
-
 
 class print_config():
     """
@@ -32,13 +25,14 @@ pcfg = print_config()
 
 
 class setup:
-    def __init__(self, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode = False, dirname = None):
-        #self._directory = os.path.abspath('')
+    def __init__(self, result_path, msis_config, iri_config, chemistry_config, path_eiscat_data, mixf, no_timecode = False, dirname = None):
+        if not os.path.isdir(result_path):
+            os.mkdir(result_path)
         self.no_timecode = no_timecode
         self.mixf = mixf
-        self._create_directory(dirname)
+        self._create_directory(result_path + "/" + dirname)
         self._copy_config(msis_config, iri_config, chemistry_config, path_eiscat_data)
-    def _create_directory(self, name = None):
+    def _create_directory(self, dirname):
         """
         Creates a directory to store the configuration and results of this run.
         The directory is labeled with the time of starting the program.
@@ -46,18 +40,16 @@ class setup:
         """
         self._today = datetime.now()
         #self._log_directory = self._directory + '/log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S')
-        if not os.path.isdir('log/testing/'):
-            if not os.path.isdir('log/'):
-                os.mkdir('log/')
-            os.mkdir('log/testing/')
+
+        if not os.path.isdir(dirname):
+            os.mkdir(dirname)
+
         if self.no_timecode == True:
-            self._log_directory = 'log/testing/'
+            self._log_directory = dirname
         else:
-            if name == None:
-                self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '_mixf=' + str(self.mixf) +'/'
-            else:
-                self._log_directory = 'log/testing/' + self._today.strftime('%Y.%m.%d_%H_%M_%S') + name + '_mixf=' + str(self.mixf) +'/'
+            self._log_directory = dirname +"/" + self._today.strftime('%Y.%m.%d_%H_%M_%S') + '/'
             os.mkdir(self._log_directory)
+
         if not os.path.isdir( self._log_directory + 'Simulation/'):
             os.mkdir(self._log_directory + '/Simulation')
         if not os.path.isdir( self._log_directory + 'plots/'):
@@ -81,24 +73,6 @@ class setup:
         '''
         with open(self._log_directory + 'Simulation/log.p', 'ab') as f:
             pickle.dump(data, f)
-
-
-# In[2]:
-
-
-""" testing
-msis_config = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/msis.txt'
-iri_config  = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/iri.txt'
-chemistry_config = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Meta-data/Reaction rates.txt'
-path_eiscat_data = '/Users/ost051/Documents/PhD/Electron Precipitation/example/Data/'
-
-setup_ = setup(msis_config, iri_config, chemistry_config, path_eiscat_data)
-
-setup_.datadump(0, 1)
-"""
-
-
-# In[ ]:
 
 
 
