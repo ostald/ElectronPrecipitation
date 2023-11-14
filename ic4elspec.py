@@ -310,7 +310,30 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
         # return new_densities
         return res
 
+    from multiprocess import Pool
+
+    def solve_ic_h(h):
+
+        #breakpoint()
+        n = np.array([c.density[h, 0] for c in model.all_species])
+        #print([c.name for c in model.all_species])
+        t = np.arange(-30*60, te[-1], 0.01)
+        temp = PchipInterpolator(ts, np.array([Tn[h, :], Ti[h, :], Te[h, :]]).T)
+
+        return solve_ivp(fun, (ts[0], te[-1]), n, method='BDF', vectorized=False, args=[h, temp],
+                              t_eval=ts_int, max_step=0.44, atol = 1e-3, rtol = 1e-7, dense_output=True)
+
+    import time
+    tstart = time.time()
+    with Pool() as pool:
+        res2 = pool.map(solve_ic_h, range(model.n_heights))
+    print('Pool: ' + str(time.time() - tstart))
+
+    tstart = time.time()
     res = solve_ic()
+    print('Serial: ' + str(time.time() - tstart))
+
+    breakpoint()
 
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)

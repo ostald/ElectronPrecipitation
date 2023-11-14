@@ -1,6 +1,6 @@
 module juliaIC
 
-export solveIC, solveIC_allAtOnce, particles, reactions, initIC
+export solveIC, solveIC_allAtOnce, particles, reactions, initIC, dummyf2
 #other variables or methods can be accessed by typing modulName.method
 
 using DifferentialEquations
