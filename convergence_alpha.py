@@ -6,7 +6,7 @@ import loadmat
 import mat73
 
 #direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/'
-direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.10.04_18_00_51testing_convergence_lsqnonlin_mixf=1/'
+direc = '/Users/ost051/Documents/PhD/Results/testing_convergence/2023.11.13_17_10_26/'
 #files = glob.glob(direc + '*.pickle')
 files = glob.glob(direc + 'IC*')
 
