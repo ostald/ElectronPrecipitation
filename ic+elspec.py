@@ -5,7 +5,7 @@ import sys
 import setup
 import loadmat
 
-dirname = 'test'
+dirname = 'test_errordist'
 
 #defining file paths
 msis_config = '../Data/other/msis.rtf'

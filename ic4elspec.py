@@ -8,6 +8,8 @@ import loadMSIS
 import loadmat
 import pickle
 import mat73
+import warnings
+
 
 def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # load content of last Elspec iteration
@@ -40,8 +42,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     ts_ = np.copy(ts)
     #generate starting point 30 min in the past:
     ts = np.array([-30*60, *ts])
-    e_prod = np.array([con["q0"], *e_prod.T]).T
-    ne = np.array([con["ne0"], *ne.T]).T
+    e_prod = np.array([e_prod[:, 0], *e_prod.T]).T
+    ne = np.array([ne[:, 0], *ne.T]).T
     lam = lambda x: np.array([x[:, 0], *x.T]).T
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = map(lam, [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp])
     ts_show = np.arange(ts[0], te[-1], 0.01)
@@ -178,11 +180,11 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     for i, c in enumerate(model.all_species):
         # print(c.name)
-        if c.name == 'e':   prodMat[i] = e_prod_smooth
-        if c.name == 'O+':  prodMat[i] = Op_prod_smooth
-        if c.name == 'O+(4S)':prodMat[i]=Op_prod_smooth
-        if c.name == 'O2+': prodMat[i] = O2p_prod_smooth
-        if c.name == 'N2+': prodMat[i] = N2p_prod_smooth
+        if c.name == 'e':      prodMat[i] = e_prod_smooth
+        if c.name == 'O+':     prodMat[i] = Op_prod_smooth
+        if c.name == 'O+(4S)': prodMat[i] = Op_prod_smooth
+        if c.name == 'O2+':    prodMat[i] = O2p_prod_smooth
+        if c.name == 'N2+':    prodMat[i] = N2p_prod_smooth
 
     # new way to do ionospheric chemistry
     # 1. take all info from reaction (reaction rate, constituents)
@@ -325,15 +327,16 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 
     import time
     tstart = time.time()
-    with Pool() as pool:
-        res2 = pool.map(solve_ic_h, range(model.n_heights))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        with Pool() as pool:
+            res = pool.map(solve_ic_h, range(model.n_heights))
     print('Pool: ' + str(time.time() - tstart))
 
-    tstart = time.time()
-    res = solve_ic()
-    print('Serial: ' + str(time.time() - tstart))
+    # tstart = time.time()
+    # res = solve_ic()
+    # print('Serial: ' + str(time.time() - tstart))
 
-    breakpoint()
 
     # check charge neutrality!!
     # [e,O,Op,O2,O2p,N,Np,N2,N2p,NO,NOp,H,Hp] = np.array([r.y for r in res]).swapaxes(0, 1)
@@ -352,9 +355,13 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
               rrate.T[:, 3, :] * n_ic[:, 15, :]) / n_ic[:, 0, :]
 
     print('mixf =', mixf)
+
+    if all(ts_int == ts):
+        eff_rr = np.copy(eff_rr[:, 1:])
+
     if mixf != 0:
         eff_rr_old = con["alpha"]
-        eff_rr = (eff_rr[:, 1:] + mixf * eff_rr_old) / (1 + mixf)
+        eff_rr = (eff_rr + mixf * eff_rr_old) / (1 + mixf)
 
     c_order = np.array([c.name for c in model.all_species])
     order = ','.join(c_order).replace('+', 'p').replace('-', '').replace('(', '_').replace(')', '')
