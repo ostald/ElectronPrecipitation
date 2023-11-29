@@ -3,15 +3,18 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 import matplotlib.colors as colors
+import loadmat
 
-c = mat73.loadmat("/Users/ost051/Documents/PhD/Results/Comparison Flipchem-IonChem/flipchem_res_smooth.mat")
+
+
+c = mat73.loadmat("/Users/ost051/Documents/PhD/Results/Comparison Flipchem-IonChem/flipchem_res_smooth2.mat")
 fc_iri = c['modelout']
 [Tn_, Ti_, Te_, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = fc_iri.swapaxes(0,1)
 
-c = mat73.loadmat("/Users/ost051/Documents/PhD/Results/Comparison Flipchem-IonChem/ElSpec_res.mat")["ElSpecQT_iqtOutliers_L5"]
+c = loadmat.loadmat("/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_14.mat")["ElSpecOut"]
 
 
-f = "/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_14.pickle"
+f = "/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_13.pickle"
 with open(f, 'rb') as pf:
      data = pickle.load(pf)
 

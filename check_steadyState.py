@@ -11,33 +11,6 @@ import mat73
 import warnings
 
 
-#how to include msis:___________________________________
-# """
-# Example:
-# Poker Flat Research Range altitude profile
-# """
-# import numpy as np
-# from datetime import datetime
-# from matplotlib.pyplot import show
-#
-# import msise00.plots as msplots
-# import msise00
-#
-# glat = 65.1
-# glon = -147.5
-# alt_km = np.arange(70, 160, 1)
-# time = datetime(2015, 12, 13, 10, 0, 0)
-#
-# atmos = msise00.run(time, alt_km, glat, glon)
-#
-# msplots.plotgtd(atmos)
-#
-# show()
-#how to include msis:___________________________________
-
-
-
-
 def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # load content of last Elspec iteration
     f = direc + file + str(iteration)
@@ -372,7 +345,7 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     n_ic = np.array([r.y for r in res])
 
     import plot_nop_o2p_prod
-    #plot_nop_o2p_prod.plot_nop_o2p_prod(N2p_prod, O2p_prod, Op_prod, model, n_ic, z_model, np.array([Tn, Ti, Te]))
+    plot_nop_o2p_prod.plot_nop_o2p_prod(N2p_prod, O2p_prod, Op_prod, model, n_ic, z_model, np.array([Tn, Ti, Te]))
 
 # Steady state experiments____________________________________________________________________________________________
     ii = 283

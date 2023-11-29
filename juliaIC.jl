@@ -1,6 +1,6 @@
 module juliaIC
 
-export solveIC, solveIC_allAtOnce, particles, reactions, initIC, dummyf2
+export solveIC, solveIC_allAtOnce, particles, reactions, initIC, dummyf2, dndt, dndt_str, ode_raw
 #other variables or methods can be accessed by typing modulName.method
 
 using DifferentialEquations
@@ -202,7 +202,7 @@ for i in 1:length(particles)
             end
         end
     end
-    #println(dndt_str[i], "\n")
+    println(dndt_str[i], "\n")
 end
 
 for i in 1:length(particles)
