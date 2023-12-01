@@ -4,37 +4,12 @@ from scipy.interpolate import PchipInterpolator
 import ionChem
 import numpy as np
 import matplotlib.pyplot as plt
-import loadMSIS
+#import loadMSIS
 import loadmat
 import pickle
 import mat73
 import warnings
-
-
-#how to include msis:___________________________________
-# """
-# Example:
-# Poker Flat Research Range altitude profile
-# """
-# import numpy as np
-# from datetime import datetime
-# from matplotlib.pyplot import show
-#
-# import msise00.plots as msplots
-# import msise00
-#
-# glat = 65.1
-# glon = -147.5
-# alt_km = np.arange(70, 160, 1)
-# time = datetime(2015, 12, 13, 10, 0, 0)
-#
-# atmos = msise00.run(time, alt_km, glat, glon)
-#
-# msplots.plotgtd(atmos)
-#
-# show()
-#how to include msis:___________________________________
-
+import msise00
 
 
 
@@ -157,9 +132,19 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     # model.e.density = np.sum(np.array([i.density for i in model.ions]), axis = 0)
 
 
-    msis_model = loadMSIS.loadMSIS_new('Data/other/msis.rtf')
-    nH = msis_model[4]
-    nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
+    # how to include msis:___________________________________
+    glat = con["loc"][0]
+    glon = con["loc"][1]
+    alt_km = con["h"]
+    import datetime
+    time = datetime.datetime.fromtimestamp(con["ts"][0], datetime.timezone.utc).replace(tzinfo=None)
+    atmos = msise00.run(time, alt_km, glat, glon)
+    # how to include msis:___________________________________
+
+    #msis_model = loadMSIS.loadMSIS_new('Data/other/msis.rtf')
+    #nH = msis_model[4]
+    #nH_intp = np.exp(PchipInterpolator(msis_model[0][1:-3] / 1e3, np.log(nH[1:-3]))(z_model))
+    nH_intp = atmos["H"].to_numpy().flatten()
     model.H.density = np.tile(nH_intp, (len(ts), 1)).T
 
     #model.check_chargeNeutrality()
@@ -374,7 +359,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     import plot_nop_o2p_prod
     #plot_nop_o2p_prod.plot_nop_o2p_prod(N2p_prod, O2p_prod, Op_prod, model, n_ic, z_model, np.array([Tn, Ti, Te]))
 
-# Steady state experiments____________________________________________________________________________________________
+    # Steady state experiments____________________________________________________________________________________________
+    """
     ii = 283
     n0 = n_ic[:, :, ii]
     t_end = 60*60*2
@@ -429,7 +415,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     import plot_relative_density
     plot_relative_density.plot_rel_abs_den(tt, z_model, e, NOp, 'NO+')
     plot_relative_density.plot_rel_abs_den(tt, z_model, e, O2p, 'O2+')
-# End of steady state experiments_____________________________________________________________________________________
+    """
+    # End of steady state experiments_____________________________________________________________________________________
 
 
     if any(n_ic.flat < 0):
