@@ -187,7 +187,6 @@ plot_compare_ionratio(ts0, z0, nO2p/nNOp, n_ic2[:, 3, 1:]/n_ic2[:, 8, 1:], 'O2+/
 plt.savefig('/Users/ost051/Documents/PhD/ElectronPrecipitation/writing/plots/ratio_o2+_no+_v2.png')
 
 
-
 mat3 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/ElSpec-iqt_IC_1.mat'
 con3 = loadmat.loadmat(mat3)["ElSpecOut"]
 f3 = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.04.27_17_54_27_mixf=0/IC_res_0.pickle'

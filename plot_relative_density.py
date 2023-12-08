@@ -5,7 +5,8 @@ import numpy as np
 import matplotlib.colors as colors
 import loadmat
 
-
+import matplotlib as mpl
+mpl.rc('image', cmap = 'plasma')
 
 c = mat73.loadmat("/Users/ost051/Documents/PhD/Results/Comparison Flipchem-IonChem/flipchem_res_smooth2.mat")
 fc_iri = c['modelout']
@@ -25,11 +26,11 @@ n_ic = np.array([res[h].sol(c["te"]-c["te"][0]) for h in range(len(z_model))])
 def plot_rel_abs_den(t, h, ne, ni, label):
     fig, ax = plt.subplots(nrows = 3, sharex = True)
     pc0 = ax[0].pcolormesh(t, h, ni/ne, vmin = 0)
-    plt.colorbar(pc0, ax = ax[0], label = label + ' Rel. Density [1]')
-    pc1 = ax[1].pcolormesh(t, h, ne)#, norm=colors.LogNorm())
-    plt.colorbar(pc1, ax = ax[1], label = 'e Density [m-3]')
-    pc2 = ax[2].pcolormesh(t, h, ni)#, norm=colors.LogNorm())
-    plt.colorbar(pc2, ax = ax[2], label = label + ' Density [m-3]')
+    plt.colorbar(pc0, ax = ax[0], label = 'n' + label + '/ne [1]')
+    pc1 = ax[1].pcolormesh(t, h, ni)  # , norm=colors.LogNorm())
+    plt.colorbar(pc1, ax=ax[1], label='n' + label + ' [m-3]')
+    pc2 = ax[2].pcolormesh(t, h, ne)#, norm=colors.LogNorm())
+    plt.colorbar(pc2, ax = ax[2], label = 'ne [m-3]')
     fig.supxlabel('Time [s]')
     fig.supylabel('Height [km]')
 

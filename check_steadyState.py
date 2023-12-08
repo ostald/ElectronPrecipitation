@@ -350,15 +350,15 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
 # Steady state experiments____________________________________________________________________________________________
     ii = 283
     n0 = n_ic[:, :, ii]
-    t_end = 60*60*2
+    t_end = 60*60
 
     for i, c in enumerate(model.all_species):
         # print(c.name)
-        if c.name == 'e':      prodMat[i] = lambda t: e_prod[:, ii] *0
-        if c.name == 'O+':     prodMat[i] = lambda t: Op_prod[:, ii] *0
-        if c.name == 'O+(4S)': prodMat[i] = lambda t: Op_prod[:, ii] *0
-        if c.name == 'O2+':    prodMat[i] = lambda t: O2p_prod[:, ii] *0
-        if c.name == 'N2+':    prodMat[i] = lambda t: N2p_prod[:, ii] *0
+        if c.name == 'e':      prodMat[i] = lambda t: e_prod[:, ii]
+        if c.name == 'O+':     prodMat[i] = lambda t: Op_prod[:, ii]
+        if c.name == 'O+(4S)': prodMat[i] = lambda t: Op_prod[:, ii]
+        if c.name == 'O2+':    prodMat[i] = lambda t: O2p_prod[:, ii]
+        if c.name == 'N2+':    prodMat[i] = lambda t: N2p_prod[:, ii]
 
     tt = np.arange(0, t_end, 1)
     def solve_ic_ss():
@@ -395,13 +395,14 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     plt.legend()
 
 
-    plt.figure()
-    plt.plot(tt, prodMat[3](tt)[ih, :], label = 'O2+ prod')
-    plt.show()
+#    plt.figure()
+ #   plt.plot(tt, prodMat[3](tt)[ih, :], label = 'O2+ prod')
+  #  plt.show()
 
     import plot_relative_density
     plot_relative_density.plot_rel_abs_den(tt, z_model, e, NOp, 'NO+')
     plot_relative_density.plot_rel_abs_den(tt, z_model, e, O2p, 'O2+')
+    breakpoint()
 # End of steady state experiments_____________________________________________________________________________________
 
 
@@ -612,3 +613,20 @@ def stepped_rrate_t(r, t, ts, te):
             raise RuntimeError
         prod_t = r[i_max_ts]
         return prod_t
+
+import loadmat
+import matplotlib.pyplot as plt
+import numpy as np
+import pickle
+
+direc = '/Users/ost051/Documents/PhD/ElectronPrecipitation/log/testing/2023.05.03_14_07_04_mixf=0/'
+file = 'ElSpec-iqt_IC_'
+iteration = 0
+
+chemistry_config = 'Data/other/Reaction rates full set.txt'
+
+mixf = 0
+
+ic(direc, chemistry_config, file, iteration, mixf = mixf, test = False)
+
+exit()
