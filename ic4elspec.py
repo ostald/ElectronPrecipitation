@@ -44,8 +44,8 @@ def ic(direc, chemistry_config, file, iteration, mixf = 0, test = False):
     ts_ = np.copy(ts)
     #generate starting point 30 min in the past:
     ts = np.array([-30*60, *ts])
-    e_prod = np.array([e_prod[:, 0], *e_prod.T]).T
-    ne = np.array([ne[:, 0], *ne.T]).T
+    e_prod = np.array([con["q0"], *e_prod.T]).T
+    ne = np.array([con["ne0"], *ne.T]).T
     lam = lambda x: np.array([x[:, 0], *x.T]).T
     [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp] = map(lam, [Tn, Ti, Te, nN2, nO2, nO, nAr, nNOp, nO2p, nOp])
     ts_show = np.arange(ts[0], te[-1], 0.01)
