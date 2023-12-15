@@ -1729,7 +1729,7 @@ plt.plot(x, np.exp(-(x**2)/2)/np.sqrt(2*np.pi)*len(res3.flat))
 
 
 
-
+"""
 # ## Ionopsheric Chemistry
 for start, only O2+ and NO+ are looked at. => this expanded a bit (e, O, O+, O2, O2+, N, N+, N2, N2+, NO, NO+)
 
@@ -1780,7 +1780,7 @@ Production:
 
 => need a model for T_e!!
 # In[ ]:
-
+"""
 
 """
 Preparation (could be written as module)
@@ -1793,7 +1793,6 @@ from datetime import datetime
 import os
 import import_ipynb
 from ionChem import *
-model = 
 
 
 # In[ ]:
